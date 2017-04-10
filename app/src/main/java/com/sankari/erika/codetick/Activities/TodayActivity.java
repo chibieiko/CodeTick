@@ -25,6 +25,12 @@ import android.widget.TextView;
 
 import com.sankari.erika.codetick.R;
 
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class TodayActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     /**
@@ -43,6 +49,8 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +80,13 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        client = new OkHttpClient();
+        try {
+            test("https://wakatime.com");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +95,15 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    private void test(String url) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        System.out.println("OkHTTP RESULT: " + response.body().string());
     }
 
     @Override
