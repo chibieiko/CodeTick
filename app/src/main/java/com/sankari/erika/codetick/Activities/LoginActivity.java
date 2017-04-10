@@ -52,23 +52,29 @@ public class LoginActivity extends AppCompatActivity {
         final Uri data = this.getIntent().getData();
         System.out.println("DATA = " + data);
         if (data != null) {
-            System.out.println("SHCEME = " + data.getScheme());
+            System.out.println("SCHEME = " + data.getScheme());
             System.out.println("FRAGMENT = " + data.getFragment());
-            System.out.println("PARAMETER = " + data.getQueryParameter("code"));
         }
 
-        if (data != null && data.getScheme().equals("codeticklogin") && data.getQueryParameter("code") != null) {
-            final String accessToken = data.getQueryParameter("code").replaceFirst("code=", "");
+        if (data != null && data.getScheme().equals("codeticklogin") && data.getFragment() != null) {
+
+            String accessToken = data.getFragment().replaceFirst("access_token=", "");
             if (accessToken != null) {
                 System.out.println("ACCESS TOKEN:" + accessToken);
+
+                String[] reply = accessToken.split("&");
+
+                String token = reply[0];
+                String expires = reply[1].replaceFirst("expires_in=", "");
+                String refresh_token = reply[2].replaceFirst("refresh_token=", "");
+
                 Intent intent = new Intent(this, TodayActivity.class);
-                intent.putExtra("token", accessToken);
+                intent.putExtra("token", token);
+                intent.putExtra("expires", expires);
+                intent.putExtra("refresh_token", refresh_token);
                 startActivity(intent);
-                // handleSignInResult(...);
             } else {
                 System.out.println("SAIN PALAUTETTA MUT EN ACCESS TOKENIA");
-                System.out.println(accessToken);
-                // handleSignInResult(...);
             }
         }
     }
@@ -83,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                 .appendQueryParameter("client_id", "0drYEiKHnVnUgwxY7N8dY4Hs")
                 .appendQueryParameter("scope", "email, read_logged_time, read_stats")
                 .appendQueryParameter("redirect_uri", "codeticklogin://redirect")
-                .appendQueryParameter("response_type", "code");
+                .appendQueryParameter("response_type", "token");
         final Intent browser = new Intent(Intent.ACTION_VIEW, uriBuilder.build());
         startActivity(browser);
     }

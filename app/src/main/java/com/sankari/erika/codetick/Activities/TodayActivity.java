@@ -27,9 +27,12 @@ import com.sankari.erika.codetick.R;
 
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.internal.http2.Header;
 
 public class TodayActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -80,12 +83,14 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        Bundle extras = getIntent().getExtras();
+        String token = extras.getString("token");
+        String tokenExpires = extras.getString("expires");
+        String refreshToken = extras.getString("refresh_token");
+
         client = new OkHttpClient();
-        try {
-            test("https://wakatime.com");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        test("https://wakatime.com/api/v1/users/current", token);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,13 +102,26 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
         });
     }
 
-    private void test(String url) throws IOException {
+    private void test(String url, String token) {
+        final String URL = url;
+        final String userToken = token;
+
         Request request = new Request.Builder()
-                .url(url)
+                .header("Authorization", "Bearer " + userToken)
+                .url(URL)
                 .build();
 
-        Response response = client.newCall(request).execute();
-        System.out.println("OkHTTP RESULT: " + response.body().string());
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("ERROR: " + e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("SUCCESS: " + response.body().string());
+            }
+        });
     }
 
     @Override
