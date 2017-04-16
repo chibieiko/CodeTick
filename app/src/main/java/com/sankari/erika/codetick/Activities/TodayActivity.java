@@ -21,12 +21,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sankari.erika.codetick.ApiHandler;
 import com.sankari.erika.codetick.Classes.User;
 import com.sankari.erika.codetick.Listeners.OnDataLoadedListener;
 import com.sankari.erika.codetick.R;
+import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
 
 public class TodayActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataLoadedListener {
 
@@ -136,6 +138,9 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
         System.out.println("MAIN: USER IS: " + user);
         final TextView userName = (TextView) findViewById(R.id.username);
         final TextView userEmail = (TextView) findViewById(R.id.user_email);
+
+        new DownloadAndPlaceImage((ImageView) findViewById(R.id.user_image)).execute(user.getPhoto());
+
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
