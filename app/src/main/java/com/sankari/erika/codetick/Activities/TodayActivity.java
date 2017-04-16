@@ -23,7 +23,12 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.sankari.erika.codetick.ApiHandler;
 import com.sankari.erika.codetick.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -53,7 +58,10 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
      */
     private ViewPager mViewPager;
 
-    OkHttpClient client;
+    private String token;
+    private String tokenExpires;
+    private String refreshToken;
+    private ApiHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +92,14 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        Bundle extras = getIntent().getExtras();
-        String token = extras.getString("token");
-        String tokenExpires = extras.getString("expires");
-        String refreshToken = extras.getString("refresh_token");
+        handler = new ApiHandler();
 
-        client = new OkHttpClient();
-        test("https://wakatime.com/api/v1/users/current", token);
+        Bundle extras = getIntent().getExtras();
+        token = extras.getString("token");
+        tokenExpires = extras.getString("expires");
+        refreshToken = extras.getString("refresh_token");
+
+        handler.getUserDetails("https://wakatime.com/api/v1/users/current", token);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -98,28 +107,6 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-            }
-        });
-    }
-
-    private void test(String url, String token) {
-        final String URL = url;
-        final String userToken = token;
-
-        Request request = new Request.Builder()
-                .header("Authorization", "Bearer " + userToken)
-                .url(URL)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("ERROR: " + e);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("SUCCESS: " + response.body().string());
             }
         });
     }

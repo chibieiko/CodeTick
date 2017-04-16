@@ -3,7 +3,6 @@ package com.sankari.erika.codetick.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.net.Uri;
@@ -29,16 +28,16 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button wakatimeSignInButton = (Button) findViewById(R.id.wakatime_sign_in_button);
+        wakatimeSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mLoginFormView = findViewById(R.id.login_form);
     }
 
     @Override
@@ -48,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkForWakatimeData() {
-        System.out.println("KUULIN JOTAIN OLEN SIIS CHECK FOR WAKATIME DATA");
         final Uri data = this.getIntent().getData();
         System.out.println("DATA = " + data);
         if (data != null) {
@@ -58,29 +56,42 @@ public class LoginActivity extends AppCompatActivity {
 
         if (data != null && data.getScheme().equals("codeticklogin") && data.getFragment() != null) {
 
-            String accessToken = data.getFragment().replaceFirst("access_token=", "");
-            if (accessToken != null) {
-                System.out.println("ACCESS TOKEN:" + accessToken);
+            String token = null;
+            String expires = null;
+            String refresh_token = null;
+            String[] reply = data.getFragment().split("&");
+            for (String replyContent : reply) {
+                String[] replyContentParts = replyContent.split("=");
+                if (replyContentParts[0].equals("access_token")) {
+                    token = replyContentParts[1];
+                } else if (replyContentParts[0].equals("refresh_token")) {
+                    refresh_token = replyContentParts[1];
+                } else if (replyContentParts[0].equals("expires_in")) {
+                    expires = replyContentParts[1];
+                }
+            }
 
-                String[] reply = accessToken.split("&");
+            System.out.println("TOKEN: " + token);
+            System.out.println("EXPIRES: " + expires);
+            System.out.println("REFRESH_TOKEN: " + refresh_token);
 
-                String token = reply[0];
-                String expires = reply[1].replaceFirst("expires_in=", "");
-                String refresh_token = reply[2].replaceFirst("refresh_token=", "");
-
+            if (token != null && refresh_token != null && expires != null) {
                 Intent intent = new Intent(this, TodayActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("expires", expires);
                 intent.putExtra("refresh_token", refresh_token);
                 startActivity(intent);
             } else {
-                System.out.println("SAIN PALAUTETTA MUT EN ACCESS TOKENIA");
+                // todo show snackbar
+                System.out.println("ERROR missing token parts");
             }
+        } else {
+            // todo show snackbar
+            System.out.println("ERROR in login");
         }
     }
 
     private void attemptLogin() {
-
         final Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("https")
                 .authority("wakatime.com")

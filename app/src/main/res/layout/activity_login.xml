@@ -31,7 +31,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/wakatime_sign_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
