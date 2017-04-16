@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.net.Uri;
 import android.os.Build;
@@ -12,7 +14,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.sankari.erika.codetick.ApiHandler;
+import com.sankari.erika.codetick.Classes.Token;
 import com.sankari.erika.codetick.R;
+import com.sankari.erika.codetick.Utils.Util;
+
+import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -24,7 +31,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+       // PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+
         checkForWakatimeData();
+        checkForExistingToken();
 
         setContentView(R.layout.activity_login);
 
@@ -46,6 +56,32 @@ public class LoginActivity extends AppCompatActivity {
         checkForWakatimeData();
     }
 
+    private void checkForExistingToken() {
+        System.out.println("CHECKING FOR TOKEN");
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String accessToken = prefs.getString("token", null);
+        long expires = prefs.getLong("expires", 0);
+        String refreshToken = prefs.getString("refreshToken", null);
+
+        System.out.println("Token: " + accessToken);
+        System.out.println("Expiry: " + new Date(expires));
+        System.out.println("Refresh: " + refreshToken);
+
+        if (accessToken != null && expires != 0 && refreshToken != null) {
+            Date today = new Date();
+            // If token has not expired yet.
+            if (today.getTime() < expires) {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                // If token has expired get a new one with refresh token.
+            } else {
+                ApiHandler handler = new ApiHandler(this);
+                handler.refreshToken(refreshToken, true);
+            }
+        }
+    }
+
     private void checkForWakatimeData() {
         final Uri data = this.getIntent().getData();
         System.out.println("DATA = " + data);
@@ -56,30 +92,19 @@ public class LoginActivity extends AppCompatActivity {
 
         if (data != null && data.getScheme().equals("codeticklogin") && data.getFragment() != null) {
 
-            String token = null;
-            String expires = null;
-            String refresh_token = null;
-            String[] reply = data.getFragment().split("&");
-            for (String replyContent : reply) {
-                String[] replyContentParts = replyContent.split("=");
-                if (replyContentParts[0].equals("access_token")) {
-                    token = replyContentParts[1];
-                } else if (replyContentParts[0].equals("refresh_token")) {
-                    refresh_token = replyContentParts[1];
-                } else if (replyContentParts[0].equals("expires_in")) {
-                    expires = replyContentParts[1];
-                }
-            }
+            Token token = Util.parseTokenUrl(data.getFragment());
 
-            System.out.println("TOKEN: " + token);
-            System.out.println("EXPIRES: " + expires);
-            System.out.println("REFRESH_TOKEN: " + refresh_token);
+            System.out.println("TOKEN: " + token.getAccessToken());
+            System.out.println("EXPIRES: " + new Date(token.getExpires()));
+            System.out.println("REFRESH_TOKEN: " + token.getRefreshToken());
 
-            if (token != null && refresh_token != null && expires != null) {
+            if (token.getAccessToken() != null && token.getRefreshToken() != null && token.getExpires() != 0) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                prefs.edit().putString("token", token.getAccessToken()).apply();
+                prefs.edit().putString("refreshToken", token.getRefreshToken()).apply();
+                prefs.edit().putLong("expires", token.getExpires()).apply();
+
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("token", token);
-                intent.putExtra("expires", expires);
-                intent.putExtra("refresh_token", refresh_token);
                 startActivity(intent);
             } else {
                 // todo show snackbar

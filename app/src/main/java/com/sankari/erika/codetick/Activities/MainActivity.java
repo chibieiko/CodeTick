@@ -1,5 +1,6 @@
 package com.sankari.erika.codetick.Activities;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -46,15 +47,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private ViewPager mViewPager;
 
-    private String token;
-    private String tokenExpires;
-    private String refreshToken;
     private ApiHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_today);
+
+        System.out.println("ON MAIN ACTIVITY CREATE");
+        handler = new ApiHandler(this);
+        handler.addListener(this);
+        handler.getUserDetails("https://wakatime.com/api/v1/users/current");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,17 +83,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        handler = new ApiHandler();
-        handler.addListener(this);
-
-        Bundle extras = getIntent().getExtras();
-        token = extras.getString("token");
-        tokenExpires = extras.getString("expires");
-        refreshToken = extras.getString("refresh_token");
-
-        handler.getUserDetails("https://wakatime.com/api/v1/users/current", token);
-
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        System.out.println("MAIN ON START");
     }
 
     @Override
@@ -125,8 +123,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_today:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                break;
 
-        return false;
+            case R.id.nav_leaderboards:
+                break;
+
+            case R.id.nav_logout:
+                System.out.println("Log OUT");
+                break;
+        }
+
+        return true;
     }
 
     @Override
