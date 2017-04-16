@@ -201,11 +201,11 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "TODAY";
                 case 1:
-                    return "SECTION 2";
+                    return "PROJECTS";
                 case 2:
-                    return "SECTION 3";
+                    return "ACTIVITY";
             }
             return null;
         }
