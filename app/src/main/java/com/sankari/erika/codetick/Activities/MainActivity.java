@@ -27,6 +27,7 @@ import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
 import com.sankari.erika.codetick.Listeners.OnDataLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
+import com.sankari.erika.codetick.Utils.Util;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataLoadedListener {
 
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_logout:
+                Util.logout(this);
                 System.out.println("Log OUT");
                 break;
         }

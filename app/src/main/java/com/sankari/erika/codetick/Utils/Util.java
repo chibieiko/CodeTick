@@ -1,5 +1,10 @@
 package com.sankari.erika.codetick.Utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.preference.PreferenceManager;
+
+import com.sankari.erika.codetick.Activities.LoginActivity;
 import com.sankari.erika.codetick.Classes.Token;
 
 import java.util.Date;
@@ -33,5 +38,11 @@ public class Util {
         }
 
         return token;
+    }
+
+    public static void logout(Context context) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
     }
 }
