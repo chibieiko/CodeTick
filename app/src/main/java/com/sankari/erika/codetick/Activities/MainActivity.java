@@ -6,6 +6,8 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import com.sankari.erika.codetick.ApiHandler;
 import com.sankari.erika.codetick.Classes.User;
 import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
+import com.sankari.erika.codetick.Fragments.TodayFragment;
 import com.sankari.erika.codetick.Listeners.OnDataLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    private DrawerLayout mDrawerLayout;
+    private DrawerLayout drawer;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.setupWithViewPager(mViewPager);
 
         // Set up navigation drawer.
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -122,12 +125,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
+    // Close navigation drawer with back button if it is open.
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerVisible(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_today:
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                // todo change to today fragment if in leaderboards fragment
+
+                drawer.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.nav_leaderboards:
@@ -135,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_logout:
                 Util.logout(this);
-                System.out.println("Log OUT");
                 break;
         }
 
