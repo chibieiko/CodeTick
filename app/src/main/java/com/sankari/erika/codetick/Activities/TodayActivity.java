@@ -24,22 +24,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sankari.erika.codetick.ApiHandler;
+import com.sankari.erika.codetick.Classes.User;
+import com.sankari.erika.codetick.Listeners.OnDataLoadedListener;
 import com.sankari.erika.codetick.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.internal.http2.Header;
-
-public class TodayActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class TodayActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataLoadedListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -82,6 +71,7 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        // Set up navigation drawer.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -91,8 +81,8 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         handler = new ApiHandler();
+        handler.addListener(this);
 
         Bundle extras = getIntent().getExtras();
         token = extras.getString("token");
@@ -100,6 +90,7 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
         refreshToken = extras.getString("refresh_token");
 
         handler.getUserDetails("https://wakatime.com/api/v1/users/current", token);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +128,26 @@ public class TodayActivity extends AppCompatActivity implements NavigationView.O
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         return false;
+    }
+
+    @Override
+    public void onDataSuccessfullyLoaded(Object obj) {
+        final User user = (User) obj;
+        System.out.println("MAIN: USER IS: " + user);
+        final TextView userName = (TextView) findViewById(R.id.username);
+        final TextView userEmail = (TextView) findViewById(R.id.user_email);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                userName.setText(user.getName());
+                userEmail.setText(user.getEmail());
+            }
+        });
+    }
+
+    @Override
+    public void onDataLoadError(String error) {
+        System.out.println("MAIN: USER ERROR IS: " + error);
     }
 
     /**

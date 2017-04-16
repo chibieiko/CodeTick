@@ -1,6 +1,7 @@
 package com.sankari.erika.codetick;
 
 import com.sankari.erika.codetick.Classes.User;
+import com.sankari.erika.codetick.Listeners.OnDataLoadedListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,9 +21,14 @@ import okhttp3.Response;
 public class ApiHandler {
 
     OkHttpClient client;
+    private OnDataLoadedListener userListener;
 
     public ApiHandler() {
         client = new OkHttpClient();
+    }
+
+    public void addListener(OnDataLoadedListener listener) {
+        userListener = listener;
     }
 
     private Request getRequest(String url, String token) {
@@ -40,7 +46,13 @@ public class ApiHandler {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                // todo show snackbar
                 System.out.println("ERROR: " + e);
+                if (userListener != null) {
+                    userListener.onDataLoadError(e.toString());
+                } else {
+                    System.out.println("NO USER LISTENER IN API HANDLER");
+                }
             }
 
             @Override
@@ -50,19 +62,21 @@ public class ApiHandler {
 
                 try {
                     JSONObject resultObject = new JSONObject(result);
-                  //  System.out.println(resultObject.getString("data"));
-                    if (true) {
-                        JSONObject userObject = new JSONObject(resultObject.getString("data"));
+                    JSONObject userObject = new JSONObject(resultObject.getString("data"));
 
-                        User user = new User(userObject.getString("display_name"),
-                                userObject.getString("email"),
-                                userObject.getString("photo"));
+                    User user = new User(userObject.getString("display_name"),
+                            userObject.getString("email"),
+                            userObject.getString("photo"));
 
-                        System.out.println(user);
+                    System.out.println(user);
+                    if (userListener != null) {
+                        userListener.onDataSuccessfullyLoaded(user);
                     } else {
-                        System.out.println("ERROR: " + resultObject);
+                        System.out.println("NO USER LISTENER IN API HANDLER");
                     }
+
                 } catch (JSONException e) {
+                    System.out.println("ERROR, could not fetch data properly");
                     e.printStackTrace();
                 }
             }
