@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println("REFRESH_TOKEN: " + refresh_token);
 
             if (token != null && refresh_token != null && expires != null) {
-                Intent intent = new Intent(this, TodayActivity.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("expires", expires);
                 intent.putExtra("refresh_token", refresh_token);

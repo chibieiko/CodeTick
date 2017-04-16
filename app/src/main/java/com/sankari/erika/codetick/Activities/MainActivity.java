@@ -27,7 +27,7 @@ import com.sankari.erika.codetick.Listeners.OnDataLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
 
-public class TodayActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataLoadedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataLoadedListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide

@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.TodayActivity"
+            android:name=".Activities.MainActivity"
             android:label="@string/title_activity_today"
             android:theme="@style/AppTheme.NoActionBar" />
 
