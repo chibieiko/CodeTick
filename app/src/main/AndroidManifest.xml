@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,9 +31,10 @@
                     android:scheme="codeticklogin" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Activities.MainActivity"
-            android:label="@string/title_activity_today"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
