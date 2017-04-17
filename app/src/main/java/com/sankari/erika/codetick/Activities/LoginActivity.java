@@ -1,14 +1,10 @@
 package com.sankari.erika.codetick.Activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +15,9 @@ import com.sankari.erika.codetick.Classes.Token;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Util;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.Properties;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -74,8 +72,8 @@ public class LoginActivity extends AppCompatActivity {
             if (today.getTime() < expires) {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-                // If token has expired get a new one with refresh token.
-            } else {
+                // If refresh token is not invalid and token has expired gets a new token with refresh token.
+            } else if (!Token.isInvalidRefreshToken()) {
                 ApiHandler handler = new ApiHandler(this);
                 handler.refreshToken(refreshToken, true);
             }
@@ -84,14 +82,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void checkForWakatimeData() {
         final Uri data = this.getIntent().getData();
-        System.out.println("DATA = " + data);
-        if (data != null) {
-            System.out.println("SCHEME = " + data.getScheme());
-            System.out.println("FRAGMENT = " + data.getFragment());
-        }
 
         if (data != null && data.getScheme().equals("codeticklogin") && data.getFragment() != null) {
-
             Token token = Util.parseTokenUrl(data.getFragment());
 
             System.out.println("TOKEN: " + token.getAccessToken());
@@ -104,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                 prefs.edit().putString("refreshToken", token.getRefreshToken()).apply();
                 prefs.edit().putLong("expires", token.getExpires()).apply();
 
+                Token.setInvalidRefreshToken(false);
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             } else {
@@ -111,59 +104,35 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println("ERROR missing token parts");
             }
         } else {
-            // todo show snackbar
-            System.out.println("ERROR in login");
+            System.out.println("No need to get login data again from wakatime");
         }
     }
 
     private void attemptLogin() {
+        Properties config = new Properties();
+        String appId = "";
+        String redirectUri = "";
+
+        // Loads app information from file.
+        try {
+            config.load(this.getAssets().open("config.properties"));
+            appId = config.getProperty("id");
+            redirectUri = config.getProperty("redirectUri");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         final Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("https")
                 .authority("wakatime.com")
                 .appendPath("oauth")
                 .appendPath("authorize")
-                .appendQueryParameter("client_id", "0drYEiKHnVnUgwxY7N8dY4Hs")
+                .appendQueryParameter("client_id", appId)
                 .appendQueryParameter("scope", "email, read_logged_time, read_stats")
-                .appendQueryParameter("redirect_uri", "codeticklogin://redirect")
+                .appendQueryParameter("redirect_uri", redirectUri)
                 .appendQueryParameter("response_type", "token");
         final Intent browser = new Intent(Intent.ACTION_VIEW, uriBuilder.build());
         startActivity(browser);
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
     }
 }
 

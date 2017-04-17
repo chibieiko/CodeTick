@@ -86,15 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
@@ -159,9 +150,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onDataSuccessfullyLoaded(Object obj) {
         final User user = (User) obj;
         System.out.println("MAIN: USER IS: " + user);
+
         final TextView userName = (TextView) findViewById(R.id.username);
         final TextView userEmail = (TextView) findViewById(R.id.user_email);
-
         new DownloadAndPlaceImage((ImageView) findViewById(R.id.user_image)).execute(user.getPhoto());
 
         this.runOnUiThread(new Runnable() {
@@ -169,12 +160,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void run() {
                 userName.setText(user.getName());
                 userEmail.setText(user.getEmail());
+
+                Snackbar.make(findViewById(R.id.drawer_layout), "Welcome " + user.getEmail(), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
     }
 
     @Override
     public void onDataLoadError(String error) {
+        final String reason = error;
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(findViewById(R.id.drawer_layout), reason, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
         System.out.println("MAIN: USER ERROR IS: " + error);
     }
 }

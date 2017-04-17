@@ -1,10 +1,14 @@
 package com.sankari.erika.codetick;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
+import com.sankari.erika.codetick.Activities.LoginActivity;
 import com.sankari.erika.codetick.Activities.MainActivity;
 import com.sankari.erika.codetick.Classes.Token;
 import com.sankari.erika.codetick.Classes.User;
@@ -34,7 +38,7 @@ import okio.BufferedSink;
 
 public class ApiHandler {
 
-    OkHttpClient client;
+    private OkHttpClient client;
     private OnDataLoadedListener userListener;
     private Context context;
     private SharedPreferences prefs;
@@ -57,7 +61,6 @@ public class ApiHandler {
         if (today.getTime() < expires) {
             return true;
         } else {
-            refreshToken(prefs.getString("refreshToken", null), false);
             return false;
         }
     }
@@ -72,95 +75,13 @@ public class ApiHandler {
                 .build();
     }
 
-    public void refreshToken(String refreshToken, final boolean startMain) {
-        String appSecret = "";
-        String appId = "";
-        String redirectUri = "";
-        Properties config = new Properties();
-
-        try {
-            config.load(context.getAssets().open("config.properties"));
-            appSecret = config.getProperty("secret");
-            appId = config.getProperty("id");
-            redirectUri = config.getProperty("redirectUri");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("APP ID: " + appId);
-        System.out.println("APP secret: " + appSecret);
-        System.out.println("RedirectUri: " + redirectUri);
-
-        final HttpUrl.Builder uriBuilder = HttpUrl.parse("https://wakatime.com/oauth/token").newBuilder();
-        uriBuilder.addQueryParameter("client_id", appId);
-        uriBuilder.addQueryParameter("client_secret", appSecret);
-        uriBuilder.addQueryParameter("grant_type", "refresh_token");
-        uriBuilder.addQueryParameter("redirect_uri", redirectUri);
-        uriBuilder.addQueryParameter("refresh_token", refreshToken);
-        String url = uriBuilder.build().toString();
-
-        Request request = new Request.Builder()
-                .url(url)
-                .method("POST", new RequestBody() {
-                    @Override
-                    public MediaType contentType() {
-                        return null;
-                    }
-
-                    @Override
-                    public void writeTo(BufferedSink sink) throws IOException {
-
-                    }
-                })
-                .build();
-
-        System.out.println("CLIENT: " + client);
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("ERROR refreshing token");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String result = response.body().string();
-                System.out.println("Response: " + result);
-
-                try {
-                    JSONObject object = new JSONObject(result);
-                    if (object.getString("error") != null) {
-                        // todo throw out and show snackbar
-                        System.out.println("ERROR TRYING TO REFRESH TOKEN");
-                    } else {
-                        Token token = Util.parseTokenUrl(result);
-                        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                        prefs.edit().putString("token", token.getAccessToken()).apply();
-                        prefs.edit().putString("refreshToken", token.getRefreshToken()).apply();
-                        prefs.edit().putLong("expires", token.getExpires()).apply();
-
-                        if (startMain) {
-                            Intent intent = new Intent(context, MainActivity.class);
-                            context.startActivity(intent);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.println("SUCCESS refreshing token");
-            }
-        });
-    }
-
     public void getUserDetails(String url) {
         if (checkTokenExpiry()) {
             Request request = getRequest(url);
-
             client.newCall(request).enqueue(new Callback() {
+
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    // todo show snackbar
-                    System.out.println("ERROR: " + e);
                     if (userListener != null) {
                         userListener.onDataLoadError(e.toString());
                     } else {
@@ -172,27 +93,109 @@ public class ApiHandler {
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
                     System.out.println("SUCCESS: " + result);
+                    System.out.println("CODE: " + response.code());
 
-                    try {
-                        JSONObject resultObject = new JSONObject(result);
-                        JSONObject userObject = new JSONObject(resultObject.getString("data"));
+                    if (response.code() == 200) {
+                        try {
+                            JSONObject resultObject = new JSONObject(result);
+                            JSONObject userObject = new JSONObject(resultObject.getString("data"));
 
-                        User user = new User(userObject.getString("display_name"),
-                                userObject.getString("email"),
-                                userObject.getString("photo"));
+                            User user = new User(userObject.getString("display_name"),
+                                    userObject.getString("email"),
+                                    userObject.getString("photo"));
 
-                        System.out.println(user);
-                        if (userListener != null) {
+                            System.out.println(user);
                             userListener.onDataSuccessfullyLoaded(user);
-                        } else {
-                            System.out.println("NO USER LISTENER IN API HANDLER");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        System.out.println("ERROR, could not fetch data properly");
-                        e.printStackTrace();
+                    } else {
+                        userListener.onDataLoadError("Error fetching user data from Wakatime's server...");
                     }
                 }
             });
+        } else {
+            refreshToken(prefs.getString("token", null), false);
         }
+    }
+
+    public void refreshToken(String refreshToken, final boolean startMain) {
+        String appSecret = "";
+        String appId = "";
+        String redirectUri = "";
+        Properties config = new Properties();
+
+        // Loads app information from file.
+        try {
+            config.load(context.getAssets().open("config.properties"));
+            appSecret = config.getProperty("secret");
+            appId = config.getProperty("id");
+            redirectUri = config.getProperty("redirectUri");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        final HttpUrl.Builder uriBuilder = HttpUrl.parse("https://wakatime.com/oauth/token").newBuilder();
+        String url = uriBuilder.build().toString();
+
+        final String postForm = "client_id=" + appId +
+                "&client_secret=" + appSecret +
+                "&grant_type=refresh_token" +
+                "&redirect_uri=" + redirectUri +
+                "&refresh_token=" + refreshToken;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .method("POST", new RequestBody() {
+                    @Override
+                    public MediaType contentType() {
+                        return MediaType.parse("application/x-www-form-urlencoded");
+                    }
+
+                    @Override
+                    public void writeTo(BufferedSink sink) throws IOException {
+                        sink.writeUtf8(postForm);
+                    }
+                })
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //todo show snackbar
+                Util.logout(context);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String result = response.body().string();
+                System.out.println("Refresh token Response: " + result);
+
+                try {
+                    JSONObject object = new JSONObject(result);
+                    if (response.code() != 200) {
+                        // todo show snackbar to prompt user to login
+                        System.out.println("ERROR TRYING TO REFRESH TOKEN");
+                        Token.setInvalidRefreshToken(true);
+                        Util.logout(context);
+                    } else {
+                        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                        prefs.edit().putString("token", object.getString("access_token")).apply();
+                        prefs.edit().putString("refreshToken", object.getString("refresh_token")).apply();
+                        prefs.edit().putLong("expires", Util.getProperExpiryDate(object.getString("expires_in"))).apply();
+
+                        System.out.println("SUCCESS refreshing token");
+                        if (startMain) {
+                            Intent intent = new Intent(context, MainActivity.class);
+                            context.startActivity(intent);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

@@ -31,9 +31,8 @@ public class Util {
                 token.setRefreshToken(replyContentParts[1]);
             } else if (replyContentParts[0].equals("expires_in")) {
                 String expiryString = replyContentParts[1];
-                Date today = new Date();
-                long realtime = TimeUnit.MINUTES.toMillis(Long.parseLong(expiryString));
-                token.setExpires(realtime + today.getTime());
+                token.setExpires(getProperExpiryDate(expiryString));
+                System.out.println("EXPIRY DATE FOR NOW: " + new Date(token.getExpires()));
             }
         }
 
@@ -41,8 +40,14 @@ public class Util {
     }
 
     public static void logout(Context context) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit();
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
+    }
+
+    public static long getProperExpiryDate(String expires) {
+        Date today = new Date();
+        long expiresInMillis = TimeUnit.MINUTES.toMillis(Long.parseLong(expires));
+        return expiresInMillis + today.getTime();
     }
 }

@@ -5,9 +5,10 @@ package com.sankari.erika.codetick.Classes;
  */
 
 public class Token {
-    String accessToken;
-    String refreshToken;
-    long expires;
+    private String accessToken;
+    private String refreshToken;
+    private long expires;
+    private static boolean invalidRefreshToken = false;
 
     public Token() {
     }
@@ -40,5 +41,13 @@ public class Token {
 
     public void setExpires(long expires) {
         this.expires = expires;
+    }
+
+    public static boolean isInvalidRefreshToken() {
+        return invalidRefreshToken;
+    }
+
+    public static void setInvalidRefreshToken(boolean invalidRefreshToken) {
+        invalidRefreshToken = invalidRefreshToken;
     }
 }
