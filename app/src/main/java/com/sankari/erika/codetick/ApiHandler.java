@@ -1,24 +1,24 @@
 package com.sankari.erika.codetick;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 
-import com.sankari.erika.codetick.Activities.LoginActivity;
 import com.sankari.erika.codetick.Activities.MainActivity;
+import com.sankari.erika.codetick.Classes.Project;
+import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.Classes.Token;
 import com.sankari.erika.codetick.Classes.User;
-import com.sankari.erika.codetick.Listeners.OnDataLoadedListener;
+import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
 import com.sankari.erika.codetick.Utils.Util;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
@@ -39,7 +39,7 @@ import okio.BufferedSink;
 public class ApiHandler {
 
     private OkHttpClient client;
-    private OnDataLoadedListener userListener;
+    private OnUserDataLoadedListener userListener;
     private Context context;
     private SharedPreferences prefs;
 
@@ -48,8 +48,12 @@ public class ApiHandler {
         client = new OkHttpClient();
     }
 
-    public void addListener(OnDataLoadedListener listener) {
+    public void addUserListener(OnUserDataLoadedListener listener) {
         userListener = listener;
+    }
+
+    public OnUserDataLoadedListener getUserListener() {
+        return userListener;
     }
 
     private boolean checkTokenExpiry() {
@@ -83,7 +87,7 @@ public class ApiHandler {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     if (userListener != null) {
-                        userListener.onDataLoadError(e.toString());
+                        userListener.onUserDataLoadError(e.toString());
                     } else {
                         System.out.println("NO USER LISTENER IN API HANDLER");
                     }
@@ -105,13 +109,75 @@ public class ApiHandler {
                                     userObject.getString("photo"));
 
                             System.out.println(user);
-                            userListener.onDataSuccessfullyLoaded(user);
+                            userListener.onUserDataSuccessfullyLoaded(user);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        userListener.onDataLoadError("Error fetching user data from Wakatime's server...");
+                        userListener.onUserDataLoadError("Error fetching user data from Wakatime's server...");
+                    }
+                }
+            });
+        } else {
+            refreshToken(prefs.getString("token", null), false);
+        }
+    }
+
+    public void getTodayDetails() {
+        // todo Get today total time and time per project and project name
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://wakatime.com/api/v1/users/current/summaries").newBuilder();
+        urlBuilder.addQueryParameter("start", Util.convertDateToProperFormat(new Date()));
+        urlBuilder.addQueryParameter("end", Util.convertDateToProperFormat(new Date()));
+        String url = urlBuilder.build().toString();
+
+        if (checkTokenExpiry()) {
+            Request request = getRequest(url);
+            client.newCall(request).enqueue(new Callback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println(e.toString());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String result = response.body().string();
+                    System.out.println("TODAY SUMMARY SUCCESS: " + result);
+                    System.out.println("SUMMARY CODE: " + response.code());
+
+                    if (response.code() == 200) {
+                        try {
+                            JSONObject resultObject = new JSONObject(result);
+                            JSONObject summaryObject = new JSONObject(resultObject.getString("data"));
+                            JSONArray jsonProjects = new JSONArray(summaryObject.getJSONArray("projects"));
+
+                            ArrayList<Project> projects = new ArrayList<Project>();
+                            long totalTimeToday = 0;
+
+                            for (int i = 0; i < jsonProjects.length(); i++) {
+                                JSONObject tempObject = jsonProjects.getJSONObject(i);
+                                projects.add(new Project(
+                                        tempObject.getString("name"),
+                                        tempObject.getInt("percent"),
+                                        tempObject.getInt("hours"),
+                                        tempObject.getInt("minutes"),
+                                        tempObject.getLong("total_seconds")));
+                                totalTimeToday += tempObject.getLong("total_seconds");
+                            }
+
+                            TodaySummary todaySummary = new TodaySummary();
+                            todaySummary.setProjectList(projects);
+                            todaySummary.setTotalTime(totalTimeToday);
+
+                            System.out.println(todaySummary);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        userListener.onUserDataLoadError("Error fetching user data from Wakatime's server...");
                     }
                 }
             });

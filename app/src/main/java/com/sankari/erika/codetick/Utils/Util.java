@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.sankari.erika.codetick.Activities.LoginActivity;
 import com.sankari.erika.codetick.Classes.Token;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -49,5 +50,10 @@ public class Util {
         Date today = new Date();
         long expiresInMillis = TimeUnit.MINUTES.toMillis(Long.parseLong(expires));
         return expiresInMillis + today.getTime();
+    }
+
+    public static String convertDateToProperFormat(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
     }
 }

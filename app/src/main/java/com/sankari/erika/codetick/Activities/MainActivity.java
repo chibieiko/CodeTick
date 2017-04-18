@@ -1,12 +1,9 @@
 package com.sankari.erika.codetick.Activities;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,7 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,13 +22,12 @@ import android.widget.TextView;
 import com.sankari.erika.codetick.ApiHandler;
 import com.sankari.erika.codetick.Classes.User;
 import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
-import com.sankari.erika.codetick.Fragments.TodayFragment;
-import com.sankari.erika.codetick.Listeners.OnDataLoadedListener;
+import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
 import com.sankari.erika.codetick.Utils.Util;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataLoadedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnUserDataLoadedListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -60,9 +55,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         System.out.println("ON MAIN ACTIVITY CREATE");
         handler = new ApiHandler(this);
-        handler.addListener(this);
+        handler.addUserListener(this);
         handler.getUserDetails("https://wakatime.com/api/v1/users/current");
 
+        // todo remove, just for testing
+        handler.getTodayDetails();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -81,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -92,6 +89,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         System.out.println("MAIN ON START");
+        if (handler.getUserListener() == null) {
+            handler.addUserListener(this);
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (handler.getUserListener() == null) {
+            handler.addUserListener(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (handler.getUserListener() != null) {
+            handler.addUserListener(null);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (handler.getUserListener() != null) {
+            handler.addUserListener(null);
+        }
     }
 
     @Override
@@ -147,8 +171,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onDataSuccessfullyLoaded(Object obj) {
-        final User user = (User) obj;
+    public void onUserDataSuccessfullyLoaded(User obj) {
+        final User user = obj;
         System.out.println("MAIN: USER IS: " + user);
 
         final TextView userName = (TextView) findViewById(R.id.username);
@@ -168,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onDataLoadError(String error) {
+    public void onUserDataLoadError(String error) {
         final String reason = error;
         this.runOnUiThread(new Runnable() {
             @Override
