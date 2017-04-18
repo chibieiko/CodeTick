@@ -17,4 +17,9 @@
         android:text="Today fragment"
         />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/today_stats"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </LinearLayout>
