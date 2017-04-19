@@ -13,24 +13,30 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="codeticklogin" android:host="redirect" />
+
+                <data
+                    android:host="redirect"
+                    android:scheme="codeticklogin" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".Activities.TodayActivity"
-            android:label="@string/title_activity_today"
+            android:name=".Activities.MainActivity"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>
