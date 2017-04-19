@@ -59,7 +59,7 @@ public class TodayHandler {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
-                    System.out.println("TODAY SUMMARY SUCCESS: " + result);
+                  //  System.out.println("TODAY SUMMARY SUCCESS: " + result);
                     System.out.println("SUMMARY CODE: " + response.code());
 
                     if (response.code() == 200) {

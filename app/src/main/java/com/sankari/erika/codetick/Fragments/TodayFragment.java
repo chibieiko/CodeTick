@@ -61,7 +61,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         todayHandler.getTodayDetails();
 
         todaySummary = new TodaySummary();
-        todayAdapter = new TodayAdapter(rootView.getContext(), todaySummary);
+        todayAdapter = new TodayAdapter(todaySummary);
 
         recyclerView.setAdapter(todayAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
@@ -81,6 +81,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                System.out.println("notifying data changed");
                 todayAdapter.notifyDataSetChanged();
             }
         });
