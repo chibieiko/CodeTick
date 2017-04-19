@@ -23,7 +23,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     private List<User> users;
     private Context context;
 
-    public TodayAdapter(Context context, List<User> users, ) {
+    public TodayAdapter(Context context, List<User> users) {
         this.users = users;
         this.context = context;
     }

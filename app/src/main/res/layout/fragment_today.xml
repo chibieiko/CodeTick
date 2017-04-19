@@ -10,13 +10,6 @@
     tools:context="com.sankari.erika.codetick.Fragments.TodayFragment"
     android:id="@+id/fragment_today">
 
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Today fragment"
-        />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/today_stats"
         android:layout_width="match_parent"
