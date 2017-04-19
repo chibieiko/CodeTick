@@ -19,7 +19,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sankari.erika.codetick.ApiHandler;
+import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
+import com.sankari.erika.codetick.ApiHandlers.UserHandler;
 import com.sankari.erika.codetick.Classes.User;
 import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
 import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager mViewPager;
 
     private ApiHandler handler;
+    private UserHandler userHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,16 +57,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         System.out.println("ON MAIN ACTIVITY CREATE");
         handler = new ApiHandler(this);
-        handler.addUserListener(this);
-        handler.getUserDetails("https://wakatime.com/api/v1/users/current");
+        userHandler = new UserHandler(handler);
+        userHandler.addUserListener(this);
+        userHandler.getUserDetails("https://wakatime.com/api/v1/users/current");
 
-        // todo remove, just for testing
-        handler.getTodayDetails();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), handler);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -89,32 +90,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         System.out.println("MAIN ON START");
-        if (handler.getUserListener() == null) {
-            handler.addUserListener(this);
+        if (userHandler.getUserListener() == null) {
+            userHandler.addUserListener(this);
         }
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (handler.getUserListener() == null) {
-            handler.addUserListener(this);
+        if (userHandler.getUserListener() == null) {
+            userHandler.addUserListener(this);
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (handler.getUserListener() != null) {
-            handler.addUserListener(null);
+        if (userHandler.getUserListener() != null) {
+            userHandler.addUserListener(null);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (handler.getUserListener() != null) {
-            handler.addUserListener(null);
+        if (userHandler.getUserListener() != null) {
+            userHandler.addUserListener(null);
         }
     }
 
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        // Noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

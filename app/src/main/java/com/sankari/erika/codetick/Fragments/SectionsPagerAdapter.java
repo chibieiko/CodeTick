@@ -8,14 +8,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
+
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    public SectionsPagerAdapter(FragmentManager fm) {
+    ApiHandler apiHandler;
+
+    public SectionsPagerAdapter(FragmentManager fm, ApiHandler handler) {
         super(fm);
+        apiHandler = handler;
     }
 
     @Override
@@ -25,7 +30,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         System.out.println("TAB POSITION: " + position);
         switch (position) {
             case 0:
-                return TodayFragment.newInstance(position);
+                return TodayFragment.newInstance(position, apiHandler);
             case 1:
                 return ProjectsFragment.newInstance(position);
             case 2:

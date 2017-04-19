@@ -1,15 +1,14 @@
 package com.sankari.erika.codetick.Fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.sankari.erika.codetick.ApiHandler;
+import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
+import com.sankari.erika.codetick.ApiHandlers.TodayHandler;
 import com.sankari.erika.codetick.Classes.User;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Views.TodayAdapter;
@@ -28,15 +27,18 @@ public class TodayFragment extends android.support.v4.app.Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private ArrayList<User> users = new ArrayList<>();
+    private static TodayHandler todayHandler;
 
     public TodayFragment() {
+
     }
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static TodayFragment newInstance(int sectionNumber) {
+    public static TodayFragment newInstance(int sectionNumber, ApiHandler handler) {
+        todayHandler = new TodayHandler(handler);
         TodayFragment fragment = new TodayFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -51,9 +53,7 @@ public class TodayFragment extends android.support.v4.app.Fragment {
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById (R.id.today_stats);
 
-        users.add(new User("Testi", "testi@email.com", "fdjfkdsjfdsk"));
-        users.add(new User("Testi2", "testi@email.com", "fdjfkdsjfdsk"));
-        users.add(new User("Testi3", "testi@email.com", "fdjfkdsjfdsk"));
+        todayHandler.getTodayDetails();
 
         TodayAdapter todayAdapter = new TodayAdapter(rootView.getContext(), users);
 
