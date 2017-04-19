@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.ApiHandlers.TodayHandler;
-import com.sankari.erika.codetick.Classes.User;
+import com.sankari.erika.codetick.Classes.Project;
+import com.sankari.erika.codetick.Classes.TodaySummary;
+import com.sankari.erika.codetick.Listeners.OnTodaySummaryLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Views.TodayAdapter;
 
@@ -19,19 +21,21 @@ import java.util.ArrayList;
  * Created by erika on 4/16/2017.
  */
 
-public class TodayFragment extends android.support.v4.app.Fragment {
+public class TodayFragment extends android.support.v4.app.Fragment implements OnTodaySummaryLoadedListener {
+
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    private ArrayList<User> users = new ArrayList<>();
     private static TodayHandler todayHandler;
+    private RecyclerView recyclerView;
+    private View rootView;
+    private TodayAdapter todayAdapter;
+    private TodaySummary todaySummary = null;
 
-    public TodayFragment() {
-
-    }
+    public TodayFragment() {}
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -49,17 +53,41 @@ public class TodayFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_today, container, false);
+        todayHandler.setTodayListener(TodayFragment.this);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById (R.id.today_stats);
+        rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
+        recyclerView = (RecyclerView) rootView.findViewById (R.id.today_stats);
         todayHandler.getTodayDetails();
 
-        TodayAdapter todayAdapter = new TodayAdapter(rootView.getContext(), users);
+        todaySummary = new TodaySummary();
+        todayAdapter = new TodayAdapter(rootView.getContext(), todaySummary);
 
         recyclerView.setAdapter(todayAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
 
         return rootView;
+    }
+
+    @Override
+    public void onTodaySummarySuccessfullyLoaded(TodaySummary obj) {
+        System.out.println("GETTING FEEDBACK ON SUCCESS");
+        System.out.println("total time coding: " + obj.getTotalTime());
+        todaySummary.setProjectList(obj.getProjectList());
+        todaySummary.setTotalTime(obj.getTotalTime());
+
+        System.out.println(todaySummary);
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                todayAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    public void onTodaySummaryLoadError(String error) {
+        System.out.println("Error: " + error);
     }
 }

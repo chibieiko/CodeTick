@@ -7,10 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sankari.erika.codetick.Classes.User;
+import com.sankari.erika.codetick.Classes.Project;
+import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.R;
-
-import java.util.List;
 
 /**
  * Created by erika on 4/18/2017.
@@ -20,11 +19,11 @@ import java.util.List;
 // Note that we specify the custom ViewHolder which gives us access to our views
 public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> {
 
-    private List<User> users;
+    private TodaySummary todaySummary;
     private Context context;
 
-    public TodayAdapter(Context context, List<User> users) {
-        this.users = users;
+    public TodayAdapter(Context context, TodaySummary todaySummary) {
+        this.todaySummary = todaySummary;
         this.context = context;
     }
 
@@ -51,15 +50,15 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(TodayAdapter.ViewHolder holder, int position) {
         // Gets the data model based on position.
-        User user = users.get(position);
+        Project project = todaySummary.getProjectList().get(position);
 
         TextView textView = holder.holderTextView;
-        textView.setText(user.getName());
+        textView.setText(project.getName());
     }
 
     @Override
     public int getItemCount() {
-        return users.size();
+        return todaySummary.getProjectList().size();
     }
 
     // Provide a direct reference to each of the views within a data item

@@ -26,6 +26,7 @@ import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
 import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
+import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnUserDataLoadedListener {
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         handler = new ApiHandler(this);
         userHandler = new UserHandler(handler);
         userHandler.addUserListener(this);
-        userHandler.getUserDetails("https://wakatime.com/api/v1/users/current");
+        userHandler.getUserDetails(Urls.BASE_URL + "/users/current");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

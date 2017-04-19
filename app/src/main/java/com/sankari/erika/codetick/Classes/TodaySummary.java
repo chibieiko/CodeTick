@@ -1,5 +1,6 @@
 package com.sankari.erika.codetick.Classes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,8 @@ public class TodaySummary {
     private long totalTime;
 
     public TodaySummary() {
+        setProjectList(new ArrayList<Project>());
+        setTotalTime(0);
     }
 
     public List<Project> getProjectList() {
@@ -27,5 +30,15 @@ public class TodaySummary {
 
     public void setTotalTime(long totalTime) {
         this.totalTime = totalTime;
+    }
+
+    @Override
+    public String toString() {
+        String summary = "Total time: " + totalTime;
+        for (Project project : projectList) {
+            summary += " ProjectName: " + project.getName();
+        }
+
+        return summary;
     }
 }

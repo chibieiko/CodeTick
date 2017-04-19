@@ -21,10 +21,6 @@ import java.util.Properties;
 
 public class LoginActivity extends AppCompatActivity {
 
-    // UI references.
-    private View mProgressView;
-    private View mLoginFormView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +39,6 @@ public class LoginActivity extends AppCompatActivity {
                 attemptLogin();
             }
         });
-
-        mProgressView = findViewById(R.id.login_progress);
-        mLoginFormView = findViewById(R.id.login_form);
     }
 
     @Override
@@ -103,8 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                 // todo show snackbar
                 System.out.println("ERROR missing token parts");
             }
-        } else {
-            System.out.println("No need to get login data again from wakatime");
         }
     }
 

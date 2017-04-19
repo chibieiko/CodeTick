@@ -92,8 +92,7 @@ public class TodayHandler {
                             todaySummary.setTotalTime(totalTimeToday);
 
                             System.out.println("NYT OLIS VALMIS SUMMARY");
-                            System.out.println(todaySummary);
-
+                            todayListener.onTodaySummarySuccessfullyLoaded(todaySummary);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

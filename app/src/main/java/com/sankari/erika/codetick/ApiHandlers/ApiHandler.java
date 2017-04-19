@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.sankari.erika.codetick.Activities.MainActivity;
 import com.sankari.erika.codetick.Classes.Token;
+import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
 
 import org.json.JSONException;
@@ -87,7 +88,7 @@ public class ApiHandler {
             e.printStackTrace();
         }
 
-        final HttpUrl.Builder uriBuilder = HttpUrl.parse("https://wakatime.com/oauth/token").newBuilder();
+        final HttpUrl.Builder uriBuilder = HttpUrl.parse(Urls.REFRESH_URL).newBuilder();
         String url = uriBuilder.build().toString();
 
         final String postForm = "client_id=" + appId +

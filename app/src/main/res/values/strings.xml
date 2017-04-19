@@ -2,7 +2,8 @@
     <string name="app_name">CodeTick</string>
 
     <!-- Strings related to login -->
-    <string name="action_sign_in">Sign in to Wakatime</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="welcomeText">Welcome to CodeTick, a Wakatime client. Sign in with your Wakatime account to enjoy the app!</string>
 
     <!-- Strings related to Today activity -->
     <string name="title_activity_today">CodeTick</string>
@@ -16,6 +17,4 @@
     <string name="nav_drawer_leaderboards">Leaderboards</string>
     <string name="nav_drawer_logout">Logout</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
