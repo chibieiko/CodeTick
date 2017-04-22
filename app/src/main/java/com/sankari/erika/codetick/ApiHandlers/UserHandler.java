@@ -41,6 +41,7 @@ public class UserHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
                     userListener.onUserDataLoadError(e.toString());
                 }
 

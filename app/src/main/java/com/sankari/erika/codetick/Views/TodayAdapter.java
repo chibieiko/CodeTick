@@ -27,6 +27,10 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         this.todaySummary = todaySummary;
     }
 
+    public void add(TodaySummary todaySummary) {
+        System.out.println("adding items");
+    }
+
     // Usually involves inflating a layout from XML and returning the holder.
     @Override
     public TodayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -68,13 +72,14 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
         if (holder.getItemViewType() == 0) {
             TextView todayTimeBox = holder.todayTime;
-            String totalTime = "Total time today: " + String.format("%d h %d min",
-                    TimeUnit.SECONDS.toHours(todaySummary.getTotalTime()),
-                    TimeUnit.SECONDS.toMinutes(todaySummary.getTotalTime()) -
-            TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(todaySummary.getTotalTime())));
+            if (todaySummary.getProjectList().size() > 0) {
+                String totalTime = "Total time today: " + String.format("%d h %d min",
+                        TimeUnit.SECONDS.toHours(todaySummary.getTotalTime()),
+                        TimeUnit.SECONDS.toMinutes(todaySummary.getTotalTime()) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(todaySummary.getTotalTime())));
 
-
-            todayTimeBox.setText(totalTime);
+                todayTimeBox.setText(totalTime);
+            }
         } else {
             // Gets the data model based on position (-1 because todaySummary total time takes position 0).
             Project project = todaySummary.getProjectList().get(position - 1);

@@ -40,8 +40,6 @@ public class TodayHandler {
     }
 
     public void getTodayDetails() {
-        // todo Get today total time and time per project and project name
-
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://wakatime.com/api/v1/users/current/summaries").newBuilder();
         urlBuilder.addQueryParameter("start", Util.convertDateToProperFormat(new Date()));
         urlBuilder.addQueryParameter("end", Util.convertDateToProperFormat(new Date()));
@@ -53,6 +51,7 @@ public class TodayHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
                     System.out.println(e.toString());
                 }
 
