@@ -3,6 +3,7 @@ package com.sankari.erika.codetick.Activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.Classes.Token;
 import com.sankari.erika.codetick.R;
+import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Util;
 
 import java.io.IOException;
@@ -21,11 +23,13 @@ import java.util.Properties;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private final String TAG = this.getClass().getName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       // PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+        Debug.loadDebug(this);
 
         checkForWakatimeData();
         checkForExistingToken();
@@ -33,11 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         Button wakatimeSignInButton = (Button) findViewById(R.id.wakatime_sign_in_button);
-        wakatimeSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
+        wakatimeSignInButton.setOnClickListener((View view) -> {
+            attemptLogin();
         });
     }
 
@@ -48,16 +49,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkForExistingToken() {
-        System.out.println("CHECKING FOR TOKEN");
+        Debug.print(TAG, "checkForExistingToken", "CHECKING FOR TOKEN", 5);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String accessToken = prefs.getString("token", null);
         long expires = prefs.getLong("expires", 0);
         String refreshToken = prefs.getString("refreshToken", null);
 
-        System.out.println("Token: " + accessToken);
-        System.out.println("Expiry: " + new Date(expires));
-        System.out.println("Refresh: " + refreshToken);
+        Debug.print(TAG, "checkForExistingToken", "TOKEN: " + accessToken, 1);
+        Debug.print(TAG, "checkForExistingToken", "EXPIRY: " + new Date(expires).toString(), 1);
+        Debug.print(TAG, "checkForExistingToken", "REFRESH_TOKEN: " + refreshToken, 1);
 
         if (accessToken != null && expires != 0 && refreshToken != null) {
             Date today = new Date();
@@ -79,9 +80,9 @@ public class LoginActivity extends AppCompatActivity {
         if (data != null && data.getScheme().equals("codeticklogin") && data.getFragment() != null) {
             Token token = Util.parseTokenUrl(data.getFragment());
 
-            System.out.println("TOKEN: " + token.getAccessToken());
-            System.out.println("EXPIRES: " + new Date(token.getExpires()));
-            System.out.println("REFRESH_TOKEN: " + token.getRefreshToken());
+            Debug.print(TAG, "checkForWakatimeData", "TOKEN: " + token.getAccessToken(), 1);
+            Debug.print(TAG, "checkForWakatimeData", "EXPIRY: " + new Date(token.getExpires()).toString(), 1);
+            Debug.print(TAG, "checkForWakatimeData", "REFRESH_TOKEN: " + token.getRefreshToken(), 1);
 
             if (token.getAccessToken() != null && token.getRefreshToken() != null && token.getExpires() != 0) {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -93,8 +94,10 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             } else {
-                // todo show snackbar
-                System.out.println("ERROR missing token parts");
+                Snackbar.make(findViewById(R.id.wakatime_sign_in_button),
+                        "Error, please try login again",
+                        Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         }
     }

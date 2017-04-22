@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.sankari.erika.codetick.Activities.MainActivity;
 import com.sankari.erika.codetick.Classes.Token;
+import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
 
@@ -33,6 +34,7 @@ import okio.BufferedSink;
 
 public class ApiHandler {
 
+    private final String TAG = this.getClass().getName();
     private OkHttpClient client;
     private Context context;
     private SharedPreferences prefs;
@@ -53,7 +55,8 @@ public class ApiHandler {
 
     public boolean checkTokenExpiry() {
         long expires = prefs.getLong("expires", 0);
-        System.out.println("EXPIRY DATE IS: " + new Date(expires));
+
+        Debug.print(TAG, "checkTokenExpiry", new Date(expires).toString(), 1);
 
         Date today = new Date();
         if (today.getTime() < expires) {
@@ -116,20 +119,22 @@ public class ApiHandler {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                //todo show snackbar
+                //todo show snackbar in Login activity
                 Util.logout(context);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String result = response.body().string();
-                System.out.println("Refresh token Response: " + result);
+
+                Debug.print(TAG, "refreshToken::onResponse", result, 5);
 
                 try {
                     JSONObject object = new JSONObject(result);
                     if (response.code() != 200) {
                         // todo show snackbar to prompt user to login
-                        System.out.println("ERROR TRYING TO REFRESH TOKEN");
+                        Debug.print(TAG, "refreshToken::onResponse", "ERROR TRYING TO REFRESH TOKEN", 5);
+
                         Token.setInvalidRefreshToken(true);
                         Util.logout(context);
                     } else {
@@ -138,7 +143,8 @@ public class ApiHandler {
                         prefs.edit().putString("refreshToken", object.getString("refresh_token")).apply();
                         prefs.edit().putLong("expires", Util.getProperExpiryDate(object.getString("expires_in"))).apply();
 
-                        System.out.println("SUCCESS refreshing token");
+                        Debug.print(TAG, "refreshToken::onResponse", "SUCCESS refreshing token", 5);
+
                         if (startMain) {
                             Intent intent = new Intent(context, MainActivity.class);
                             context.startActivity(intent);

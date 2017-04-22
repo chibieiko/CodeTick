@@ -3,6 +3,8 @@ package com.sankari.erika.codetick.ApiHandlers;
 import com.sankari.erika.codetick.Classes.Project;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.Listeners.OnTodaySummaryLoadedListener;
+import com.sankari.erika.codetick.Utils.Debug;
+import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
 
 import org.json.JSONArray;
@@ -24,8 +26,10 @@ import okhttp3.Response;
  */
 
 public class TodayHandler {
-    OnTodaySummaryLoadedListener todayListener;
-    ApiHandler apiHandler;
+
+    private final String TAG = this.getClass().getName();
+    private OnTodaySummaryLoadedListener todayListener;
+    private ApiHandler apiHandler;
 
     public TodayHandler(ApiHandler handler) {
         this.apiHandler = handler;
@@ -40,7 +44,7 @@ public class TodayHandler {
     }
 
     public void getTodayDetails() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://wakatime.com/api/v1/users/current/summaries").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL +"/users/current/summaries").newBuilder();
         urlBuilder.addQueryParameter("start", Util.convertDateToProperFormat(new Date()));
         urlBuilder.addQueryParameter("end", Util.convertDateToProperFormat(new Date()));
         String url = urlBuilder.build().toString();
@@ -58,8 +62,9 @@ public class TodayHandler {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
-                  //  System.out.println("TODAY SUMMARY SUCCESS: " + result);
-                    System.out.println("SUMMARY CODE: " + response.code());
+
+                    Debug.print(TAG, "onResponse", result, 6);
+                    Debug.print(TAG, "onResponse", "code: " + response.code(), 6);
 
                     if (response.code() == 200) {
                         try {
@@ -90,7 +95,7 @@ public class TodayHandler {
                             todaySummary.setProjectList(projects);
                             todaySummary.setTotalTime(totalTimeToday);
 
-                            System.out.println("NYT OLIS VALMIS SUMMARY");
+                            Debug.print(TAG, "onResponse", "NYT OLIS VALMIS SUMMARY", 5);
                             todayListener.onTodaySummarySuccessfullyLoaded(todaySummary);
                         } catch (JSONException e) {
                             e.printStackTrace();

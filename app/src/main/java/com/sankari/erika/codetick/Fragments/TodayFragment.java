@@ -1,6 +1,7 @@
 package com.sankari.erika.codetick.Fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
  */
 
 public class TodayFragment extends android.support.v4.app.Fragment implements OnTodaySummaryLoadedListener {
+
+    private final String TAG = this.getClass().getName();
 
     /**
      * The fragment argument representing the section number for this
@@ -65,11 +68,8 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
         // Defines where to show the refresh icon.
         swipeRefreshLayout = (SwipeRefreshLayout) rootView;
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
                 todayHandler.getTodayDetails();
-            }
         });
         swipeRefreshLayout.setRefreshing(true);
         todayHandler.getTodayDetails();
@@ -81,22 +81,16 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
-
         return rootView;
     }
 
     @Override
     public void onTodaySummarySuccessfullyLoaded(TodaySummary obj) {
-        System.out.println("GETTING FEEDBACK ON SUCCESS");
-        System.out.println("total time coding: " + obj.getTotalTime());
         // Set values from server.
         todaySummary.setProjectList(obj.getProjectList());
         todaySummary.setTotalTime(obj.getTotalTime());
 
-        System.out.println(todaySummary);
-
         getActivity().runOnUiThread(() -> {
-            System.out.println("notifying data changed");
             todayAdapter.notifyDataSetChanged();
             if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -106,6 +100,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
     @Override
     public void onTodaySummaryLoadError(String error) {
-        System.out.println("Error: " + error);
+        Snackbar.make(getActivity().findViewById(R.id.drawer_layout), "Error getting data from Wakatime's server... Try again later", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 }

@@ -4,12 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.sankari.erika.codetick.Classes.Project;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.R;
+import com.sankari.erika.codetick.Utils.Debug;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 // Note that we specify the custom ViewHolder which gives us access to our views
 public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> {
 
+    private final String TAG = this.getClass().getName();
     private TodaySummary todaySummary;
 
     public TodayAdapter(TodaySummary todaySummary) {
@@ -36,7 +37,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     public TodayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        System.out.println("onCreateViewHolder::ViewType: " + viewType);
+        Debug.print(TAG, "onCreateViewHolder", "ViewType: " + viewType, 5);
 
         if (viewType == 0) {
             // Inflates the today_total layout
@@ -55,7 +56,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        System.out.println("getItemViewType::position: " + position);
+        Debug.print(TAG, "getItemViewType", "position: " + position, 5);
 
         if (position == 0) {
             return 0;
@@ -67,13 +68,13 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     // Involves populating data into the item through holder.
     @Override
     public void onBindViewHolder(TodayAdapter.ViewHolder holder, int position) {
-        System.out.println("onBindViewHolder.position: " + position);
-        System.out.println("onBindViewHolder.ViewType: " + holder.getItemViewType());
+        Debug.print(TAG, "onBindViewHolder", "position: " + position, 5);
+        Debug.print(TAG, "onBindViewHolder", "viewType: " + holder.getItemViewType(), 5);
 
         if (holder.getItemViewType() == 0) {
             TextView todayTimeBox = holder.todayTime;
             if (todaySummary.getProjectList().size() > 0) {
-                String totalTime = "Total: " + String.format("%d h %d min",
+                String totalTime = "Total: " + String.format("%dh %dmin",
                         TimeUnit.SECONDS.toHours(todaySummary.getTotalTime()),
                         TimeUnit.SECONDS.toMinutes(todaySummary.getTotalTime()) -
                                 TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(todaySummary.getTotalTime())));
@@ -93,9 +94,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         // Add one to count in today total time item.
-        int count = todaySummary.getProjectList().size() + 1;
-        System.out.println("Count: " + count);
-        return count;
+        return todaySummary.getProjectList().size() + 1;
     }
 
     // Provide a direct reference to each of the views within a data item

@@ -16,7 +16,8 @@ import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    ApiHandler apiHandler;
+    private final String TAG = this.getClass().getName();
+    private ApiHandler apiHandler;
 
     public SectionsPagerAdapter(FragmentManager fm, ApiHandler handler) {
         super(fm);
