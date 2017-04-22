@@ -17,7 +17,7 @@ import okhttp3.Response;
  * Created by erika on 4/19/2017.
  */
 
-public class UserHandler  {
+public class UserHandler {
 
     OnUserDataLoadedListener userListener;
     ApiHandler apiHandler;
@@ -41,11 +41,7 @@ public class UserHandler  {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    if (userListener != null) {
-                        userListener.onUserDataLoadError(e.toString());
-                    } else {
-                        System.out.println("NO USER LISTENER IN API HANDLER");
-                    }
+                    userListener.onUserDataLoadError(e.toString());
                 }
 
                 @Override
@@ -64,13 +60,20 @@ public class UserHandler  {
                                     userObject.getString("photo"));
 
                             System.out.println(user);
-                            userListener.onUserDataSuccessfullyLoaded(user);
+                            System.out.println("USER LISTENER: " + userListener);
+                            if (userListener != null) {
+                                userListener.onUserDataSuccessfullyLoaded(user);
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        userListener.onUserDataLoadError("Error fetching user data from Wakatime's server...");
+                        System.out.println("USER LISTENER in error: " + userListener);
+
+                        if (userListener != null) {
+                            userListener.onUserDataLoadError("Error fetching user data from Wakatime's server...");
+                        }
                     }
                 }
             });

@@ -53,7 +53,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        todayHandler.setTodayListener(TodayFragment.this);
+        todayHandler.setTodayListener(this);
 
         rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
