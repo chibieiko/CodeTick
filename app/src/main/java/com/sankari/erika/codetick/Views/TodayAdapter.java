@@ -73,7 +73,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         if (holder.getItemViewType() == 0) {
             TextView todayTimeBox = holder.todayTime;
             if (todaySummary.getProjectList().size() > 0) {
-                String totalTime = "Total time today: " + String.format("%d h %d min",
+                String totalTime = "Total: " + String.format("%d h %d min",
                         TimeUnit.SECONDS.toHours(todaySummary.getTotalTime()),
                         TimeUnit.SECONDS.toMinutes(todaySummary.getTotalTime()) -
                                 TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(todaySummary.getTotalTime())));
