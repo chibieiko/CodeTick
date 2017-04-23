@@ -2,6 +2,7 @@ package com.sankari.erika.codetick.Fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,13 +13,11 @@ import android.view.ViewGroup;
 
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.ApiHandlers.TodayHandler;
-import com.sankari.erika.codetick.Classes.Project;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.Listeners.OnTodaySummaryLoadedListener;
 import com.sankari.erika.codetick.R;
-import com.sankari.erika.codetick.Views.TodayAdapter;
-
-import java.util.ArrayList;
+import com.sankari.erika.codetick.Adapters.TodayAdapter;
+import com.sankari.erika.codetick.Utils.CustomDividerItemDecoration;
 
 /**
  * Created by erika on 4/16/2017.
@@ -64,7 +63,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
         rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.today_stats);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.today_recycler_view);
 
         // Defines where to show the refresh icon.
         swipeRefreshLayout = (SwipeRefreshLayout) rootView;
@@ -79,7 +78,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
         recyclerView.setAdapter(todayAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new CustomDividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.item_decorator)));
 
         return rootView;
     }
