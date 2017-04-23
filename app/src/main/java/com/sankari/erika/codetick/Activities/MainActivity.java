@@ -189,18 +189,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final TextView userEmail = (TextView) findViewById(R.id.user_email);
         new DownloadAndPlaceImage((ImageView) findViewById(R.id.user_image)).execute(user.getPhoto());
 
-        this.runOnUiThread(() -> {
-            userName.setText(user.getName());
-            userEmail.setText(user.getEmail());
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                userName.setText(user.getName());
+                userEmail.setText(user.getEmail());
+            }
         });
     }
 
     @Override
     public void onUserDataLoadError(String error) {
         final String reason = error;
-        this.runOnUiThread(() -> {
-            Snackbar.make(findViewById(R.id.drawer_layout), reason, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(findViewById(R.id.drawer_layout), reason, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
         });
 
         Debug.print(TAG, "onUserDataLoadError", error, 5);

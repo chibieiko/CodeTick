@@ -18,5 +18,5 @@
     <string name="nav_drawer_logout">Logout</string>
 
     <!-- Debugger level -->
-    <string name="debugLevel">5</string>
+    <string name="debugLevel">4</string>
 </resources>

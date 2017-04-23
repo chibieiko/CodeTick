@@ -8,20 +8,20 @@ import java.util.List;
  */
 
 public class TodaySummary {
-    private List<Project> projectList;
+    private List<TodayProject> todayProjectList;
     private long totalTime;
 
     public TodaySummary() {
-        setProjectList(new ArrayList<Project>());
+        setTodayProjectList(new ArrayList<TodayProject>());
         setTotalTime(0);
     }
 
-    public List<Project> getProjectList() {
-        return projectList;
+    public List<TodayProject> getTodayProjectList() {
+        return todayProjectList;
     }
 
-    public void setProjectList(List<Project> projectList) {
-        this.projectList = projectList;
+    public void setTodayProjectList(List<TodayProject> todayProjectList) {
+        this.todayProjectList = todayProjectList;
     }
 
     public long getTotalTime() {
@@ -35,8 +35,8 @@ public class TodaySummary {
     @Override
     public String toString() {
         String summary = "Total time: " + totalTime;
-        for (Project project : projectList) {
-            summary += " ProjectName: " + project.getName();
+        for (TodayProject todayProject : todayProjectList) {
+            summary += " ProjectName: " + todayProject.getName();
         }
 
         return summary;
