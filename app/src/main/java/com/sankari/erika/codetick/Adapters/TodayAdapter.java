@@ -1,6 +1,5 @@
 package com.sankari.erika.codetick.Adapters;
 
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +12,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.sankari.erika.codetick.Classes.Project;
+import com.sankari.erika.codetick.Classes.TodayProject;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
@@ -87,7 +86,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             // Today total time.
             case 0:
                 TextView todayTimeBox = holder.todayTime;
-                if (todaySummary.getProjectList().size() > 0) {
+                if (todaySummary.getTodayProjectList().size() > 0) {
                     String totalTime = "Total: " + String.format("%dh %dmin",
                             TimeUnit.SECONDS.toHours(todaySummary.getTotalTime()),
                             TimeUnit.SECONDS.toMinutes(todaySummary.getTotalTime()) -
@@ -102,10 +101,10 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             case 1:
                 PieChart todayPie = holder.todayPie;
 
-                List<Project> projects = todaySummary.getProjectList();
+                List<TodayProject> todayProjects = todaySummary.getTodayProjectList();
                 List<PieEntry> pieEntries = new ArrayList<>();
-                for (Project project : projects) {
-                    pieEntries.add(new PieEntry(project.getPercent(), project.getName()));
+                for (TodayProject todayProject : todayProjects) {
+                    pieEntries.add(new PieEntry(todayProject.getPercent(), todayProject.getName()));
                 }
 
                 PieDataSet dataSet = new PieDataSet(pieEntries, "");
@@ -136,6 +135,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 legend.setTextSize(16f);
                 legend.setTextColor(ContextCompat.getColor(todayPieView.getContext(), R.color.secondary_text));
 
+                // Draws the pie chart.
                 todayPie.invalidate();
 
                 break;
@@ -144,10 +144,10 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             default:
                 // Gets the data model based on position (-2 because todaySummary total time and
                 // chart take positions 0 & 1).
-                Project project = todaySummary.getProjectList().get(position - 2);
+                TodayProject todayProject = todaySummary.getTodayProjectList().get(position - 2);
 
-                holder.projectName.setText(project.getName());
-                String time = project.getHours() + "h " + project.getMinutes() + "min";
+                holder.projectName.setText(todayProject.getName());
+                String time = todayProject.getHours() + "h " + todayProject.getMinutes() + "min";
                 holder.projectTime.setText(time);
         }
     }
@@ -155,12 +155,12 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         // Add two to count for chart and total time.
-        return todaySummary.getProjectList().size() + 2;
+        return todaySummary.getTodayProjectList().size() + 2;
     }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         protected TextView projectName;

@@ -18,6 +18,7 @@ import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Util;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.Date;
 import java.util.Properties;
 
@@ -37,8 +38,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         Button wakatimeSignInButton = (Button) findViewById(R.id.wakatime_sign_in_button);
-        wakatimeSignInButton.setOnClickListener((View view) -> {
-            attemptLogin();
+        wakatimeSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptLogin();
+            }
         });
     }
 
@@ -56,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         long expires = prefs.getLong("expires", 0);
         String refreshToken = prefs.getString("refreshToken", null);
 
+        System.out.println("TOKEN: " + accessToken);
         Debug.print(TAG, "checkForExistingToken", "TOKEN: " + accessToken, 1);
         Debug.print(TAG, "checkForExistingToken", "EXPIRY: " + new Date(expires).toString(), 1);
         Debug.print(TAG, "checkForExistingToken", "REFRESH_TOKEN: " + refreshToken, 1);
@@ -80,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
         if (data != null && data.getScheme().equals("codeticklogin") && data.getFragment() != null) {
             Token token = Util.parseTokenUrl(data.getFragment());
 
+            System.out.println("TÄSSÄ PITÄIS OLLA");
+            System.out.println(token.getAccessToken());
             Debug.print(TAG, "checkForWakatimeData", "TOKEN: " + token.getAccessToken(), 1);
             Debug.print(TAG, "checkForWakatimeData", "EXPIRY: " + new Date(token.getExpires()).toString(), 1);
             Debug.print(TAG, "checkForWakatimeData", "REFRESH_TOKEN: " + token.getRefreshToken(), 1);

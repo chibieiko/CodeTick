@@ -1,6 +1,6 @@
 package com.sankari.erika.codetick.ApiHandlers;
 
-import com.sankari.erika.codetick.Classes.Project;
+import com.sankari.erika.codetick.Classes.TodayProject;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.Listeners.OnTodaySummaryLoadedListener;
 import com.sankari.erika.codetick.Utils.Debug;
@@ -77,12 +77,12 @@ public class TodayHandler {
                                 projectsArray = obj.getJSONArray("projects");
                             }
 
-                            ArrayList<Project> projects = new ArrayList<>();
+                            ArrayList<TodayProject> todayProjects = new ArrayList<>();
                             long totalTimeToday = 0;
 
                             for (int i = 0; i < projectsArray.length(); i++) {
                                 JSONObject tempObject = projectsArray.getJSONObject(i);
-                                projects.add(new Project(
+                                todayProjects.add(new TodayProject(
                                         tempObject.getString("name"),
                                         tempObject.getInt("percent"),
                                         tempObject.getInt("hours"),
@@ -92,7 +92,7 @@ public class TodayHandler {
                             }
 
                             TodaySummary todaySummary = new TodaySummary();
-                            todaySummary.setProjectList(projects);
+                            todaySummary.setTodayProjectList(todayProjects);
                             todaySummary.setTotalTime(totalTimeToday);
 
                             Debug.print(TAG, "onResponse", "NYT OLIS VALMIS SUMMARY", 5);

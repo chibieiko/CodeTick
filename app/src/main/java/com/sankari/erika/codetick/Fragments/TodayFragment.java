@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -67,8 +66,11 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
         // Defines where to show the refresh icon.
         swipeRefreshLayout = (SwipeRefreshLayout) rootView;
-        swipeRefreshLayout.setOnRefreshListener(() -> {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
                 todayHandler.getTodayDetails();
+            }
         });
         swipeRefreshLayout.setRefreshing(true);
         todayHandler.getTodayDetails();
@@ -78,7 +80,8 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
         recyclerView.setAdapter(todayAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-        recyclerView.addItemDecoration(new CustomDividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.item_decorator)));
+        recyclerView.addItemDecoration(new CustomDividerItemDecoration(
+                ContextCompat.getDrawable(getContext(), R.drawable.item_decorator)));
 
         return rootView;
     }
@@ -86,13 +89,16 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
     @Override
     public void onTodaySummarySuccessfullyLoaded(TodaySummary obj) {
         // Set values from server.
-        todaySummary.setProjectList(obj.getProjectList());
+        todaySummary.setTodayProjectList(obj.getTodayProjectList());
         todaySummary.setTotalTime(obj.getTotalTime());
 
-        getActivity().runOnUiThread(() -> {
-            todayAdapter.notifyDataSetChanged();
-            if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                todayAdapter.notifyDataSetChanged();
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
