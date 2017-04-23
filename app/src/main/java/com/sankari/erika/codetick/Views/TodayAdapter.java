@@ -28,10 +28,6 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         this.todaySummary = todaySummary;
     }
 
-    public void add(TodaySummary todaySummary) {
-        System.out.println("adding items");
-    }
-
     // Usually involves inflating a layout from XML and returning the holder.
     @Override
     public TodayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
