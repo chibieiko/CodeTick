@@ -1,4 +1,4 @@
-package com.sankari.erika.codetick.Views;
+package com.sankari.erika.codetick.Adapters;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -8,14 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.sankari.erika.codetick.Classes.Project;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.R;
@@ -113,6 +109,8 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
                 PieDataSet dataSet = new PieDataSet(pieEntries, "");
                 dataSet.setSliceSpace(2);
+
+                // todo proper colors and many of them
                 int[] colors = {
                         todayPieView.getResources().getColor(R.color.blue),
                         todayPieView.getResources().getColor(R.color.gold),
@@ -121,7 +119,8 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 dataSet.setColors(colors);
 
                 PieData pieData = new PieData(dataSet);
-                pieData.setValueTextColor(Color.WHITE);
+                pieData.setDrawValues(false);
+                //pieData.setValueTextColor(Color.WHITE);
 
                 todayPie.setData(pieData);
                 todayPie.setDrawEntryLabels(false);
@@ -130,9 +129,11 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 todayPie.setCenterTextSize(16);
                 todayPie.setNoDataText("Maybe it's time to code something?");
                 todayPie.setDescription(null);
+                todayPie.setTouchEnabled(false);
 
                 Legend legend = todayPie.getLegend();
                 legend.setTextSize(16f);
+                legend.setTextColor(todayPieView.getResources().getColor(R.color.secondary_text));
 
                 todayPie.invalidate();
 

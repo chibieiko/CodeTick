@@ -9,9 +9,9 @@
     tools:context="com.sankari.erika.codetick.Fragments.ProjectsFragment"
     android:id="@+id/fragment_projects">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/project_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Projects fragment" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>
