@@ -140,7 +140,8 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
             // Project list.
             default:
-                // Gets the data model based on position (-2 because todaySummary total time and chart take positions 0&1).
+                // Gets the data model based on position (-2 because todaySummary total time and
+                // chart take positions 0 & 1).
                 Project project = todaySummary.getProjectList().get(position - 2);
 
                 holder.projectName.setText(project.getName());
