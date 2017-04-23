@@ -17,4 +17,6 @@
     <string name="nav_drawer_leaderboards">Leaderboards</string>
     <string name="nav_drawer_logout">Logout</string>
 
+    <!-- Debugger level -->
+    <string name="debugLevel">5</string>
 </resources>

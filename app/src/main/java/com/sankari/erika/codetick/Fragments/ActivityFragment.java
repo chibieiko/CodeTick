@@ -14,6 +14,8 @@ import com.sankari.erika.codetick.R;
  */
 public class ActivityFragment extends Fragment {
 
+    private final String TAG = this.getClass().getName();
+
     /**
      * The fragment argument representing the section number for this
      * fragment.

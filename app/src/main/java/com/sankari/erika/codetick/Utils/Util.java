@@ -48,7 +48,7 @@ public class Util {
 
     public static long getProperExpiryDate(String expires) {
         Date today = new Date();
-        long expiresInMillis = TimeUnit.MINUTES.toMillis(Long.parseLong(expires));
+        long expiresInMillis = TimeUnit.SECONDS.toMillis(Long.parseLong(expires));
         return expiresInMillis + today.getTime();
     }
 

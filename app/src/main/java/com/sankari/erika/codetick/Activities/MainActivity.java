@@ -25,6 +25,7 @@ import com.sankari.erika.codetick.Classes.User;
 import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
 import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
 import com.sankari.erika.codetick.R;
+import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
 import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
@@ -50,17 +51,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ApiHandler handler;
     private UserHandler userHandler;
+    private User user;
+    private final String TAG = this.getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_today);
 
-        System.out.println("ON MAIN ACTIVITY CREATE");
+        Debug.loadDebug(this);
+        Debug.print(TAG, "onCreate", "ON MAIN ACTIVITY CREATE", 5);
+
         handler = new ApiHandler(this);
         userHandler = new UserHandler(handler);
-        userHandler.addUserListener(this);
-        userHandler.getUserDetails(Urls.BASE_URL + "/users/current");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -122,8 +125,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflates the menu. Adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_today, menu);
+        if (user == null) {
+            userHandler.addUserListener(this);
+            userHandler.getUserDetails(Urls.BASE_URL + "/users/current");
+        }
+
         return true;
     }
 
@@ -174,36 +182,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onUserDataSuccessfullyLoaded(User obj) {
-        final User user = obj;
-        System.out.println("MAIN: USER IS: " + user);
+        user = obj;
+        Debug.print(TAG, "onUserDataSuccessfullyLoaded", "USER IS: " + user, 5);
 
         final TextView userName = (TextView) findViewById(R.id.username);
         final TextView userEmail = (TextView) findViewById(R.id.user_email);
         new DownloadAndPlaceImage((ImageView) findViewById(R.id.user_image)).execute(user.getPhoto());
 
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                userName.setText(user.getName());
-                userEmail.setText(user.getEmail());
-
-                Snackbar.make(findViewById(R.id.drawer_layout), "Welcome " + user.getEmail(), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+        this.runOnUiThread(() -> {
+            userName.setText(user.getName());
+            userEmail.setText(user.getEmail());
         });
     }
 
     @Override
     public void onUserDataLoadError(String error) {
         final String reason = error;
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Snackbar.make(findViewById(R.id.drawer_layout), reason, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+        this.runOnUiThread(() -> {
+            Snackbar.make(findViewById(R.id.drawer_layout), reason, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         });
 
-        System.out.println("MAIN: USER ERROR IS: " + error);
+        Debug.print(TAG, "onUserDataLoadError", error, 5);
     }
 }

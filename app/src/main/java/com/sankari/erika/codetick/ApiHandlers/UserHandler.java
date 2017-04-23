@@ -2,6 +2,7 @@ package com.sankari.erika.codetick.ApiHandlers;
 
 import com.sankari.erika.codetick.Classes.User;
 import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
+import com.sankari.erika.codetick.Utils.Debug;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,10 +18,11 @@ import okhttp3.Response;
  * Created by erika on 4/19/2017.
  */
 
-public class UserHandler  {
+public class UserHandler {
 
-    OnUserDataLoadedListener userListener;
-    ApiHandler apiHandler;
+    private final String TAG = this.getClass().getName();
+    private OnUserDataLoadedListener userListener;
+    private ApiHandler apiHandler;
 
     public UserHandler(ApiHandler apiHandler) {
         this.apiHandler = apiHandler;
@@ -41,18 +43,15 @@ public class UserHandler  {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    if (userListener != null) {
-                        userListener.onUserDataLoadError(e.toString());
-                    } else {
-                        System.out.println("NO USER LISTENER IN API HANDLER");
-                    }
+                    e.printStackTrace();
+                    userListener.onUserDataLoadError(e.toString());
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
-                    System.out.println("SUCCESS: " + result);
-                    System.out.println("CODE: " + response.code());
+                    Debug.print(TAG, "onResponse", result, 5);
+                    Debug.print(TAG, "onResponse", "code: " + response.code(), 5);
 
                     if (response.code() == 200) {
                         try {
@@ -64,13 +63,18 @@ public class UserHandler  {
                                     userObject.getString("photo"));
 
                             System.out.println(user);
-                            userListener.onUserDataSuccessfullyLoaded(user);
+                            System.out.println("USER LISTENER: " + userListener);
+                            if (userListener != null) {
+                                userListener.onUserDataSuccessfullyLoaded(user);
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        userListener.onUserDataLoadError("Error fetching user data from Wakatime's server...");
+                        if (userListener != null) {
+                            userListener.onUserDataLoadError("Error fetching user data from Wakatime's server...");
+                        }
                     }
                 }
             });

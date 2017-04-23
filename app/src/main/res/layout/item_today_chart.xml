@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
-    <TextView
-        android:id="@+id/projectName"
-        android:textSize="20sp"
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/today_pie_chart"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        app:paddingEnd="0dp"
+        app:paddingStart="0dp"
+        android:layout_height="300dp"
+        />
 
-    <TextView
-        android:id="@+id/projectTime"
-        android:textSize="16sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 </LinearLayout>

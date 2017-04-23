@@ -1,6 +1,9 @@
 package com.sankari.erika.codetick.Fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +26,8 @@ import java.util.ArrayList;
 
 public class TodayFragment extends android.support.v4.app.Fragment implements OnTodaySummaryLoadedListener {
 
+    private final String TAG = this.getClass().getName();
+
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -34,8 +39,10 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
     private View rootView;
     private TodayAdapter todayAdapter;
     private TodaySummary todaySummary = null;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    public TodayFragment() {}
+    public TodayFragment() {
+    }
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -53,11 +60,18 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        todayHandler.setTodayListener(TodayFragment.this);
+        todayHandler.setTodayListener(this);
 
         rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById (R.id.today_stats);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.today_stats);
+
+        // Defines where to show the refresh icon.
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView;
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+                todayHandler.getTodayDetails();
+        });
+        swipeRefreshLayout.setRefreshing(true);
         todayHandler.getTodayDetails();
 
         todaySummary = new TodaySummary();
@@ -65,30 +79,28 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
         recyclerView.setAdapter(todayAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
         return rootView;
     }
 
     @Override
     public void onTodaySummarySuccessfullyLoaded(TodaySummary obj) {
-        System.out.println("GETTING FEEDBACK ON SUCCESS");
-        System.out.println("total time coding: " + obj.getTotalTime());
+        // Set values from server.
         todaySummary.setProjectList(obj.getProjectList());
         todaySummary.setTotalTime(obj.getTotalTime());
 
-        System.out.println(todaySummary);
-
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("notifying data changed");
-                todayAdapter.notifyDataSetChanged();
+        getActivity().runOnUiThread(() -> {
+            todayAdapter.notifyDataSetChanged();
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
     @Override
     public void onTodaySummaryLoadError(String error) {
-        System.out.println("Error: " + error);
+        Snackbar.make(getActivity().findViewById(R.id.drawer_layout), "Error getting data from Wakatime's server... Try again later", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 }
