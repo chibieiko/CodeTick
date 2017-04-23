@@ -1,6 +1,7 @@
 package com.sankari.erika.codetick.Adapters;
 
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,9 +113,9 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
                 // todo proper colors and many of them
                 int[] colors = {
-                        todayPieView.getResources().getColor(R.color.blue),
-                        todayPieView.getResources().getColor(R.color.gold),
-                        todayPieView.getResources().getColor(R.color.pink)
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.pink),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.blue),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.gold),
                 };
                 dataSet.setColors(colors);
 
@@ -133,7 +134,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
                 Legend legend = todayPie.getLegend();
                 legend.setTextSize(16f);
-                legend.setTextColor(todayPieView.getResources().getColor(R.color.secondary_text));
+                legend.setTextColor(ContextCompat.getColor(todayPieView.getContext(), R.color.secondary_text));
 
                 todayPie.invalidate();
 
