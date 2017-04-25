@@ -6,11 +6,11 @@ package com.sankari.erika.codetick.Classes;
 
 public class Language {
     private String name;
-    private float percent;
+    private long percent;
     private int hours;
     private int minutes;
 
-    public Language(String name, float percent, int hours, int minutes) {
+    public Language(String name, long percent, int hours, int minutes) {
         this.name = name;
         this.percent = percent;
         this.hours = hours;
@@ -25,11 +25,11 @@ public class Language {
         this.name = name;
     }
 
-    public float getPercent() {
+    public long getPercent() {
         return percent;
     }
 
-    public void setPercent(float percent) {
+    public void setPercent(long percent) {
         this.percent = percent;
     }
 

@@ -14,6 +14,8 @@ public class ProjectDetails {
     private long bestDayTime;
     private String bestDayDate;
 
+    public ProjectDetails() {}
+
     public ProjectDetails(long totalTime, long dailyAverage, List<Language> languages, String lastModified, long bestDayTime, String bestDayDate) {
         this.totalTime = totalTime;
         this.dailyAverage = dailyAverage;
