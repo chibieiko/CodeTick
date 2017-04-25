@@ -47,7 +47,11 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
      * number.
      */
     public static TodayFragment newInstance(int sectionNumber, ApiHandler handler) {
-        todayHandler = new TodayHandler(handler);
+        System.out.println("TODAY HANDLER: " + todayHandler);
+        if (todayHandler == null) {
+            todayHandler = new TodayHandler(handler);
+        }
+
         TodayFragment fragment = new TodayFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);

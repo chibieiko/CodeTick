@@ -43,8 +43,7 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
     private List<ProjectListItem> projectList = new ArrayList<>();
 
     // Required empty constructor.
-    public ProjectsFragment() {
-    }
+    public ProjectsFragment() {}
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -57,7 +56,6 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
 
-        System.out.println("MINUT LUOTIIN");
         return fragment;
     }
 

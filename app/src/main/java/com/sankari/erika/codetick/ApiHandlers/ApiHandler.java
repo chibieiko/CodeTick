@@ -41,8 +41,8 @@ public class ApiHandler {
 
     public ApiHandler(Context context) {
         this.context = context;
-        client = new OkHttpClient();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        client = new OkHttpClient();
     }
 
     public OkHttpClient getClient() {
@@ -119,8 +119,9 @@ public class ApiHandler {
 
             @Override
             public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
                 //todo show snackbar in Login activity
-                Util.logout(context);
+                // Util.logout(context);
             }
 
             @Override

@@ -62,10 +62,6 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
 
         @Override
         public void onClick(View v) {
-            System.out.println("CLICKED");
-            System.out.println("VALUE: " + String.valueOf(getAdapterPosition()));
-            System.out.println(projectList.get(getAdapterPosition()).getName());
-
             String projectName = projectList.get(getAdapterPosition()).getName();
             Intent intent = new Intent(v.getContext(), ProjectActivity.class);
             intent.putExtra("projectname", projectName);

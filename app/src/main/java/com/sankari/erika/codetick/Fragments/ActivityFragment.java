@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.R;
 
 /**
@@ -30,7 +31,7 @@ public class ActivityFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static ActivityFragment newInstance(int sectionNumber) {
+    public static ActivityFragment newInstance(int sectionNumber, ApiHandler apiHandler) {
         ActivityFragment fragment = new ActivityFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);

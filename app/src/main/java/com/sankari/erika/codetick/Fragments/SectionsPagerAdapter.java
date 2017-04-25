@@ -35,7 +35,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return ProjectsFragment.newInstance(position, apiHandler);
             case 2:
-                return ActivityFragment.newInstance(position);
+                return ActivityFragment.newInstance(position, apiHandler);
         }
 
         return null;
