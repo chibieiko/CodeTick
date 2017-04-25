@@ -14,11 +14,11 @@ public class ProjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_details);
 
-        TextView test = (TextView) findViewById(R.id.project_name_activity);
         Bundle extras = getIntent().getExtras();
         String name = extras.getString("projectname");
-        test.setText(name);
+        setTitle(name);
 
+        // For back arrow.
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -26,7 +26,6 @@ public class ProjectActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (item.getItemId() == android.R.id.home) {
             // Return to previous.
             finish();
