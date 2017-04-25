@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         app:contentPadding="10dp"
         app:cardBackgroundColor="@color/colorAccent"
-        app:cardElevation="14.5sp">
+        app:cardElevation="10dp">
         <TextView
             android:id="@+id/total_today_box"
             android:textSize="24sp"
