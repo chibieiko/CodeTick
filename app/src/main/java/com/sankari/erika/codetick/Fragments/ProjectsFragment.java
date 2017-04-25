@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,9 +18,7 @@ import com.sankari.erika.codetick.ApiHandlers.ProjectHandler;
 import com.sankari.erika.codetick.Classes.ProjectListItem;
 import com.sankari.erika.codetick.Listeners.OnProjectListLoadedListener;
 import com.sankari.erika.codetick.R;
-import com.sankari.erika.codetick.Utils.Debug;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +43,8 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
     private List<ProjectListItem> projectList = new ArrayList<>();
 
     // Required empty constructor.
-    public ProjectsFragment() {}
+    public ProjectsFragment() {
+    }
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -83,8 +83,9 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
         projectAdapter = new ProjectAdapter(projectList);
         recyclerView.setAdapter(projectAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration
+                (recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
 
         // Inflate the layout for this fragment
         return rootView;
@@ -94,7 +95,7 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
     public void onProjectListSuccessfullyLoaded(List<ProjectListItem> projects) {
         System.out.println("GOT IT");
         projectList.clear();
-       // projectList.addAll(projects);
+        // projectList.addAll(projects);
 
         for (ProjectListItem projectListItem : projects) {
             projectList.add(projectListItem);

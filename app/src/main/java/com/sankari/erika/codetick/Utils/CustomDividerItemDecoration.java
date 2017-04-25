@@ -39,7 +39,7 @@ public class CustomDividerItemDecoration extends RecyclerView.ItemDecoration {
 
         int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
-            if (i != 0) {
+            if (i != 0 && i != childCount - 1) {
                 View child = parent.getChildAt(i);
 
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
