@@ -16,6 +16,7 @@ import com.sankari.erika.codetick.Classes.TodayProject;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
+import com.sankari.erika.codetick.Utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,10 +88,8 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             case 0:
                 TextView todayTimeBox = holder.todayTime;
                 if (todaySummary.getTodayProjectList().size() > 0) {
-                    String totalTime = "Total: " + String.format("%dh %dmin",
-                            TimeUnit.SECONDS.toHours(todaySummary.getTotalTime()),
-                            TimeUnit.SECONDS.toMinutes(todaySummary.getTotalTime()) -
-                                    TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(todaySummary.getTotalTime())));
+                    String totalTime = "Total " +
+                            Util.convertMillisToHoursAndMinutes(todaySummary.getTotalTime());
 
                     todayTimeBox.setText(totalTime);
                 }

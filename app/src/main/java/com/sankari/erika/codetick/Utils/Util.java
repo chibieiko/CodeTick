@@ -52,8 +52,16 @@ public class Util {
         return expiresInMillis + today.getTime();
     }
 
+    // For wakatime's api query parameters.
     public static String convertDateToProperFormat(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
+    }
+
+    public static String convertMillisToHoursAndMinutes(Long time) {
+        return String.format("%dh %dmin",
+                TimeUnit.SECONDS.toHours(time),
+                TimeUnit.SECONDS.toMinutes(time) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(time)));
     }
 }
