@@ -40,6 +40,8 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
     private SwipeRefreshLayout swipeRefreshLayoutProjects;
     private ProjectAdapter projectAdapter;
     private RecyclerView recyclerView;
+
+    // todo sort list alphabetically before displaying
     private List<ProjectListItem> projectList = new ArrayList<>();
 
     // Required empty constructor.

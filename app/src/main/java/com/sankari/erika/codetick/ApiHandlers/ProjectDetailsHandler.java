@@ -91,16 +91,18 @@ public class ProjectDetailsHandler {
                                         languageObj.getInt("minutes")));
                             }
 
-                            Debug.print(TAG, "onResponse", "NYT OLIS VALMIS PROJECT DETAILS", 4);
+                            projectDetails.setLanguages(languages);
+
+                            Debug.print(TAG, "onResponse", "PROJECT DETAILS READY", 4);
                             projectDetailsLoadedListener.onProjectDetailsSuccessfullyLoaded(projectDetails);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
                     } else if (response.code() == 202) {
-                        System.out.println("Moro tääl on 202");
                         try {
                             Debug.print(TAG, "getProjectDetails:onResponse", "code: " + response.code(), 4);
+                            // calls Thread to sleep for one second and then try again to get project details.
                             TimeUnit.SECONDS.sleep(1);
                             getProjectDetails();
                         } catch (InterruptedException e) {
