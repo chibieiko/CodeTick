@@ -20,6 +20,9 @@ import com.sankari.erika.codetick.Listeners.OnProjectListLoadedListener;
 import com.sankari.erika.codetick.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -95,11 +98,14 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
     public void onProjectListSuccessfullyLoaded(List<ProjectListItem> projects) {
         System.out.println("GOT IT");
         projectList.clear();
-        // projectList.addAll(projects);
+        projectList.addAll(projects);
 
-        for (ProjectListItem projectListItem : projects) {
-            projectList.add(projectListItem);
-        }
+        Collections.sort(projectList, new Comparator<ProjectListItem>() {
+            @Override
+            public int compare(ProjectListItem o1, ProjectListItem o2) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+            }
+        });
 
         getActivity().runOnUiThread(new Runnable() {
             @Override
