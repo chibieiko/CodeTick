@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -49,9 +51,11 @@ SearchView.OnQueryTextListener {
     private ProjectAdapter projectAdapter;
     private RecyclerView recyclerView;
     private SearchView searchView;
+    private boolean hasSearched = false;
 
     // todo sort list alphabetically before displaying
     private List<ProjectListItem> projectList = new ArrayList<>();
+    private List<ProjectListItem> originalProjectList = new ArrayList<>();
 
     // Required empty constructor.
     public ProjectsFragment() {}
@@ -85,12 +89,28 @@ SearchView.OnQueryTextListener {
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 System.out.println("Query: " + query);
 
+                if (!query.equals("")) {
+                    hasSearched = true;
+                    projectList.clear();
+                    for (ProjectListItem projectListItem : originalProjectList) {
+                        if (projectListItem.getName().toLowerCase().contains(query.toLowerCase())) {
+                            projectList.add(projectListItem);
+                        }
+                    }
 
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            projectAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
 
                 return false;
             }
@@ -137,6 +157,8 @@ SearchView.OnQueryTextListener {
     public void onProjectListSuccessfullyLoaded(List<ProjectListItem> projects) {
         projectList.clear();
         projectList.addAll(projects);
+        originalProjectList.clear();
+        originalProjectList.addAll(projects);
 
         Collections.sort(projectList, new Comparator<ProjectListItem>() {
             @Override
