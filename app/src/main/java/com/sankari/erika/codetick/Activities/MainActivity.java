@@ -1,5 +1,7 @@
 package com.sankari.erika.codetick.Activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -8,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.FragmentPagerAdapter;
@@ -30,7 +33,8 @@ import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
 import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnUserDataLoadedListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener, OnUserDataLoadedListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -97,6 +101,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (userHandler.getUserListener() == null) {
             userHandler.addUserListener(this);
         }
+
+        if (user == null) {
+            userHandler.addUserListener(this);
+            userHandler.getUserDetails(Urls.BASE_URL + "/users/current");
+        }
     }
 
     @Override
@@ -121,33 +130,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (userHandler.getUserListener() != null) {
             userHandler.addUserListener(null);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflates the menu. Adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_today, menu);
-        if (user == null) {
-            userHandler.addUserListener(this);
-            userHandler.getUserDetails(Urls.BASE_URL + "/users/current");
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        // Noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     // Close navigation drawer with back button if it is open.

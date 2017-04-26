@@ -1,14 +1,19 @@
 package com.sankari.erika.codetick.Fragments;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,7 +25,6 @@ import com.sankari.erika.codetick.Listeners.OnProjectListLoadedListener;
 import com.sankari.erika.codetick.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -28,7 +32,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProjectsFragment extends android.support.v4.app.Fragment implements OnProjectListLoadedListener {
+public class ProjectsFragment extends android.support.v4.app.Fragment implements OnProjectListLoadedListener,
+SearchView.OnQueryTextListener {
 
     private final String TAG = this.getClass().getName();
 
@@ -43,6 +48,7 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
     private SwipeRefreshLayout swipeRefreshLayoutProjects;
     private ProjectAdapter projectAdapter;
     private RecyclerView recyclerView;
+    private SearchView searchView;
 
     // todo sort list alphabetically before displaying
     private List<ProjectListItem> projectList = new ArrayList<>();
@@ -62,6 +68,39 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflates the menu. Adds items to the action bar if it is present.
+        getActivity().getMenuInflater().inflate(R.menu.menu_today, menu);
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                System.out.println("Query: " + query);
+
+
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                System.out.println("NewText: " + newText);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -96,7 +135,6 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
 
     @Override
     public void onProjectListSuccessfullyLoaded(List<ProjectListItem> projects) {
-        System.out.println("GOT IT");
         projectList.clear();
         projectList.addAll(projects);
 
@@ -124,5 +162,15 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
                 "Error getting data from Wakatime's server... Try again later",
                 Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }
