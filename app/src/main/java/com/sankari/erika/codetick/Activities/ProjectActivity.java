@@ -15,7 +15,6 @@ import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.ApiHandlers.ProjectDetailsHandler;
 import com.sankari.erika.codetick.Classes.Language;
 import com.sankari.erika.codetick.Classes.ProjectDetails;
-import com.sankari.erika.codetick.Classes.TodayProject;
 import com.sankari.erika.codetick.Listeners.OnProjectDetailsLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Util;
@@ -26,10 +25,13 @@ import java.util.List;
 public class ProjectActivity extends AppCompatActivity implements OnProjectDetailsLoadedListener{
 
     private TextView totalTime;
+    private TextView totalTimeText;
     private TextView projectAverageTime;
+    private TextView projectAverageTimeText;
     private TextView bestday;
+    private TextView bestdayText;
     private TextView bestdayTime;
-    private TextView lastModified;
+    private TextView bestdayTimeText;
     private PieChart languagePie;
 
     @Override
@@ -39,7 +41,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
 
         Bundle extras = getIntent().getExtras();
         String name = extras.getString("projectname");
-        setTitle(name);
+        setTitle(name + " last 7 days");
 
         ApiHandler apiHandler = new ApiHandler(this);
         ProjectDetailsHandler projectDetailsHandler = new ProjectDetailsHandler(apiHandler, name);
@@ -47,10 +49,13 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         projectDetailsHandler.getProjectDetails();
 
         totalTime = (TextView) findViewById(R.id.project_activity_total_time);
+        totalTimeText = (TextView) findViewById(R.id.project_activity_total_time_text);
         projectAverageTime = (TextView) findViewById(R.id.project_activity_average_time);
+        projectAverageTimeText = (TextView) findViewById(R.id.project_activity_average_time_text);
         bestday = (TextView) findViewById(R.id.project_activity_best_day);
+        bestdayText = (TextView) findViewById(R.id.project_activity_best_day_text);
         bestdayTime = (TextView) findViewById(R.id.project_activity_best_day_time);
-        lastModified = (TextView) findViewById(R.id.project_activity_last_modified);
+        bestdayTimeText = (TextView) findViewById(R.id.project_activity_best_day_time_text);
         languagePie = (PieChart) findViewById(R.id.language_pie_chart);
 
         // For back arrow.
@@ -72,12 +77,14 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
 
     @Override
     public void onProjectDetailsSuccessfullyLoaded(ProjectDetails projectDetails) {
-
-        final String totalTimeText = "Total " + Util.convertMillisToHoursAndMinutes(projectDetails.getTotalTime());
-        final String dailyAverageText = "Daily avg " + Util.convertMillisToHoursAndMinutes(projectDetails.getDailyAverage());
-        final String bestdayTimeText = "Best day time " + Util.convertMillisToHoursAndMinutes(projectDetails.getBestDayTime());
-        final String bestdayDate = "Best day: " + projectDetails.getBestDayDate();
-        final String lastModifiedDate = "Last modified: " + projectDetails.getLastModified();
+        final String total_time = "" + Util.convertMillisToHoursAndMinutes(projectDetails.getTotalTime());
+        final String total_time_text = "Total ";
+        final String daily_average = "" + Util.convertMillisToHoursAndMinutes(projectDetails.getDailyAverage());
+        final String daily_average_text = "Daily average ";
+        final String bestday_time_text = "Best day total ";
+        final String bestday_time = Util.convertMillisToHoursAndMinutes(projectDetails.getBestDayTime());
+        final String bestday_date_text = "Best day ";
+        final String bestday_date = projectDetails.getBestDayDate();
 
         List<Language> languages = projectDetails.getLanguages();
         List<PieEntry> pieEntries = new ArrayList<>();
@@ -106,22 +113,27 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         languagePie.setUsePercentValues(true);
         languagePie.setCenterText("Languages");
         languagePie.setCenterTextSize(16);
-        languagePie.setNoDataText("Maybe it's time to code something?");
         languagePie.setDescription(null);
         languagePie.setTouchEnabled(false);
 
         Legend legend = languagePie.getLegend();
         legend.setTextSize(16f);
         legend.setTextColor(ContextCompat.getColor(this, R.color.secondary_text));
+        legend.setXEntrySpace(10f);
+        legend.setYEntrySpace(5f);
+        legend.setWordWrapEnabled(true);
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                totalTime.setText(totalTimeText);
-                projectAverageTime.setText(dailyAverageText);
-                bestday.setText(bestdayDate);
-                bestdayTime.setText(bestdayTimeText);
-                lastModified.setText(lastModifiedDate);
+                totalTimeText.setText(total_time_text);
+                totalTime.setText(total_time);
+                projectAverageTimeText.setText(daily_average_text);
+                projectAverageTime.setText(daily_average);
+                bestdayText.setText(bestday_date_text);
+                bestday.setText(bestday_date);
+                bestdayTimeText.setText(bestday_time_text);
+                bestdayTime.setText(bestday_time);
 
                 // Draws the pie chart.
                 languagePie.invalidate();
