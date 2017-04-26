@@ -132,7 +132,11 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
                 Legend legend = todayPie.getLegend();
                 legend.setTextSize(16f);
-                legend.setTextColor(ContextCompat.getColor(todayPieView.getContext(), R.color.secondary_text));
+                legend.setTextColor(ContextCompat.getColor(todayPieView.getContext(),
+                        R.color.secondary_text));
+                legend.setXEntrySpace(10f);
+                legend.setYEntrySpace(5f);
+                legend.setWordWrapEnabled(true);
 
                 // Draws the pie chart.
                 todayPie.invalidate();
