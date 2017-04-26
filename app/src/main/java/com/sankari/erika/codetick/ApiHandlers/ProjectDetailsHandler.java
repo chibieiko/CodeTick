@@ -80,6 +80,9 @@ public class ProjectDetailsHandler {
                             // Last modified date.
                             projectDetails.setLastModified(data.getString("modified_at"));
 
+                            // Project name
+                            projectDetails.setName(data.getString("project"));
+
                             // List of languages.
                             ArrayList<Language> languages = new ArrayList<>();
                             JSONArray languagesArray = data.getJSONArray("languages");

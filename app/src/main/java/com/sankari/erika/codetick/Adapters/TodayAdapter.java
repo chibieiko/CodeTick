@@ -87,11 +87,13 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             // Today total time.
             case 0:
                 TextView todayTimeBox = holder.todayTime;
+                TextView todayTimeBoxText = holder.todayTimeText;
                 if (todaySummary.getTodayProjectList().size() > 0) {
-                    String totalTime = "Total " +
-                            Util.convertMillisToHoursAndMinutes(todaySummary.getTotalTime());
+                    String totalText = "Total ";
+                    String total = "" + Util.convertMillisToHoursAndMinutes(todaySummary.getTotalTime());
 
-                    todayTimeBox.setText(totalTime);
+                    todayTimeBox.setText(total);
+                    todayTimeBoxText.setText(totalText);
                 }
 
                 break;
@@ -169,6 +171,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         protected TextView projectName;
         protected TextView projectTime;
         protected TextView todayTime;
+        protected TextView todayTimeText;
         protected PieChart todayPie;
 
         // We also create a constructor that accepts the entire item row
@@ -181,6 +184,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             projectName = (TextView) itemView.findViewById(R.id.projectName);
             projectTime = (TextView) itemView.findViewById(R.id.projectTime);
             todayTime = (TextView) itemView.findViewById(R.id.total_today_box);
+            todayTimeText = (TextView) itemView.findViewById(R.id.total_today_box_text);
             todayPie = (PieChart) itemView.findViewById(R.id.today_pie_chart);
         }
     }

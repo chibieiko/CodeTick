@@ -10,12 +10,16 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
-    <!-- String related to Navigation drawer -->
+    <!-- Strings related to Project activity -->
+    <string name="project_activity_label">Last 7 days logged</string>
+
+    <!-- Strings related to Navigation drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_drawer_today">Today</string>
     <string name="nav_drawer_leaderboards">Leaderboards</string>
     <string name="nav_drawer_logout">Logout</string>
+
 
     <!-- Debugger level -->
     <string name="debugLevel">4</string>
