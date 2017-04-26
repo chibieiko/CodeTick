@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/project_activity_swipe">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="com.sankari.erika.codetick.Activities.ProjectActivity">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/reading"
+                    android:textColor="@color/primary_text"
+                    android:text="@string/no_data_for_project"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/project_activity_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:textAlignment="center"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/header" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    app:cardElevation="1.5dp"
+                    app:contentPadding="@dimen/content_padding">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/project_activity_total_time_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/reading" />
+
+                        <TextView
+                            android:id="@+id/project_activity_total_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/reading" />
+
+                        <TextView
+                            android:id="@+id/project_activity_average_time_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/project_activity_total_time_text"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/reading" />
+
+                        <TextView
+                            android:id="@+id/project_activity_average_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_below="@+id/project_activity_total_time_text"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/reading" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    app:cardElevation="1.5dp"
+                    app:contentPadding="@dimen/content_padding">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/project_activity_best_day_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/reading" />
+
+                        <TextView
+                            android:id="@+id/project_activity_best_day"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/reading" />
+
+                        <TextView
+                            android:id="@+id/project_activity_best_day_time_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/project_activity_best_day_text"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/reading" />
+
+                        <TextView
+                            android:id="@+id/project_activity_best_day_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_below="@+id/project_activity_best_day_text"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/reading" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    app:cardElevation="1.5dp"
+                    app:contentPadding="@dimen/content_padding">
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/language_pie_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:textColor="@color/primary_text"
+                        app:paddingEnd="@dimen/activity_vertical_margin"
+                        app:paddingStart="@dimen/activity_vertical_margin" />
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>
+

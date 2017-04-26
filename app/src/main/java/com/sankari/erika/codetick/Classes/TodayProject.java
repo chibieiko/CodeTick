@@ -4,14 +4,14 @@ package com.sankari.erika.codetick.Classes;
  * Created by erika on 4/10/2017.
  */
 
-public class Project {
+public class TodayProject {
     private String name;
     private int percent;
     private int hours;
     private int minutes;
     private long totalInSeconds;
 
-    public Project(String name, int percent, int hours, int minutes, long totalInSeconds) {
+    public TodayProject(String name, int percent, int hours, int minutes, long totalInSeconds) {
         this.name = name;
         this.percent = percent;
         this.hours = hours;
@@ -19,7 +19,7 @@ public class Project {
         this.totalInSeconds = totalInSeconds;
     }
 
-    public Project() {
+    public TodayProject() {
     }
 
     public String getName() {

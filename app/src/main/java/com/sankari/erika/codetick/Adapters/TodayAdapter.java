@@ -1,6 +1,6 @@
-package com.sankari.erika.codetick.Views;
+package com.sankari.erika.codetick.Adapters;
 
-import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +8,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.sankari.erika.codetick.Classes.Project;
+import com.sankari.erika.codetick.Classes.TodayProject;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
+import com.sankari.erika.codetick.Utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,13 +87,13 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             // Today total time.
             case 0:
                 TextView todayTimeBox = holder.todayTime;
-                if (todaySummary.getProjectList().size() > 0) {
-                    String totalTime = "Total: " + String.format("%dh %dmin",
-                            TimeUnit.SECONDS.toHours(todaySummary.getTotalTime()),
-                            TimeUnit.SECONDS.toMinutes(todaySummary.getTotalTime()) -
-                                    TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(todaySummary.getTotalTime())));
+                TextView todayTimeBoxText = holder.todayTimeText;
+                if (todaySummary.getTodayProjectList().size() > 0) {
+                    String totalText = "Total ";
+                    String total = "" + Util.convertMillisToHoursAndMinutes(todaySummary.getTotalTime());
 
-                    todayTimeBox.setText(totalTime);
+                    todayTimeBox.setText(total);
+                    todayTimeBoxText.setText(totalText);
                 }
 
                 break;
@@ -105,23 +102,26 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             case 1:
                 PieChart todayPie = holder.todayPie;
 
-                List<Project> projects = todaySummary.getProjectList();
+                List<TodayProject> todayProjects = todaySummary.getTodayProjectList();
                 List<PieEntry> pieEntries = new ArrayList<>();
-                for (Project project : projects) {
-                    pieEntries.add(new PieEntry(project.getPercent(), project.getName()));
+                for (TodayProject todayProject : todayProjects) {
+                    pieEntries.add(new PieEntry(todayProject.getPercent(), todayProject.getName()));
                 }
 
                 PieDataSet dataSet = new PieDataSet(pieEntries, "");
                 dataSet.setSliceSpace(2);
+
+                // todo proper colors and many of them
                 int[] colors = {
-                        todayPieView.getResources().getColor(R.color.blue),
-                        todayPieView.getResources().getColor(R.color.gold),
-                        todayPieView.getResources().getColor(R.color.pink)
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.pink),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.blue),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.gold),
                 };
                 dataSet.setColors(colors);
 
                 PieData pieData = new PieData(dataSet);
-                pieData.setValueTextColor(Color.WHITE);
+                pieData.setDrawValues(false);
+                //pieData.setValueTextColor(Color.WHITE);
 
                 todayPie.setData(pieData);
                 todayPie.setDrawEntryLabels(false);
@@ -130,21 +130,29 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 todayPie.setCenterTextSize(16);
                 todayPie.setNoDataText("Maybe it's time to code something?");
                 todayPie.setDescription(null);
+                todayPie.setTouchEnabled(false);
 
                 Legend legend = todayPie.getLegend();
                 legend.setTextSize(16f);
+                legend.setTextColor(ContextCompat.getColor(todayPieView.getContext(),
+                        R.color.secondary_text));
+                legend.setXEntrySpace(10f);
+                legend.setYEntrySpace(5f);
+                legend.setWordWrapEnabled(true);
 
+                // Draws the pie chart.
                 todayPie.invalidate();
 
                 break;
 
             // Project list.
             default:
-                // Gets the data model based on position (-2 because todaySummary total time and chart take positions 0&1).
-                Project project = todaySummary.getProjectList().get(position - 2);
+                // Gets the data model based on position (-2 because todaySummary total time and
+                // chart take positions 0 & 1).
+                TodayProject todayProject = todaySummary.getTodayProjectList().get(position - 2);
 
-                holder.projectName.setText(project.getName());
-                String time = project.getHours() + "h " + project.getMinutes() + "min";
+                holder.projectName.setText(todayProject.getName());
+                String time = todayProject.getHours() + "h " + todayProject.getMinutes() + "min";
                 holder.projectTime.setText(time);
         }
     }
@@ -152,17 +160,18 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         // Add two to count for chart and total time.
-        return todaySummary.getProjectList().size() + 2;
+        return todaySummary.getTodayProjectList().size() + 2;
     }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         protected TextView projectName;
         protected TextView projectTime;
         protected TextView todayTime;
+        protected TextView todayTimeText;
         protected PieChart todayPie;
 
         // We also create a constructor that accepts the entire item row
@@ -175,6 +184,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             projectName = (TextView) itemView.findViewById(R.id.projectName);
             projectTime = (TextView) itemView.findViewById(R.id.projectTime);
             todayTime = (TextView) itemView.findViewById(R.id.total_today_box);
+            todayTimeText = (TextView) itemView.findViewById(R.id.total_today_box_text);
             todayPie = (PieChart) itemView.findViewById(R.id.today_pie_chart);
         }
     }
