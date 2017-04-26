@@ -13,17 +13,9 @@ public class ProjectDetails {
     private String lastModified;
     private long bestDayTime;
     private String bestDayDate;
+    private String name;
 
     public ProjectDetails() {}
-
-    public ProjectDetails(long totalTime, long dailyAverage, List<Language> languages, String lastModified, long bestDayTime, String bestDayDate) {
-        this.totalTime = totalTime;
-        this.dailyAverage = dailyAverage;
-        this.languages = languages;
-        this.lastModified = lastModified;
-        this.bestDayTime = bestDayTime;
-        this.bestDayDate = bestDayDate;
-    }
 
     public long getTotalTime() {
         return totalTime;
@@ -71,5 +63,13 @@ public class ProjectDetails {
 
     public void setBestDayDate(String bestDayDate) {
         this.bestDayDate = bestDayDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

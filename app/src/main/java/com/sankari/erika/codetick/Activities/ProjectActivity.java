@@ -32,6 +32,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
     private TextView bestdayText;
     private TextView bestdayTime;
     private TextView bestdayTimeText;
+    private TextView title;
     private PieChart languagePie;
 
     @Override
@@ -41,7 +42,6 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
 
         Bundle extras = getIntent().getExtras();
         String name = extras.getString("projectname");
-        setTitle(name + " last 7 days");
 
         ApiHandler apiHandler = new ApiHandler(this);
         ProjectDetailsHandler projectDetailsHandler = new ProjectDetailsHandler(apiHandler, name);
@@ -57,6 +57,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         bestdayTime = (TextView) findViewById(R.id.project_activity_best_day_time);
         bestdayTimeText = (TextView) findViewById(R.id.project_activity_best_day_time_text);
         languagePie = (PieChart) findViewById(R.id.language_pie_chart);
+        title = (TextView) findViewById(R.id.project_activity_title);
 
         // For back arrow.
         if (getSupportActionBar() != null) {
@@ -85,6 +86,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         final String bestday_time = Util.convertMillisToHoursAndMinutes(projectDetails.getBestDayTime());
         final String bestday_date_text = "Best day ";
         final String bestday_date = projectDetails.getBestDayDate();
+        final String titleText = projectDetails.getName();
 
         List<Language> languages = projectDetails.getLanguages();
         List<PieEntry> pieEntries = new ArrayList<>();
@@ -134,6 +136,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
                 bestday.setText(bestday_date);
                 bestdayTimeText.setText(bestday_time_text);
                 bestdayTime.setText(bestday_time);
+                title.setText(titleText);
 
                 // Draws the pie chart.
                 languagePie.invalidate();
