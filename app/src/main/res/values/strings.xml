@@ -13,6 +13,9 @@
     <!-- Strings related to Project activity -->
     <string name="project_activity_label">Last 7 days logged</string>
 
+    <!-- Strings related to toolbar -->
+    <string name="search_projects">Search projects</string>
+
     <!-- Strings related to Navigation drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
