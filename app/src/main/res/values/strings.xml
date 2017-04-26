@@ -20,7 +20,7 @@
     <string name="nav_drawer_leaderboards">Leaderboards</string>
     <string name="nav_drawer_logout">Logout</string>
 
-
     <!-- Debugger level -->
     <string name="debugLevel">4</string>
+    <string name="no_data_for_project">Nothing to show from past 7 days</string>
 </resources>

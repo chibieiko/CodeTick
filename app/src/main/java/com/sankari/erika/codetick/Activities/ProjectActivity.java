@@ -2,8 +2,10 @@ package com.sankari.erika.codetick.Activities;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -34,6 +36,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
     private TextView bestdayTimeText;
     private TextView title;
     private PieChart languagePie;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +47,17 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         String name = extras.getString("projectname");
 
         ApiHandler apiHandler = new ApiHandler(this);
-        ProjectDetailsHandler projectDetailsHandler = new ProjectDetailsHandler(apiHandler, name);
+        final ProjectDetailsHandler projectDetailsHandler = new ProjectDetailsHandler(apiHandler, name);
         projectDetailsHandler.setProjectDetailsLoadedListener(this);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.project_activity_swipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                projectDetailsHandler.getProjectDetails();
+            }
+        });
+        swipeRefreshLayout.setRefreshing(true);
         projectDetailsHandler.getProjectDetails();
 
         totalTime = (TextView) findViewById(R.id.project_activity_total_time);
@@ -140,6 +152,8 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
 
                 // Draws the pie chart.
                 languagePie.invalidate();
+
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
