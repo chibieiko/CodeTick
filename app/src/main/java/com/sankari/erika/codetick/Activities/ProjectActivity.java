@@ -21,7 +21,11 @@ import com.sankari.erika.codetick.Listeners.OnProjectDetailsLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ProjectActivity extends AppCompatActivity implements OnProjectDetailsLoadedListener{
@@ -97,7 +101,14 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         final String bestday_time_text = "Best day total ";
         final String bestday_time = Util.convertMillisToHoursAndMinutes(projectDetails.getBestDayTime());
         final String bestday_date_text = "Best day ";
-        final String bestday_date = projectDetails.getBestDayDate();
+        Date bestDate = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("MMM dd");
+        try {
+            bestDate = dateFormat.parse(projectDetails.getBestDayDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        final String bestday_date = dateFormat.format(bestDate);
         final String titleText = projectDetails.getName();
 
         List<Language> languages = projectDetails.getLanguages();

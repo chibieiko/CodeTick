@@ -31,21 +31,20 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Debug.print(TAG, "onCreateViewHolder", "here", 4);
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return new ViewHolder(inflater.inflate(R.layout.item_projects, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Debug.print(TAG, "onBindViewHolder", projectList.get(position).getName(), 4);
+      //  Debug.print(TAG, "onBindViewHolder", projectList.get(position).getName(), 4);
         ProjectListItem projectListItem = projectList.get(position);
         holder.projectName.setText(projectListItem.getName());
     }
 
     @Override
     public int getItemCount() {
-        System.out.println("ITEM COUNT: " + projectList.size());
+     //   System.out.println("ITEM COUNT: " + projectList.size());
         return projectList.size();
     }
 

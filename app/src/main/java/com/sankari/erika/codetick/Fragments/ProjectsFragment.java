@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +14,6 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -90,16 +88,31 @@ SearchView.OnQueryTextListener {
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
+        searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {}
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                if (hasSearched) {
+                    returnListToOriginalState();
+                }
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                System.out.println("Query: " + query);
+                return false;
+            }
 
-                if (!query.equals("")) {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!newText.equals("")) {
                     hasSearched = true;
                     projectList.clear();
                     for (ProjectListItem projectListItem : originalProjectList) {
-                        if (projectListItem.getName().toLowerCase().contains(query.toLowerCase())) {
+                        if (projectListItem.getName().toLowerCase().contains(newText.toLowerCase())) {
                             projectList.add(projectListItem);
                         }
                     }
@@ -110,15 +123,30 @@ SearchView.OnQueryTextListener {
                             projectAdapter.notifyDataSetChanged();
                         }
                     });
+                } else {
+                    returnListToOriginalState();
                 }
 
                 return false;
             }
+        });
+    }
 
+    private void returnListToOriginalState() {
+        hasSearched = false;
+        projectList.clear();
+        projectList.addAll(originalProjectList);
+        Collections.sort(projectList, new Comparator<ProjectListItem>() {
             @Override
-            public boolean onQueryTextChange(String newText) {
-                System.out.println("NewText: " + newText);
-                return false;
+            public int compare(ProjectListItem o1, ProjectListItem o2) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+            }
+        });
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                projectAdapter.notifyDataSetChanged();
             }
         });
     }
