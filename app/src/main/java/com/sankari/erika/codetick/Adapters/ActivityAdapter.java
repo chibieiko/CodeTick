@@ -212,12 +212,8 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), DayActivity.class);
+            intent.putExtra("daySummary", activitySummary.getDaySummaryList().get(getAdapterPosition() - 2));
             v.getContext().startActivity(intent);
-
-          /*  String projectName = projectList.get(getAdapterPosition()).getName();
-            Intent intent = new Intent(v.getContext(), ProjectActivity.class);
-            intent.putExtra("projectname", projectName);
-            v.getContext().startActivity(intent);*/
         }
     }
 }

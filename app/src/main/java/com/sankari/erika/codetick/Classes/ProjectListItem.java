@@ -1,10 +1,12 @@
 package com.sankari.erika.codetick.Classes;
 
+import java.io.Serializable;
+
 /**
  * Created by erika on 4/23/2017.
  */
 
-public class ProjectListItem {
+public class ProjectListItem implements Serializable {
     private String name;
     private String id;
     private long time;

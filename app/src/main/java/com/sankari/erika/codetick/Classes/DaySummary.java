@@ -1,12 +1,13 @@
 package com.sankari.erika.codetick.Classes;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by erika on 4/30/2017.
  */
 
-public class DaySummary {
+public class DaySummary implements Serializable {
     private List<ProjectListItem> projectList;
     private String date;
     private long total;

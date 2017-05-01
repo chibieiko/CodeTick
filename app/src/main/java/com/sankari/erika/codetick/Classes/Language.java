@@ -1,10 +1,12 @@
 package com.sankari.erika.codetick.Classes;
 
+import java.io.Serializable;
+
 /**
  * Created by erika on 4/25/2017.
  */
 
-public class Language {
+public class Language implements Serializable {
     private String name;
     private long percent;
     private int hours;
