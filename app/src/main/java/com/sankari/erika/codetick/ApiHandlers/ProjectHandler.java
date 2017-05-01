@@ -56,7 +56,6 @@ public class ProjectHandler {
                     Debug.print(TAG, "getProjectListing:onResponse", "code: " + response.code(), 4);
 
                     if (response.code() == 200) {
-                        System.out.println("IM HERE");
                         try {
                             JSONObject resultObject = new JSONObject(result);
                             JSONArray projectsArray = new JSONArray(resultObject.getString("data"));
@@ -70,7 +69,7 @@ public class ProjectHandler {
                                         tempObject.getString("id")));
                             }
 
-                            Debug.print(TAG, "onResponse", "NYT OLIS VALMIS PROJECT LIST", 4);
+                            Debug.print(TAG, "onResponse", "PROJECT LIST READY", 4);
                             projectListLoadedListener.onProjectListSuccessfullyLoaded(projectList);
                         } catch (JSONException e) {
                             e.printStackTrace();

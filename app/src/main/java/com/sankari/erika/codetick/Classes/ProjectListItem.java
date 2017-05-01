@@ -7,9 +7,9 @@ package com.sankari.erika.codetick.Classes;
 public class ProjectListItem {
     private String name;
     private String id;
+    private long time;
 
-    public ProjectListItem() {
-    }
+    public ProjectListItem() {}
 
     public ProjectListItem(String name, String id) {
         this.name = name;
@@ -30,5 +30,13 @@ public class ProjectListItem {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

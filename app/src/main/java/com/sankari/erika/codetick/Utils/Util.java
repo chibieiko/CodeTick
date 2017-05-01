@@ -52,7 +52,7 @@ public class Util {
         return expiresInMillis + today.getTime();
     }
 
-    // For wakatime's api query parameters.
+    // For Wakatime's api query parameters.
     public static String convertDateToProperFormat(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
