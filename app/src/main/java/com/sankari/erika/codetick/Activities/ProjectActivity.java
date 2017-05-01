@@ -101,14 +101,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         final String bestday_time_text = "Best day total ";
         final String bestday_time = Util.convertMillisToHoursAndMinutes(projectDetails.getBestDayTime());
         final String bestday_date_text = "Best day ";
-        Date bestDate = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("MMM dd");
-        try {
-            bestDate = dateFormat.parse(projectDetails.getBestDayDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        final String bestday_date = dateFormat.format(bestDate);
+        final String bestday_date = Util.convertStringToReadableDateString(projectDetails.getBestDayDate(), "MM/dd/yyyy");
         final String titleText = projectDetails.getName();
 
         List<Language> languages = projectDetails.getLanguages();

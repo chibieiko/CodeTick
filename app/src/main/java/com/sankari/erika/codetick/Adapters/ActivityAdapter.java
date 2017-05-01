@@ -9,10 +9,19 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.sankari.erika.codetick.Classes.ActivitySummary;
 import com.sankari.erika.codetick.Classes.DaySummary;
 import com.sankari.erika.codetick.Classes.ProjectListItem;
@@ -40,6 +49,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
     private final String TAG = this.getClass().getName();
     private ActivitySummary activitySummary;
+    private View chartView;
 
     public ActivityAdapter(ActivitySummary activitySummary) {
         this.activitySummary = activitySummary;
@@ -58,9 +68,9 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
             // Returns a new holder instance
             return new ViewHolder(activityTotalView);
         } else if (viewType == 1) {
-            View activityChartView = inflater.inflate(R.layout.item_activity_chart, parent, false);
+            chartView = inflater.inflate(R.layout.item_activity_chart, parent, false);
 
-            return new ViewHolder(activityChartView);
+            return new ViewHolder(chartView);
         } else {
             View activityDayView = inflater.inflate(R.layout.item_activity_list, parent, false);
 
@@ -91,7 +101,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         switch (holder.getItemViewType()) {
             // Activity total time and avg.
             case 0:
-                System.out.println("CASE 0");
                 holder.total_box_text.setText("Total ");
                 holder.total_box.setText(Util.convertMillisToHoursAndMinutes(activitySummary.getTotal()));
 
@@ -102,71 +111,71 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
             // Bar chart.
             case 1:
-                System.out.println("CASE 1");
-                /*PieChart todayPie = holder.todayPie;
+                BarChart barChart = holder.bar_chart;
 
-                List<TodayProject> todayProjects = todaySummary.getTodayProjectList();
-                List<PieEntry> pieEntries = new ArrayList<>();
-                for (TodayProject todayProject : todayProjects) {
-                    pieEntries.add(new PieEntry(todayProject.getPercent(), todayProject.getName()));
+                List<DaySummary> dayList = activitySummary.getDaySummaryList();
+                List<BarEntry> barEntries = new ArrayList<>();
+                for (int i = 0; i < dayList.size(); i++) {
+                    // Convert total time coded in a day to hours.
+                    long total = dayList.get(i).getTotal();
+                    double codingTimeMinutes = total / 60;
+                    double codingTimeHours = codingTimeMinutes / 60;
+                    barEntries.add(new BarEntry(dayList.size() - i - 1, (float) codingTimeHours));
                 }
 
-                PieDataSet dataSet = new PieDataSet(pieEntries, "");
-                dataSet.setSliceSpace(2);
-
-                // todo proper colors and many of them
                 int[] colors = {
-                        ContextCompat.getColor(todayPieView.getContext(), R.color.pink),
-                        ContextCompat.getColor(todayPieView.getContext(), R.color.blue),
-                        ContextCompat.getColor(todayPieView.getContext(), R.color.gold),
+                        ContextCompat.getColor(chartView.getContext(), R.color.pink),
+                        ContextCompat.getColor(chartView.getContext(), R.color.blue),
+                        ContextCompat.getColor(chartView.getContext(), R.color.gold),
                 };
+
+                BarDataSet dataSet = new BarDataSet(barEntries, "");
                 dataSet.setColors(colors);
 
-                PieData pieData = new PieData(dataSet);
-                pieData.setDrawValues(false);
-                //pieData.setValueTextColor(Color.WHITE);
+                ArrayList<String> xAxisLabels = new ArrayList<>();
+                for (int i = 0; i < dayList.size(); i++) {
+                    xAxisLabels.add(Util.convertStringToReadableDateString(dayList.get(dayList.size() - i - 1).getDate(), "yyyy-MM-dd"));
+                }
 
-                todayPie.setData(pieData);
-                todayPie.setDrawEntryLabels(false);
-                todayPie.setUsePercentValues(true);
-                todayPie.setCenterText("Projects");
-                todayPie.setCenterTextSize(16);
-                todayPie.setNoDataText("Maybe it's time to code something?");
-                todayPie.setDescription(null);
-                todayPie.setTouchEnabled(false);
+                BarData data = new BarData(dataSet);
 
-                Legend legend = todayPie.getLegend();
-                legend.setTextSize(16f);
-                legend.setTextColor(ContextCompat.getColor(todayPieView.getContext(),
-                        R.color.secondary_text));
-                legend.setXEntrySpace(10f);
-                legend.setYEntrySpace(5f);
-                legend.setWordWrapEnabled(true);
+                barChart.setData(data);
+                barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
+                barChart.setFitBars(true);
+                barChart.setScaleEnabled(false);
+                barChart.getXAxis().setDrawGridLines(false);
+                barChart.setDescription(null);
 
-                // Draws the pie chart.
-                todayPie.invalidate();
-*/
+                // Format left axis labels.
+                YAxis leftAxis = barChart.getAxisLeft();
+                leftAxis.setValueFormatter(new IAxisValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value, AxisBase axis) {
+                        return (int) value + "h";
+                    }
+                });
+
+                // Do not show right axis.
+                YAxis rightAxis = barChart.getAxisRight();
+                rightAxis.setEnabled(false);
+
+                // Do not show legend.
+                Legend legend = barChart.getLegend();
+                legend.setEnabled(false);
+
+                barChart.invalidate();
+
                 break;
 
             // Day list.
             default:
-                System.out.println("CASE DEFAULT");
                 // Gets the data model based on position (-2 because todaySummary total time and
                 // chart take positions 0 & 1).
                 DaySummary daySummary = activitySummary.getDaySummaryList().get(position - 2);
-
-                System.out.println("DATE: " + daySummary.getDate());
-                Date date = new Date();
-                DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dateFormat = new SimpleDateFormat("MMM dd");
-                try {
-                    date = dateFormatter.parse(daySummary.getDate());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                holder.date.setText(dateFormat.format(date));
+                holder.date.setText(Util.convertStringToReadableDateString(daySummary.getDate(), "yyyy-MM-dd"));
                 holder.time.setText(Util.convertMillisToHoursAndMinutes(daySummary.getTotal()));
+
+                break;
         }
     }
 

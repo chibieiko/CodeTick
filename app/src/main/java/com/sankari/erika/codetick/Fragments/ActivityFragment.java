@@ -99,8 +99,6 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
 
     @Override
     public void onActivitySummaryLoadedSuccessfully(ActivitySummary obj) {
-        System.out.println("ActivityFragment::summaryLoadedSuccessfully");
-
         // Set values from server.
         activitySummary.setAverage(obj.getAverage());
         activitySummary.setTotal(obj.getTotal());
