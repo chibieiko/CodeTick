@@ -1,43 +1,32 @@
 package com.sankari.erika.codetick.Adapters;
 
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.sankari.erika.codetick.Activities.DayActivity;
 import com.sankari.erika.codetick.Classes.ActivitySummary;
 import com.sankari.erika.codetick.Classes.DaySummary;
-import com.sankari.erika.codetick.Classes.ProjectListItem;
-import com.sankari.erika.codetick.Classes.TodayProject;
-import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Util;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by erika on 4/30/2017.
@@ -188,7 +177,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         TextView total_box_text;
@@ -198,6 +187,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         TextView date;
         TextView time;
         BarChart bar_chart;
+        RelativeLayout list_item;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -213,6 +203,21 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
             date = (TextView) itemView.findViewById(R.id.activity_date);
             time = (TextView) itemView.findViewById(R.id.activity_time);
             bar_chart = (BarChart) itemView.findViewById(R.id.activity_bar_chart);
+            list_item = (RelativeLayout) itemView.findViewById(R.id.activity_list_item);
+            if (list_item != null) {
+                list_item.setOnClickListener(this);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(v.getContext(), DayActivity.class);
+            v.getContext().startActivity(intent);
+
+          /*  String projectName = projectList.get(getAdapterPosition()).getName();
+            Intent intent = new Intent(v.getContext(), ProjectActivity.class);
+            intent.putExtra("projectname", projectName);
+            v.getContext().startActivity(intent);*/
         }
     }
 }

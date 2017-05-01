@@ -176,8 +176,7 @@ SearchView.OnQueryTextListener {
         recyclerView.addItemDecoration(new DividerItemDecoration
                 (recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
-
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment.
         return rootView;
     }
 
