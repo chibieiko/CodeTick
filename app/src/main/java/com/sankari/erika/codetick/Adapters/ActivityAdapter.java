@@ -134,7 +134,8 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
                 ArrayList<String> xAxisLabels = new ArrayList<>();
                 for (int i = 0; i < dayList.size(); i++) {
-                    xAxisLabels.add(Util.convertStringToReadableDateString(dayList.get(dayList.size() - i - 1).getDate(), "yyyy-MM-dd"));
+                    xAxisLabels.add(Util.convertStringToReadableDateString(
+                            dayList.get(dayList.size() - i - 1).getDate(), "yyyy-MM-dd"));
                 }
 
                 BarData data = new BarData(dataSet);
