@@ -91,10 +91,10 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
             // Activity total time and avg.
             case 0:
                 holder.total_box_text.setText("Total ");
-                holder.total_box.setText(Util.convertMillisToHoursAndMinutes(activitySummary.getTotal()));
+                holder.total_box.setText(Util.convertSecondsToHoursAndMinutes(activitySummary.getTotal()));
 
                 holder.avg_box_text.setText("Daily avg ");
-                holder.avg_box.setText(Util.convertMillisToHoursAndMinutes(activitySummary.getAverage()));
+                holder.avg_box.setText(Util.convertSecondsToHoursAndMinutes(activitySummary.getAverage()));
 
                 break;
 
@@ -163,7 +163,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                 // chart take positions 0 & 1).
                 DaySummary daySummary = activitySummary.getDaySummaryList().get(position - 2);
                 holder.date.setText(Util.convertStringToReadableDateString(daySummary.getDate(), "yyyy-MM-dd"));
-                holder.time.setText(Util.convertMillisToHoursAndMinutes(daySummary.getTotal()));
+                holder.time.setText(Util.convertSecondsToHoursAndMinutes(daySummary.getTotal()));
 
                 break;
         }

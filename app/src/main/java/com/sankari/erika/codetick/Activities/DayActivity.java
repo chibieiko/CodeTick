@@ -2,14 +2,19 @@ package com.sankari.erika.codetick.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
+import com.sankari.erika.codetick.Adapters.DayAdapter;
 import com.sankari.erika.codetick.Classes.DaySummary;
 import com.sankari.erika.codetick.R;
 
 public class DayActivity extends AppCompatActivity {
 
     private DaySummary daySummary;
+    private RecyclerView recyclerView;
+    private DayAdapter dayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +24,12 @@ public class DayActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         daySummary = (DaySummary) extras.get("daySummary");
 
-        System.out.println("DAYACTITVITY DATE" + daySummary.getDate());
+        System.out.println("DAYACTIVITY DATE " + daySummary.getDate());
+
+        recyclerView = (RecyclerView) findViewById(R.id.day_recycler_view);
+        dayAdapter = new DayAdapter(daySummary);
+        recyclerView.setAdapter(dayAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // For back arrow.
         if (getSupportActionBar() != null) {

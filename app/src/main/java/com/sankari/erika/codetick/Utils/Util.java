@@ -73,7 +73,7 @@ public class Util {
          return dateFormat.format(date);
     }
 
-    public static String convertMillisToHoursAndMinutes(Long time) {
+    public static String convertSecondsToHoursAndMinutes(Long time) {
         return String.format("%dh %dmin",
                 TimeUnit.SECONDS.toHours(time),
                 TimeUnit.SECONDS.toMinutes(time) -
