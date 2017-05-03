@@ -56,11 +56,10 @@ public class ProjectDetailsHandler {
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
 
-                    Debug.print(TAG, "getProjectDetails:onResponse", result, 4);
-                    Debug.print(TAG, "getProjectDetails:onResponse", "code: " + response.code(), 4);
+                    Debug.print(TAG, "getProjectDetails:onResponse", result, 6);
+                    Debug.print(TAG, "getProjectDetails:onResponse", "code: " + response.code(), 6);
 
                     if (response.code() == 200) {
-                        System.out.println("Moro tääl on 200");
                         ProjectDetails projectDetails = new ProjectDetails();
                         try {
                             JSONObject resultObject = new JSONObject(result);
