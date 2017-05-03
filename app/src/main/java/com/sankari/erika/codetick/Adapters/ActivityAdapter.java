@@ -113,9 +113,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                 }
 
                 int[] colors = {
-                        ContextCompat.getColor(chartView.getContext(), R.color.pink),
-                        ContextCompat.getColor(chartView.getContext(), R.color.blue),
-                        ContextCompat.getColor(chartView.getContext(), R.color.gold),
+                        ContextCompat.getColor(chartView.getContext(), R.color.colorPrimary)
                 };
 
                 BarDataSet dataSet = new BarDataSet(barEntries, "");

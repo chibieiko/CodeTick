@@ -18,7 +18,7 @@ import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
 import com.sankari.erika.codetick.Utils.Urls;
 
-public class MainActivity extends BaseActivity implements OnUserDataLoadedListener {
+public class MainActivity extends BaseActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -34,10 +34,6 @@ public class MainActivity extends BaseActivity implements OnUserDataLoadedListen
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-
-    private ApiHandler handler;
-    private UserHandler userHandler;
-    private User user;
     private final String TAG = this.getClass().getName();
 
     @Override
@@ -48,8 +44,7 @@ public class MainActivity extends BaseActivity implements OnUserDataLoadedListen
         Debug.loadDebug(this);
         Debug.print(TAG, "onCreate", "ON MAIN ACTIVITY CREATE", 5);
 
-        handler = new ApiHandler(this);
-        userHandler = new UserHandler(handler);
+        ApiHandler handler = new ApiHandler(this);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -63,84 +58,4 @@ public class MainActivity extends BaseActivity implements OnUserDataLoadedListen
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        System.out.println("MAIN ON START");
-        if (userHandler.getUserListener() == null) {
-            userHandler.addUserListener(this);
-        }
-
-        if (user == null) {
-            userHandler.addUserListener(this);
-            userHandler.getUserDetails(Urls.BASE_URL + "/users/current");
-        }
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-
-        if (userHandler.getUserListener() == null) {
-            userHandler.addUserListener(this);
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        if (userHandler.getUserListener() != null) {
-            userHandler.addUserListener(null);
-        }
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (userHandler.getUserListener() != null) {
-            userHandler.addUserListener(null);
-        }
-
-    }
-
-    @Override
-    public void onUserDataSuccessfullyLoaded(User obj) {
-        user = obj;
-        Debug.print(TAG, "onUserDataSuccessfullyLoaded", "USER IS: " + user, 5);
-
-        final TextView userName = (TextView) findViewById(R.id.username);
-        final TextView userEmail = (TextView) findViewById(R.id.user_email);
-        new DownloadAndPlaceImage((ImageView) findViewById(R.id.user_image)).execute(user.getPhoto());
-
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (userName != null && userEmail != null) {
-                    userName.setText(user.getName());
-                    userEmail.setText(user.getEmail());
-                }
-            }
-        });
-
-    }
-
-    @Override
-    public void onUserDataLoadError(String error) {
-        final String reason = error;
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Snackbar.make(findViewById(R.id.drawer_layout), reason, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        Debug.print(TAG, "onUserDataLoadError", error, 5);
-    }
-
 }

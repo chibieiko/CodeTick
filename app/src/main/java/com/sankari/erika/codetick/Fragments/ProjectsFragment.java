@@ -32,8 +32,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProjectsFragment extends android.support.v4.app.Fragment implements OnProjectListLoadedListener,
-SearchView.OnQueryTextListener {
+public class ProjectsFragment extends android.support.v4.app.Fragment implements OnProjectListLoadedListener {
 
     private final String TAG = this.getClass().getName();
 
@@ -51,7 +50,6 @@ SearchView.OnQueryTextListener {
     private SearchView searchView;
     private boolean hasSearched = false;
 
-    // todo sort list alphabetically before displaying
     private List<ProjectListItem> projectList = new ArrayList<>();
     private List<ProjectListItem> originalProjectList = new ArrayList<>();
 
@@ -211,15 +209,5 @@ SearchView.OnQueryTextListener {
                 "Error getting data from Wakatime's server... Try again later",
                 Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
     }
 }

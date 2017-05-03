@@ -1,7 +1,6 @@
 package com.sankari.erika.codetick.Activities;
 
 import android.os.Bundle;
-
 import com.sankari.erika.codetick.R;
 
 public class LeaderboardActivity extends BaseActivity {
