@@ -5,7 +5,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -90,14 +89,14 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
 
     @Override
     public void onProjectDetailsSuccessfullyLoaded(ProjectDetails projectDetails) {
-        final String total_time = "" + Util.convertMillisToHoursAndMinutes(projectDetails.getTotalTime());
+        final String total_time = "" + Util.convertSecondsToHoursAndMinutes(projectDetails.getTotalTime());
         final String total_time_text = "Total ";
-        final String daily_average = "" + Util.convertMillisToHoursAndMinutes(projectDetails.getDailyAverage());
+        final String daily_average = "" + Util.convertSecondsToHoursAndMinutes(projectDetails.getDailyAverage());
         final String daily_average_text = "Daily average ";
         final String bestday_time_text = "Best day total ";
-        final String bestday_time = Util.convertMillisToHoursAndMinutes(projectDetails.getBestDayTime());
+        final String bestday_time = Util.convertSecondsToHoursAndMinutes(projectDetails.getBestDayTime());
         final String bestday_date_text = "Best day ";
-        final String bestday_date = projectDetails.getBestDayDate();
+        final String bestday_date = Util.convertStringToReadableDateString(projectDetails.getBestDayDate(), "MM/dd/yyyy");
         final String titleText = projectDetails.getName();
 
         List<Language> languages = projectDetails.getLanguages();

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sankari.erika.codetick.Activities.MainActivity;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.ApiHandlers.TodayHandler;
 import com.sankari.erika.codetick.Classes.TodaySummary;
@@ -109,6 +110,10 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
     @Override
     public void onTodaySummaryLoadError(String error) {
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
         Snackbar.make(getActivity().findViewById(R.id.drawer_layout), "Error getting data from Wakatime's server... Try again later", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }

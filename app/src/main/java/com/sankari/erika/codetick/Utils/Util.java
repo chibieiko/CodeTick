@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import com.sankari.erika.codetick.Activities.LoginActivity;
 import com.sankari.erika.codetick.Classes.Token;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -52,13 +54,26 @@ public class Util {
         return expiresInMillis + today.getTime();
     }
 
-    // For wakatime's api query parameters.
+    // For Wakatime's api query parameters.
     public static String convertDateToProperFormat(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
     }
 
-    public static String convertMillisToHoursAndMinutes(Long time) {
+    public static String convertStringToReadableDateString(String dateString, String format) {
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("MMM dd");
+        DateFormat dateFormat2 = new SimpleDateFormat(format);
+        try {
+            date = dateFormat2.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+         return dateFormat.format(date);
+    }
+
+    public static String convertSecondsToHoursAndMinutes(Long time) {
         return String.format("%dh %dmin",
                 TimeUnit.SECONDS.toHours(time),
                 TimeUnit.SECONDS.toMinutes(time) -

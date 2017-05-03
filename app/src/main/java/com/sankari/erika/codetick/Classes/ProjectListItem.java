@@ -1,15 +1,17 @@
 package com.sankari.erika.codetick.Classes;
 
+import java.io.Serializable;
+
 /**
  * Created by erika on 4/23/2017.
  */
 
-public class ProjectListItem {
+public class ProjectListItem implements Serializable {
     private String name;
     private String id;
+    private long time;
 
-    public ProjectListItem() {
-    }
+    public ProjectListItem() {}
 
     public ProjectListItem(String name, String id) {
         this.name = name;
@@ -30,5 +32,13 @@ public class ProjectListItem {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

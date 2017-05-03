@@ -56,7 +56,6 @@ public class TodayHandler {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     e.printStackTrace();
-                    System.out.println(e.toString());
                 }
 
                 @Override

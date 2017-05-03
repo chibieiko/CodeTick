@@ -20,7 +20,6 @@ import com.sankari.erika.codetick.Utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by erika on 4/18/2017.
@@ -90,7 +89,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 TextView todayTimeBoxText = holder.todayTimeText;
                 if (todaySummary.getTodayProjectList().size() > 0) {
                     String totalText = "Total ";
-                    String total = "" + Util.convertMillisToHoursAndMinutes(todaySummary.getTotalTime());
+                    String total = "" + Util.convertSecondsToHoursAndMinutes(todaySummary.getTotalTime());
 
                     todayTimeBox.setText(total);
                     todayTimeBoxText.setText(totalText);
