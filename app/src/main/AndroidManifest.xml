@@ -31,14 +31,15 @@
                     android:scheme="codeticklogin" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Activities.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name" >
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".Activities.ProjectActivity"
             android:label="@string/project_activity_label"
@@ -47,12 +48,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.MainActivity" />
         </activity>
-        <activity android:name=".Activities.DayActivity"
+
+        <activity
+            android:name=".Activities.DayActivity"
             android:parentActivityName=".Activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.MainActivity"/>
+                android:value=".Activities.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".Activities.LeaderboardActivity" />
+
+        <activity android:name=".Activities.BaseActivity" />
     </application>
 
 </manifest>

@@ -81,7 +81,6 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
             // Project list.
             default:
-
                 // Gets the data model based on position.
                 ProjectListItem projectListItem = daySummary.getProjectList().get(position - 1);
 

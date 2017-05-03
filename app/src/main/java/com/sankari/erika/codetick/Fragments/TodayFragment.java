@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sankari.erika.codetick.Activities.MainActivity;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.ApiHandlers.TodayHandler;
 import com.sankari.erika.codetick.Classes.TodaySummary;
