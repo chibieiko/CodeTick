@@ -1,6 +1,7 @@
 package com.sankari.erika.codetick.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -9,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -19,10 +19,8 @@ import android.widget.TextView;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.ApiHandlers.UserHandler;
 import com.sankari.erika.codetick.Classes.User;
-import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
 import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
 import com.sankari.erika.codetick.R;
-import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
 import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
@@ -33,11 +31,12 @@ public class BaseActivity extends AppCompatActivity implements
     private DrawerLayout drawer;
     private UserHandler userHandler;
     private User user;
+    public static boolean mainActivityVisible = false;
+    public static boolean leaderboardVisible = false;
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         // Set up navigation drawer.
-        //drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_base, null);
 
         FrameLayout activityContainer = (FrameLayout) drawer.findViewById(R.id.activity_content);
@@ -75,18 +74,25 @@ public class BaseActivity extends AppCompatActivity implements
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        System.out.println("pressed menuitem " + item);
         switch (item.getItemId()) {
             case R.id.nav_today:
-                // todo change to today fragment if in leaderboards fragment
+                if (mainActivityVisible) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                }
 
-                drawer.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.nav_leaderboards:
+                if (leaderboardVisible) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    Intent intent = new Intent(this, LeaderboardActivity.class);
+                    startActivity(intent);
+                }
 
-                Intent intent = new Intent(this, LeaderboardActivity.class);
-                startActivity(intent);
                 break;
 
             case R.id.nav_logout:

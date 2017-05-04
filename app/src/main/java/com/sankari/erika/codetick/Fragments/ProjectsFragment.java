@@ -2,6 +2,7 @@ package com.sankari.erika.codetick.Fragments;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -85,6 +86,7 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setQueryHint("Search projects");
 
         searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override

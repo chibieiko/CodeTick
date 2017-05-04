@@ -58,7 +58,8 @@
         </activity>
 
         <activity
-            android:name=".Activities.LeaderboardActivity" />
+            android:name=".Activities.LeaderboardActivity"
+            android:label="@string/leaderboard_label"/>
 
         <activity android:name=".Activities.BaseActivity" />
     </application>

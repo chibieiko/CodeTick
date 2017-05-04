@@ -1,6 +1,8 @@
 package com.sankari.erika.codetick.Activities;
 
 import android.os.Bundle;
+import android.support.design.internal.NavigationMenuItemView;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -35,6 +37,7 @@ public class MainActivity extends BaseActivity {
      */
     private ViewPager mViewPager;
     private final String TAG = this.getClass().getName();
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,5 +60,20 @@ public class MainActivity extends BaseActivity {
         // Set up tabs for ViewPager.
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BaseActivity.mainActivityVisible = false;
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        BaseActivity.mainActivityVisible = true;
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 }

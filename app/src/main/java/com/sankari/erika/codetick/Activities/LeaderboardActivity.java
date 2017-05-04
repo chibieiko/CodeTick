@@ -1,6 +1,7 @@
 package com.sankari.erika.codetick.Activities;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
@@ -23,7 +24,8 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
     private SwipeRefreshLayout swipeRefresh;
     private LeaderboardHandler leaderboardHandler;
     private List<LeaderboardItem> leaderboardList = new ArrayList<>();
-    LeaderboardAdapter leaderboardAdapter;
+    private LeaderboardAdapter leaderboardAdapter;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,8 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration
                 (recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
     }
 
     @Override
@@ -80,5 +84,18 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        BaseActivity.leaderboardVisible = true;
+        navigationView.getMenu().getItem(1).setChecked(true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BaseActivity.leaderboardVisible = false;
     }
 }
