@@ -157,10 +157,19 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
             // Day list.
             default:
-                // Gets the data model based on position (-2 because todaySummary total time and
+                // Gets the data model based on position (-2 because summary total time and
                 // chart take positions 0 & 1).
                 DaySummary daySummary = activitySummary.getDaySummaryList().get(position - 2);
-                holder.date.setText(Util.convertStringToReadableDateString(daySummary.getDate(), "yyyy-MM-dd"));
+                String dateText;
+                if (Util.checkIfToday(daySummary.getDate(), "yyyy-MM-dd")) {
+                    dateText = "Today";
+                } else if (Util.checkIfTomorrow(daySummary.getDate(), "yyyy-MM-dd")) {
+                    dateText = "Yesterday";
+                } else {
+                    dateText = Util.convertStringToReadableDateString(daySummary.getDate(), "yyyy-MM-dd");
+                }
+
+                holder.date.setText(dateText);
                 holder.time.setText(Util.convertSecondsToHoursAndMinutes(daySummary.getTotal()));
 
                 break;

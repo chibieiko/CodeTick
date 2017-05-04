@@ -10,6 +10,7 @@ import com.sankari.erika.codetick.Classes.Token;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -78,5 +79,45 @@ public class Util {
                 TimeUnit.SECONDS.toHours(time),
                 TimeUnit.SECONDS.toMinutes(time) -
                         TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(time)));
+    }
+
+    public static boolean checkIfToday(String dateString, String format) {
+        Date today = new Date();
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Calendar calToday = Calendar.getInstance();
+        calToday.setTime(today);
+        Calendar calDate = Calendar.getInstance();
+        calDate.setTime(date);
+
+        return calToday.get(Calendar.YEAR) == calDate.get(Calendar.YEAR)
+                && calToday.get(Calendar.DAY_OF_YEAR) == calDate.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public static boolean checkIfTomorrow(String dateString, String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Date todayDate = new Date();
+        Calendar calYesterday = Calendar.getInstance();
+        calYesterday.setTime(todayDate);
+        calYesterday.add(Calendar.DATE, -1);
+
+        Calendar calDate = Calendar.getInstance();
+        calDate.setTime(date);
+
+        return calYesterday.get(Calendar.YEAR) == calDate.get(Calendar.YEAR)
+                && calYesterday.get(Calendar.DAY_OF_YEAR) == calDate.get(Calendar.DAY_OF_YEAR);
     }
 }
