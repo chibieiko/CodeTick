@@ -108,11 +108,20 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         PieDataSet dataSet = new PieDataSet(pieEntries, "");
         dataSet.setSliceSpace(2);
 
-        // todo proper colors and many of them
         int[] colors = {
-                ContextCompat.getColor(this, R.color.pink),
-                ContextCompat.getColor(this, R.color.blue),
-                ContextCompat.getColor(this, R.color.gold),
+                ContextCompat.getColor(languagePie.getContext(), R.color.violet),
+                ContextCompat.getColor(languagePie.getContext(), R.color.red),
+                ContextCompat.getColor(languagePie.getContext(), R.color.teal),
+                ContextCompat.getColor(languagePie.getContext(), R.color.blue),
+                ContextCompat.getColor(languagePie.getContext(), R.color.light_green),
+                ContextCompat.getColor(languagePie.getContext(), R.color.orange),
+                ContextCompat.getColor(languagePie.getContext(), R.color.brown),
+                ContextCompat.getColor(languagePie.getContext(), R.color.gray),
+                ContextCompat.getColor(languagePie.getContext(), R.color.purple),
+                ContextCompat.getColor(languagePie.getContext(), R.color.pink),
+                ContextCompat.getColor(languagePie.getContext(), R.color.light_blue),
+                ContextCompat.getColor(languagePie.getContext(), R.color.cyan),
+                ContextCompat.getColor(languagePie.getContext(), R.color.dark_orange)
         };
 
         dataSet.setColors(colors);
@@ -126,6 +135,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         languagePie.setUsePercentValues(true);
         languagePie.setCenterText("Languages");
         languagePie.setCenterTextSize(16);
+        languagePie.setCenterTextColor(R.color.primary_text);
         languagePie.setDescription(null);
         languagePie.setTouchEnabled(false);
 

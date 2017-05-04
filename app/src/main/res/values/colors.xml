@@ -5,16 +5,27 @@
     <color name="colorPrimaryDark">#512DA8</color>
     <color name="colorPrimaryLight">#D1C4E9</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="primary_text">#212121</color>
+    <color name="primary_text">#424242</color>
     <color name="secondary_text">#757575</color>
     <color name="white">#fff</color>
 
     <!-- Recycler view decoration color -->
-    <color name="itemLine">#BDBDBD</color>
+    <color name="itemLine">#E0E0E0</color>
 
     <!-- Pie chart colors -->
-    <color name="gold">#FFC125</color>
-    <color name="pink">#FFA5A5</color>
-    <color name="blue">#1E767A</color>
+    <color name="red">#ef5350</color>
+    <color name="pink">#EC407A</color>
+    <color name="purple">#AB47BC</color>
+    <color name="violet">#7E57C2</color>
+    <color name="blue">#5C6BC0</color>
+    <color name="light_blue">#42A5F5</color>
+    <color name="cyan">#26C6DA</color>
+    <color name="teal">#26A69A</color>
+    <color name="green">#66BB6A</color>
+    <color name="light_green">#D4E157</color>
+    <color name="orange">#FFA726</color>
+    <color name="dark_orange">#FF7043</color>
+    <color name="brown">#8D6E63</color>
+    <color name="gray">#78909C</color>
 
 </resources>

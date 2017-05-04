@@ -110,11 +110,20 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 PieDataSet dataSet = new PieDataSet(pieEntries, "");
                 dataSet.setSliceSpace(2);
 
-                // todo proper colors and many of them
                 int[] colors = {
-                        ContextCompat.getColor(todayPieView.getContext(), R.color.pink),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.violet),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.red),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.teal),
                         ContextCompat.getColor(todayPieView.getContext(), R.color.blue),
-                        ContextCompat.getColor(todayPieView.getContext(), R.color.gold),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.light_green),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.orange),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.brown),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.gray),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.purple),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.pink),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.light_blue),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.cyan),
+                        ContextCompat.getColor(todayPieView.getContext(), R.color.dark_orange)
                 };
                 dataSet.setColors(colors);
 
@@ -127,6 +136,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 todayPie.setUsePercentValues(true);
                 todayPie.setCenterText("Projects");
                 todayPie.setCenterTextSize(16);
+                todayPie.setCenterTextColor(R.color.primary_text);
                 todayPie.setNoDataText("Maybe it's time to code something?");
                 todayPie.setDescription(null);
                 todayPie.setTouchEnabled(false);
@@ -167,11 +177,11 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        protected TextView projectName;
-        protected TextView projectTime;
-        protected TextView todayTime;
-        protected TextView todayTimeText;
-        protected PieChart todayPie;
+        TextView projectName;
+        TextView projectTime;
+        TextView todayTime;
+        TextView todayTimeText;
+        PieChart todayPie;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
