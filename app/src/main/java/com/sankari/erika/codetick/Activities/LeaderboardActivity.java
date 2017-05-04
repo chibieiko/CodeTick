@@ -91,6 +91,10 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (swipeRefresh.isRefreshing()) {
+                    swipeRefresh.setRefreshing(false);
+                }
+
                 Snackbar.make(findViewById(R.id.drawer_layout), reason, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

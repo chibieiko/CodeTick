@@ -1,6 +1,7 @@
 package com.sankari.erika.codetick.Activities;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
                 projectDetailsHandler.getProjectDetails();
             }
         });
+
         swipeRefreshLayout.setRefreshing(true);
         projectDetailsHandler.getProjectDetails();
 
@@ -162,13 +164,26 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
                 // Draws the pie chart.
                 languagePie.invalidate();
 
-                swipeRefreshLayout.setRefreshing(false);
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
 
     @Override
     public void onProjectDetailsLoadError(String error) {
-        System.out.println(error);
+        final String message = error;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
+                Snackbar.make(findViewById(R.id.drawer_layout), message, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
     }
 }

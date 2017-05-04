@@ -23,6 +23,9 @@
     <string name="nav_drawer_leaderboards">Leaderboards</string>
     <string name="nav_drawer_logout">Logout</string>
 
+    <string name="error_getting_data">Error getting data from Wakatime\'s server. Try again later</string>
+    <string name="error_connecting">Error connecting to Wakatime\'s server. Try again later</string>
+
     <!-- Debugger level -->
     <string name="debugLevel">4</string>
     <string name="no_data_for_project">Nothing to show from past 7 days</string>

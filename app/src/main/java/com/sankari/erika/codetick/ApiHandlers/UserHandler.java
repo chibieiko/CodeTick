@@ -44,14 +44,16 @@ public class UserHandler {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     e.printStackTrace();
-                    userListener.onUserDataLoadError(e.toString());
+                    if (userListener != null) {
+                        userListener.onUserDataLoadError("Error connecting to Wakatime's server. Try again later");
+                    }
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
-                    Debug.print(TAG, "onResponse", result, 5);
-                    Debug.print(TAG, "onResponse", "code: " + response.code(), 5);
+                    Debug.print(TAG, "onResponse", result, 6);
+                    Debug.print(TAG, "onResponse", "code: " + response.code(), 6);
 
                     if (response.code() == 200) {
                         try {
@@ -62,8 +64,6 @@ public class UserHandler {
                                     userObject.getString("email"),
                                     userObject.getString("photo"));
 
-                            System.out.println(user);
-                            System.out.println("USER LISTENER: " + userListener);
                             if (userListener != null) {
                                 userListener.onUserDataSuccessfullyLoaded(user);
                             }
@@ -73,12 +73,16 @@ public class UserHandler {
                         }
                     } else {
                         if (userListener != null) {
-                            userListener.onUserDataLoadError("Error fetching user data from Wakatime's server...");
+                            userListener.onUserDataLoadError("Error fetching data from Wakatime's server. Try again later");
                         }
                     }
                 }
             });
         } else {
+            if (userListener != null) {
+                userListener.onUserDataLoadError("Error fetching data from Wakatime's server. Try again later");
+            }
+
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

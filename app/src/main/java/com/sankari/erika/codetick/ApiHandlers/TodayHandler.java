@@ -35,10 +35,6 @@ public class TodayHandler {
         this.apiHandler = handler;
     }
 
-    public OnTodaySummaryLoadedListener getTodayListener() {
-        return todayListener;
-    }
-
     public void setTodayListener(OnTodaySummaryLoadedListener todayListener) {
         this.todayListener = todayListener;
     }
@@ -55,6 +51,7 @@ public class TodayHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    todayListener.onTodaySummaryLoadError("Error connecting to Wakatime's server. Try again later");
                     e.printStackTrace();
                 }
 
@@ -100,11 +97,12 @@ public class TodayHandler {
                             e.printStackTrace();
                         }
                     } else {
-                        todayListener.onTodaySummaryLoadError("Error fetching today's stats from Wakatime's server...");
+                        todayListener.onTodaySummaryLoadError("Error fetching data from Wakatime's server. Try again later");
                     }
                 }
             });
         } else {
+            todayListener.onTodaySummaryLoadError("Error fetching data from Wakatime's server. Try again later");
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

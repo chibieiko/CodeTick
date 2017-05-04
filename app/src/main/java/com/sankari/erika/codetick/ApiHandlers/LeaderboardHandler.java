@@ -47,6 +47,7 @@ public class LeaderboardHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    leaderboardListener.onLeaderboardDataLoadError("Error connecting to Wakatime's server. Try again later");
                     e.printStackTrace();
                 }
 
@@ -90,12 +91,13 @@ public class LeaderboardHandler {
                         }
 
                     } else {
-                        leaderboardListener.onLeaderboardDataLoadError("Error fetching data from Wakatime's server...");
+                        leaderboardListener.onLeaderboardDataLoadError("Error fetching data from Wakatime's server. Try again later");
                     }
                 }
             });
 
         } else {
+            leaderboardListener.onLeaderboardDataLoadError("Error fetching data from Wakatime's server. Try again later");
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

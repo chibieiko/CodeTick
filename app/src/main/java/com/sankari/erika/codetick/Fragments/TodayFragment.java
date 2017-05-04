@@ -110,11 +110,20 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
     @Override
     public void onTodaySummaryLoadError(String error) {
-        if (swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
+        final String message = error;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
-        Snackbar.make(getActivity().findViewById(R.id.drawer_layout), "Error getting data from Wakatime's server... Try again later", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+                Snackbar.make(getActivity().findViewById(R.id.drawer_layout),
+                        message,
+                        Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
     }
 }

@@ -49,6 +49,7 @@ public class ProjectDetailsHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    projectDetailsLoadedListener.onProjectDetailsLoadError("Error connecting to Wakatime's server. Try again later");
                     e.printStackTrace();
                 }
 
@@ -95,7 +96,7 @@ public class ProjectDetailsHandler {
 
                             projectDetails.setLanguages(languages);
 
-                            Debug.print(TAG, "onResponse", "PROJECT DETAILS READY", 4);
+                            Debug.print(TAG, "onResponse", "PROJECT DETAILS READY", 6);
                             projectDetailsLoadedListener.onProjectDetailsSuccessfullyLoaded(projectDetails);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -103,7 +104,7 @@ public class ProjectDetailsHandler {
 
                     } else if (response.code() == 202) {
                         try {
-                            Debug.print(TAG, "getProjectDetails:onResponse", "code: " + response.code(), 4);
+                            Debug.print(TAG, "getProjectDetails:onResponse", "code: " + response.code(), 6);
                             // calls Thread to sleep for one second and then try again to get project details.
                             TimeUnit.SECONDS.sleep(1);
                             getProjectDetails();
@@ -112,11 +113,12 @@ public class ProjectDetailsHandler {
                         }
 
                     } else {
-                        projectDetailsLoadedListener.onProjectDetailsLoadError("Error fetching data from Wakatime's server...");
+                        projectDetailsLoadedListener.onProjectDetailsLoadError("Error fetching data from Wakatime's server. Try again later");
                     }
                 }
             });
         } else {
+            projectDetailsLoadedListener.onProjectDetailsLoadError("Error fetching data from Wakatime's server. Try again later");
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

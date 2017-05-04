@@ -207,9 +207,20 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
 
     @Override
     public void onProjectListLoadError(String error) {
-        Snackbar.make(getActivity().findViewById(R.id.drawer_layout),
-                "Error getting data from Wakatime's server... Try again later",
-                Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        final String message = error;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (swipeRefreshLayoutProjects.isRefreshing()) {
+                    swipeRefreshLayoutProjects.setRefreshing(false);
+                }
+
+                Snackbar.make(getActivity().findViewById(R.id.drawer_layout),
+                        message,
+                        Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
     }
 }

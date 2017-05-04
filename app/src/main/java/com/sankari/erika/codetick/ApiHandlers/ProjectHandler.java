@@ -45,6 +45,7 @@ public class ProjectHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    projectListLoadedListener.onProjectListLoadError("Error connecting to Wakatime's server. Try again later");
                     e.printStackTrace();
                 }
 
@@ -52,8 +53,8 @@ public class ProjectHandler {
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
 
-                    Debug.print(TAG, "getProjectListing:onResponse", result, 4);
-                    Debug.print(TAG, "getProjectListing:onResponse", "code: " + response.code(), 4);
+                    Debug.print(TAG, "getProjectListing:onResponse", result, 6);
+                    Debug.print(TAG, "getProjectListing:onResponse", "code: " + response.code(), 6);
 
                     if (response.code() == 200) {
                         try {
@@ -69,17 +70,18 @@ public class ProjectHandler {
                                         tempObject.getString("id")));
                             }
 
-                            Debug.print(TAG, "onResponse", "PROJECT LIST READY", 4);
+                            Debug.print(TAG, "onResponse", "PROJECT LIST READY", 6);
                             projectListLoadedListener.onProjectListSuccessfullyLoaded(projectList);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        projectListLoadedListener.onProjectListLoadError("Error fetching data from Wakatime's server...");
+                        projectListLoadedListener.onProjectListLoadError("Error fetching data from Wakatime's server. Try again later");
                     }
                 }
             });
         } else {
+            projectListLoadedListener.onProjectListLoadError("Error fetching data from Wakatime's server. Try again later");
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }
