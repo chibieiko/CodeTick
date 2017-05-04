@@ -51,6 +51,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         projectDetailsHandler.setProjectDetailsLoadedListener(this);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.project_activity_swipe);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

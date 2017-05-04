@@ -71,6 +71,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
         // Defines where to show the refresh icon.
         swipeRefreshLayout = (SwipeRefreshLayout) rootView;
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

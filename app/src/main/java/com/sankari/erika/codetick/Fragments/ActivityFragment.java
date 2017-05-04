@@ -75,6 +75,7 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
 
         // Defines where to show the refresh icon.
         swipeRefreshLayout = (SwipeRefreshLayout) rootView;
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

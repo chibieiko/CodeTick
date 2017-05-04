@@ -161,6 +161,7 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
         recyclerView = (RecyclerView) rootView.findViewById(R.id.project_recycler_view);
 
         swipeRefreshLayoutProjects = (SwipeRefreshLayout) rootView;
+        swipeRefreshLayoutProjects.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayoutProjects.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

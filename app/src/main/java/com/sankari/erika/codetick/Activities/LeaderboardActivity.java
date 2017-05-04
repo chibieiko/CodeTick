@@ -48,6 +48,7 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         recyclerView = (RecyclerView) findViewById(R.id.leaderboard_recycler_view);
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.activity_leaderboard);
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
