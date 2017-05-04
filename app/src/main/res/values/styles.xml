@@ -10,6 +10,12 @@
         <item name="android:textColorHint">@color/white</item>
     </style>
 
+    <style name="ActivityWithActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="ToolbarWhiteIcons" parent="AppTheme">
         <item name="android:textColorSecondary">@color/white</item>
     </style>

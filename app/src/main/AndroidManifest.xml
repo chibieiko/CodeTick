@@ -43,6 +43,7 @@
         <activity
             android:name=".Activities.ProjectActivity"
             android:label="@string/project_activity_label"
+            android:theme="@style/ActivityWithActionBar"
             android:parentActivityName=".Activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -51,10 +52,11 @@
 
         <activity
             android:name=".Activities.DayActivity"
-            android:parentActivityName=".Activities.MainActivity">
+            android:theme="@style/ActivityWithActionBar"
+            android:parentActivityName=".Activities.BaseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.MainActivity" />
+                android:value=".Activities.BaseActivity" />
         </activity>
 
         <activity
