@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sankari.erika.codetick.Activities.MainActivity;
+import com.sankari.erika.codetick.Adapters.TodayAdapter;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.ApiHandlers.TodayHandler;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.Listeners.OnTodaySummaryLoadedListener;
 import com.sankari.erika.codetick.R;
-import com.sankari.erika.codetick.Adapters.TodayAdapter;
 import com.sankari.erika.codetick.Utils.CustomDividerItemDecoration;
 
 /**
@@ -24,8 +23,6 @@ import com.sankari.erika.codetick.Utils.CustomDividerItemDecoration;
  */
 
 public class TodayFragment extends android.support.v4.app.Fragment implements OnTodaySummaryLoadedListener {
-
-    private final String TAG = this.getClass().getName();
 
     /**
      * The fragment argument representing the section number for this
@@ -40,8 +37,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
     private TodaySummary todaySummary = null;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public TodayFragment() {
-    }
+    public TodayFragment() {}
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -69,7 +65,6 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.today_recycler_view);
 
-        // Defines where to show the refresh icon.
         swipeRefreshLayout = (SwipeRefreshLayout) rootView;
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -125,6 +120,5 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
                         .setAction("Action", null).show();
             }
         });
-
     }
 }

@@ -6,6 +6,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -36,6 +38,8 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
     private TextView bestdayTimeText;
     private TextView title;
     private PieChart languagePie;
+    private LinearLayout noData;
+    private LinearLayout content;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -62,6 +66,9 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         swipeRefreshLayout.setRefreshing(true);
         projectDetailsHandler.getProjectDetails();
 
+        content = (LinearLayout) findViewById(R.id.project_detail_content);
+        content.setVisibility(View.GONE);
+        noData = (LinearLayout) findViewById(R.id.hide_project_details);
         totalTime = (TextView) findViewById(R.id.project_activity_total_time);
         totalTimeText = (TextView) findViewById(R.id.project_activity_total_time_text);
         projectAverageTime = (TextView) findViewById(R.id.project_activity_average_time);
@@ -92,84 +99,99 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
 
     @Override
     public void onProjectDetailsSuccessfullyLoaded(ProjectDetails projectDetails) {
-        final String total_time = "" + Util.convertSecondsToHoursAndMinutes(projectDetails.getTotalTime());
-        final String total_time_text = "Total ";
-        final String daily_average = "" + Util.convertSecondsToHoursAndMinutes(projectDetails.getDailyAverage());
-        final String daily_average_text = "Daily average ";
-        final String bestday_time_text = "Best day total ";
-        final String bestday_time = Util.convertSecondsToHoursAndMinutes(projectDetails.getBestDayTime());
-        final String bestday_date_text = "Best day ";
-        final String bestday_date = Util.convertStringToReadableDateString(projectDetails.getBestDayDate(), "MM/dd/yyyy");
-        final String titleText = projectDetails.getName();
+        if (projectDetails.getLanguages().size() > 0) {
+            final String total_time = "" + Util.convertSecondsToHoursAndMinutes(projectDetails.getTotalTime());
+            final String total_time_text = "Total ";
+            final String daily_average = "" + Util.convertSecondsToHoursAndMinutes(projectDetails.getDailyAverage());
+            final String daily_average_text = "Daily average ";
+            final String bestday_time_text = "Best day total ";
+            final String bestday_time = Util.convertSecondsToHoursAndMinutes(projectDetails.getBestDayTime());
+            final String bestday_date_text = "Best day ";
+            final String bestday_date = Util.convertStringToReadableDateString(projectDetails.getBestDayDate(), "MM/dd/yyyy");
+            final String titleText = projectDetails.getName();
 
-        List<Language> languages = projectDetails.getLanguages();
-        List<PieEntry> pieEntries = new ArrayList<>();
-        for (Language language : languages) {
-            pieEntries.add(new PieEntry(language.getPercent(), language.getName()));
-        }
-
-        PieDataSet dataSet = new PieDataSet(pieEntries, "");
-        dataSet.setSliceSpace(2);
-
-        int[] colors = {
-                ContextCompat.getColor(languagePie.getContext(), R.color.violet),
-                ContextCompat.getColor(languagePie.getContext(), R.color.red),
-                ContextCompat.getColor(languagePie.getContext(), R.color.teal),
-                ContextCompat.getColor(languagePie.getContext(), R.color.blue),
-                ContextCompat.getColor(languagePie.getContext(), R.color.light_green),
-                ContextCompat.getColor(languagePie.getContext(), R.color.orange),
-                ContextCompat.getColor(languagePie.getContext(), R.color.brown),
-                ContextCompat.getColor(languagePie.getContext(), R.color.gray),
-                ContextCompat.getColor(languagePie.getContext(), R.color.purple),
-                ContextCompat.getColor(languagePie.getContext(), R.color.pink),
-                ContextCompat.getColor(languagePie.getContext(), R.color.light_blue),
-                ContextCompat.getColor(languagePie.getContext(), R.color.cyan),
-                ContextCompat.getColor(languagePie.getContext(), R.color.dark_orange)
-        };
-
-        dataSet.setColors(colors);
-
-        PieData pieData = new PieData(dataSet);
-        pieData.setDrawValues(false);
-        //pieData.setValueTextColor(Color.WHITE);
-
-        languagePie.setData(pieData);
-        languagePie.setDrawEntryLabels(false);
-        languagePie.setUsePercentValues(true);
-        languagePie.setCenterText("Languages");
-        languagePie.setCenterTextSize(16);
-        languagePie.setCenterTextColor(R.color.primary_text);
-        languagePie.setDescription(null);
-        languagePie.setTouchEnabled(false);
-
-        Legend legend = languagePie.getLegend();
-        legend.setTextSize(16f);
-        legend.setTextColor(ContextCompat.getColor(this, R.color.secondary_text));
-        legend.setXEntrySpace(10f);
-        legend.setYEntrySpace(5f);
-        legend.setWordWrapEnabled(true);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                totalTimeText.setText(total_time_text);
-                totalTime.setText(total_time);
-                projectAverageTimeText.setText(daily_average_text);
-                projectAverageTime.setText(daily_average);
-                bestdayText.setText(bestday_date_text);
-                bestday.setText(bestday_date);
-                bestdayTimeText.setText(bestday_time_text);
-                bestdayTime.setText(bestday_time);
-                title.setText(titleText);
-
-                // Draws the pie chart.
-                languagePie.invalidate();
-
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+            List<Language> languages = projectDetails.getLanguages();
+            List<PieEntry> pieEntries = new ArrayList<>();
+            for (Language language : languages) {
+                pieEntries.add(new PieEntry(language.getPercent(), language.getName()));
             }
-        });
+
+            PieDataSet dataSet = new PieDataSet(pieEntries, "");
+            dataSet.setSliceSpace(2);
+
+            int[] colors = {
+                    ContextCompat.getColor(languagePie.getContext(), R.color.violet),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.red),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.teal),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.blue),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.light_green),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.orange),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.brown),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.gray),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.purple),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.pink),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.light_blue),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.cyan),
+                    ContextCompat.getColor(languagePie.getContext(), R.color.dark_orange)
+            };
+
+            dataSet.setColors(colors);
+
+            PieData pieData = new PieData(dataSet);
+            pieData.setDrawValues(false);
+            //pieData.setValueTextColor(Color.WHITE);
+
+            languagePie.setData(pieData);
+            languagePie.setDrawEntryLabels(false);
+            languagePie.setUsePercentValues(true);
+            languagePie.setCenterText("Languages");
+            languagePie.setCenterTextSize(16);
+            languagePie.setCenterTextColor(R.color.primary_text);
+            languagePie.setDescription(null);
+            languagePie.setTouchEnabled(false);
+
+            Legend legend = languagePie.getLegend();
+            legend.setTextSize(16f);
+            legend.setTextColor(ContextCompat.getColor(this, R.color.secondary_text));
+            legend.setXEntrySpace(10f);
+            legend.setYEntrySpace(5f);
+            legend.setWordWrapEnabled(true);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    content.setVisibility(View.VISIBLE);
+                    totalTimeText.setText(total_time_text);
+                    totalTime.setText(total_time);
+                    projectAverageTimeText.setText(daily_average_text);
+                    projectAverageTime.setText(daily_average);
+                    bestdayText.setText(bestday_date_text);
+                    bestday.setText(bestday_date);
+                    bestdayTimeText.setText(bestday_time_text);
+                    bestdayTime.setText(bestday_time);
+                    title.setText(titleText);
+
+                    // Draws the pie chart.
+                    languagePie.invalidate();
+
+                    if (swipeRefreshLayout.isRefreshing()) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+            });
+
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    noData.setVisibility(View.VISIBLE);
+
+                    if (swipeRefreshLayout.isRefreshing()) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+            });
+        }
     }
 
     @Override
