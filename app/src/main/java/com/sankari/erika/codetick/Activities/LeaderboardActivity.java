@@ -6,32 +6,29 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 
 import com.sankari.erika.codetick.Adapters.LeaderboardAdapter;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.ApiHandlers.LeaderboardHandler;
 import com.sankari.erika.codetick.Classes.LeaderboardItem;
-import com.sankari.erika.codetick.Classes.ProjectListItem;
 import com.sankari.erika.codetick.Listeners.OnLeaderboardDataLoadedListener;
 import com.sankari.erika.codetick.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDataLoadedListener{
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
-    private LeaderboardHandler leaderboardHandler;
     private List<LeaderboardItem> leaderboardList = new ArrayList<>();
     private List<LeaderboardItem> originalList = new ArrayList<>();
     private LeaderboardAdapter leaderboardAdapter;
@@ -110,6 +107,7 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setQueryHint("Search users");
+
 
         searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
