@@ -11,14 +11,14 @@
     <TextView
         android:id="@+id/projectName"
         android:textColor="@color/primary_text"
-        android:textSize="@dimen/reading"
+        android:textSize="@dimen/primary_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/projectTime"
         android:textColor="@color/secondary_text"
-        android:textSize="@dimen/text"
+        android:textSize="@dimen/secondary_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

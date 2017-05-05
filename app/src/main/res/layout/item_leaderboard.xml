@@ -18,10 +18,10 @@
             android:id="@+id/leaderboard_rank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/header"
             android:paddingBottom="@dimen/content_padding"
-            android:paddingRight="@dimen/content_padding"/>
+            android:paddingRight="@dimen/content_padding" />
 
         <TextView
             android:id="@+id/leaderboard_name"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/content_padding"
             android:layout_toEndOf="@+id/leaderboard_rank"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/header" />
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/leaderboard_rank"
             android:textColor="@color/primary_text"
-            android:textSize="@dimen/reading" />
+            android:textSize="@dimen/primary_text" />
 
         <TextView
             android:id="@+id/leaderboard_total"
@@ -47,7 +47,7 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/leaderboard_rank"
             android:textColor="@color/secondary_text"
-            android:textSize="@dimen/reading" />
+            android:textSize="@dimen/primary_text" />
 
         <TextView
             android:id="@+id/leaderboard_avg_text"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/leaderboard_total_text"
             android:textColor="@color/primary_text"
-            android:textSize="@dimen/reading" />
+            android:textSize="@dimen/primary_text" />
 
         <TextView
             android:id="@+id/leaderboard_avg"
@@ -64,7 +64,7 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/leaderboard_total_text"
             android:textColor="@color/secondary_text"
-            android:textSize="@dimen/reading" />
+            android:textSize="@dimen/primary_text" />
 
         <TextView
             android:id="@+id/leaderboard_language_text"
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/leaderboard_avg_text"
             android:textColor="@color/primary_text"
-            android:textSize="@dimen/reading"
+            android:textSize="@dimen/primary_text"
             android:paddingTop="@dimen/content_padding"/>
 
         <TextView
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/leaderboard_language_text"
             android:textColor="@color/secondary_text"
-            android:textSize="@dimen/text" />
+            android:textSize="@dimen/secondary_text" />
 
     </RelativeLayout>
 </LinearLayout>

@@ -36,22 +36,30 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
         if (viewType == 0) {
             // Inflates the today_total layout
-            View todayTotalView = inflater.inflate(R.layout.item_today_total, parent, false);
+            View dayTotalView = inflater.inflate(R.layout.item_today_total, parent, false);
 
             // Returns a new holder instance
-            return new ViewHolder(todayTotalView);
-        } else {
+            return new ViewHolder(dayTotalView);
+        } else if (viewType == 1) {
             // Inflates the today_project layout
-            View todayProjectView = inflater.inflate(R.layout.item_today_project, parent, false);
+            View dayProjectView = inflater.inflate(R.layout.item_today_project, parent, false);
 
             // Returns a new holder instance
-            return new ViewHolder(todayProjectView);
+            return new ViewHolder(dayProjectView);
+        } else {
+            View noData = inflater.inflate(R.layout.item_no_data, parent, false);
+
+            return new ViewHolder(noData);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
         Debug.print(TAG, "getItemViewType", "position: " + position, 5);
+
+        if (daySummary.getProjectList().size() <= 0) {
+            return 2;
+        }
 
         if (position == 0) {
             return 0;
@@ -80,13 +88,18 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
                 break;
 
             // Project list.
-            default:
+            case 1:
                 // Gets the data model based on position.
                 ProjectListItem projectListItem = daySummary.getProjectList().get(position - 1);
 
                 holder.projectName.setText(projectListItem.getName());
                 String time = Util.convertSecondsToHoursAndMinutes(projectListItem.getTime());
                 holder.projectTime.setText(time);
+
+                break;
+
+            case 2:
+                holder.noData.setText("No coding data for this day...");
         }
     }
 
@@ -101,10 +114,11 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        protected TextView totalText;
-        protected TextView total;
-        protected TextView projectName;
-        protected TextView projectTime;
+        TextView totalText;
+        TextView total;
+        TextView projectName;
+        TextView projectTime;
+        TextView noData;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -117,6 +131,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
             projectTime = (TextView) itemView.findViewById(R.id.projectTime);
             totalText = (TextView) itemView.findViewById(R.id.total_today_box_text);
             total = (TextView) itemView.findViewById(R.id.total_today_box);
+            noData = (TextView) itemView.findViewById(R.id.no_data);
         }
     }
 }

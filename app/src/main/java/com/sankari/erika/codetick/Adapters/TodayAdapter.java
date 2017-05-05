@@ -34,7 +34,6 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     private View todayPieView;
 
     public TodayAdapter(TodaySummary todaySummary) {
-        System.out.println("TODAY SUMMARY: " + todaySummary);
         this.todaySummary = todaySummary;
     }
 
@@ -63,7 +62,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             return new ViewHolder(todayProjectView);
         } else {
             // Inflates the today_project layout
-            View noDataView = inflater.inflate(R.layout.item_no_today_data, parent, false);
+            View noDataView = inflater.inflate(R.layout.item_no_data, parent, false);
 
             // Returns a new holder instance
             return new ViewHolder(noDataView);
@@ -184,7 +183,6 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        System.out.println("TODAY SUMMARY===== " + todaySummary);
         if (todaySummary.getTodayProjectList().size() > 0) {
             // Add two to count for chart and total time.
             return todaySummary.getTodayProjectList().size() + 2;
@@ -219,7 +217,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             todayTime = (TextView) itemView.findViewById(R.id.total_today_box);
             todayTimeText = (TextView) itemView.findViewById(R.id.total_today_box_text);
             todayPie = (PieChart) itemView.findViewById(R.id.today_pie_chart);
-            noTodayData = (TextView) itemView.findViewById(R.id.no_today_data);
+            noTodayData = (TextView) itemView.findViewById(R.id.no_data);
         }
     }
 }

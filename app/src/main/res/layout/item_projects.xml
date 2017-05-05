@@ -17,7 +17,7 @@
         android:paddingBottom="2dp"
         android:id="@+id/projects_name"
         android:textColor="@color/primary_text"
-        android:textSize="@dimen/reading"
+        android:textSize="@dimen/primary_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

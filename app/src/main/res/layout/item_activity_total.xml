@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/activity_tab_title"
                 android:textColor="@color/white"
-                android:textSize="@dimen/reading" />
+                android:textSize="@dimen/primary_text" />
 
             <TextView
                 android:id="@+id/activity_total_box"
@@ -47,7 +47,7 @@
                 android:layout_below="@+id/activity_tab_title"
                 android:textColor="@color/white"
                 android:layout_alignParentEnd="true"
-                android:textSize="@dimen/reading" />
+                android:textSize="@dimen/primary_text" />
 
             <TextView
                 android:id="@+id/activity_avg_box_text"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/activity_total_box"
                 android:textColor="@color/white"
-                android:textSize="@dimen/reading" />
+                android:textSize="@dimen/primary_text" />
 
             <TextView
                 android:id="@+id/activity_avg_box"
@@ -64,7 +64,7 @@
                 android:layout_below="@+id/activity_total_box"
                 android:textColor="@color/white"
                 android:layout_alignParentEnd="true"
-                android:textSize="@dimen/reading" />
+                android:textSize="@dimen/primary_text" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
