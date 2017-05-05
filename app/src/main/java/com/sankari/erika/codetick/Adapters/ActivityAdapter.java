@@ -163,7 +163,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                 String dateText;
                 if (Util.checkIfToday(daySummary.getDate(), "yyyy-MM-dd")) {
                     dateText = "Today";
-                } else if (Util.checkIfTomorrow(daySummary.getDate(), "yyyy-MM-dd")) {
+                } else if (Util.checkIfYesterday(daySummary.getDate(), "yyyy-MM-dd")) {
                     dateText = "Yesterday";
                 } else {
                     dateText = Util.convertStringToReadableDateString(daySummary.getDate(), "yyyy-MM-dd");

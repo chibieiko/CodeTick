@@ -34,6 +34,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     private View todayPieView;
 
     public TodayAdapter(TodaySummary todaySummary) {
+        System.out.println("TODAY SUMMARY: " + todaySummary);
         this.todaySummary = todaySummary;
     }
 
@@ -54,12 +55,18 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             todayPieView = inflater.inflate(R.layout.item_today_chart, parent, false);
 
             return new ViewHolder(todayPieView);
-        } else {
+        } else if (viewType == 2) {
             // Inflates the today_project layout
             View todayProjectView = inflater.inflate(R.layout.item_today_project, parent, false);
 
             // Returns a new holder instance
             return new ViewHolder(todayProjectView);
+        } else {
+            // Inflates the today_project layout
+            View noDataView = inflater.inflate(R.layout.item_no_today_data, parent, false);
+
+            // Returns a new holder instance
+            return new ViewHolder(noDataView);
         }
     }
 
@@ -67,12 +74,16 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     public int getItemViewType(int position) {
         Debug.print(TAG, "getItemViewType", "position: " + position, 5);
 
-        if (position == 0) {
-            return 0;
-        } else if (position == 1) {
-            return 1;
+        if (todaySummary.getTodayProjectList().size() > 0) {
+            if (position == 0) {
+                return 0;
+            } else if (position == 1) {
+                return 1;
+            } else {
+                return 2;
+            }
         } else {
-            return 2;
+            return 3;
         }
     }
 
@@ -87,13 +98,12 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             case 0:
                 TextView todayTimeBox = holder.todayTime;
                 TextView todayTimeBoxText = holder.todayTimeText;
-                if (todaySummary.getTodayProjectList().size() > 0) {
-                    String totalText = "Total ";
-                    String total = "" + Util.convertSecondsToHoursAndMinutes(todaySummary.getTotalTime());
 
-                    todayTimeBox.setText(total);
-                    todayTimeBoxText.setText(totalText);
-                }
+                String totalText = "Total ";
+                String total = "" + Util.convertSecondsToHoursAndMinutes(todaySummary.getTotalTime());
+
+                todayTimeBox.setText(total);
+                todayTimeBoxText.setText(totalText);
 
                 break;
 
@@ -155,7 +165,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 break;
 
             // Project list.
-            default:
+            case 2:
                 // Gets the data model based on position (-2 because todaySummary total time and
                 // chart take positions 0 & 1).
                 TodayProject todayProject = todaySummary.getTodayProjectList().get(position - 2);
@@ -163,13 +173,26 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 holder.projectName.setText(todayProject.getName());
                 String time = todayProject.getHours() + "h " + todayProject.getMinutes() + "min";
                 holder.projectTime.setText(time);
+
+                break;
+
+            // No data.
+            default:
+                holder.noTodayData.setText("No coding data from today...");
         }
     }
 
     @Override
     public int getItemCount() {
-        // Add two to count for chart and total time.
-        return todaySummary.getTodayProjectList().size() + 2;
+        System.out.println("TODAY SUMMARY===== " + todaySummary);
+        if (todaySummary.getTodayProjectList().size() > 0) {
+            // Add two to count for chart and total time.
+            return todaySummary.getTodayProjectList().size() + 2;
+        } else if (todaySummary.getTotalTime() == -1) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -182,6 +205,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         TextView todayTime;
         TextView todayTimeText;
         PieChart todayPie;
+        TextView noTodayData;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -195,6 +219,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             todayTime = (TextView) itemView.findViewById(R.id.total_today_box);
             todayTimeText = (TextView) itemView.findViewById(R.id.total_today_box_text);
             todayPie = (PieChart) itemView.findViewById(R.id.today_pie_chart);
+            noTodayData = (TextView) itemView.findViewById(R.id.no_today_data);
         }
     }
 }

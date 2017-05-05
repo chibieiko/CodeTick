@@ -26,7 +26,16 @@ public class DayActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         daySummary = (DaySummary) extras.get("daySummary");
 
-        setTitle(Util.convertStringToReadableDateString(daySummary.getDate(), "yyyy-MM-dd"));
+        String title;
+        if (Util.checkIfToday(daySummary.getDate(), "yyyy-MM-dd")) {
+            title = "Today";
+        } else if (Util.checkIfYesterday(daySummary.getDate(), "yyyy-MM-dd")) {
+            title = "Yesterday";
+        } else {
+            title = Util.convertStringToReadableDateString(daySummary.getDate(), "yyyy-MM-dd");
+        }
+
+        setTitle(title);
 
         recyclerView = (RecyclerView) findViewById(R.id.day_recycler_view);
         dayAdapter = new DayAdapter(daySummary);

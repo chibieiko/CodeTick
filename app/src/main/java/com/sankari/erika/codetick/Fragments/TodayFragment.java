@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.sankari.erika.codetick.Adapters.TodayAdapter;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
@@ -44,7 +45,6 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
      * number.
      */
     public static TodayFragment newInstance(int sectionNumber, ApiHandler handler) {
-        System.out.println("TODAY HANDLER: " + todayHandler);
         if (todayHandler == null) {
             todayHandler = new TodayHandler(handler);
         }

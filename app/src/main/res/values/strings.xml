@@ -13,6 +13,11 @@
     <!-- Strings related to Project activity -->
     <string name="project_activity_label">Last 7 days logged</string>
 
+    <string name="leaderboard_label">Leaderboards</string>
+
+    <!-- Strings related to Activity activity -->
+    <string name="last_two_weeks_logged">Last two weeks logged</string>
+
     <!-- Strings related to toolbar -->
     <string name="search_projects">Search projects</string>
 
@@ -23,11 +28,12 @@
     <string name="nav_drawer_leaderboards">Leaderboards</string>
     <string name="nav_drawer_logout">Logout</string>
 
-    <string name="error_getting_data">Error getting data from Wakatime\'s server. Try again later</string>
+    <!-- Strings for errors -->
+    <string name="error_getting_data">Error fetching data from Wakatime\'s server. Try again later</string>
     <string name="error_connecting">Error connecting to Wakatime\'s server. Try again later</string>
 
     <!-- Debugger level -->
     <string name="debugLevel">4</string>
     <string name="no_data_for_project">Nothing to show from past 7 days</string>
-    <string name="leaderboard_label">Leaderboards</string>
+
 </resources>

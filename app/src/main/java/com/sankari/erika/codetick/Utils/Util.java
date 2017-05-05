@@ -100,7 +100,7 @@ public class Util {
                 && calToday.get(Calendar.DAY_OF_YEAR) == calDate.get(Calendar.DAY_OF_YEAR);
     }
 
-    public static boolean checkIfTomorrow(String dateString, String format) {
+    public static boolean checkIfYesterday(String dateString, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);
         Date date = null;
         try {

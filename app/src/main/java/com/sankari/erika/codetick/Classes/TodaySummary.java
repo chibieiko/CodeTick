@@ -13,7 +13,7 @@ public class TodaySummary {
 
     public TodaySummary() {
         setTodayProjectList(new ArrayList<TodayProject>());
-        setTotalTime(0);
+        setTotalTime(-1);
     }
 
     public List<TodayProject> getTodayProjectList() {
