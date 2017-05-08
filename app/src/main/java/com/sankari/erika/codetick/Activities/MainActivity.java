@@ -1,24 +1,15 @@
 package com.sankari.erika.codetick.Activities;
 
 import android.os.Bundle;
-import android.support.design.internal.NavigationMenuItemView;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
-import com.sankari.erika.codetick.ApiHandlers.UserHandler;
-import com.sankari.erika.codetick.Classes.User;
 import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
-import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
-import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
-import com.sankari.erika.codetick.Utils.Urls;
 
 public class MainActivity extends BaseActivity {
 

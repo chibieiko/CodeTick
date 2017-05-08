@@ -39,6 +39,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
     private TextView title;
     private PieChart languagePie;
     private LinearLayout noData;
+    private LinearLayout loadingData;
     private LinearLayout content;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -54,11 +55,15 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         final ProjectDetailsHandler projectDetailsHandler = new ProjectDetailsHandler(apiHandler, name);
         projectDetailsHandler.setProjectDetailsLoadedListener(this);
 
+        loadingData = (LinearLayout) findViewById(R.id.crunching_project_details);
+        loadingData.setVisibility(View.VISIBLE);
+
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.project_activity_swipe);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                loadingData.setVisibility(View.VISIBLE);
                 projectDetailsHandler.getProjectDetails();
             }
         });
@@ -107,7 +112,16 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
             final String bestday_time_text = "Best day total ";
             final String bestday_time = Util.convertSecondsToHoursAndMinutes(projectDetails.getBestDayTime());
             final String bestday_date_text = "Best day ";
-            final String bestday_date = Util.convertStringToReadableDateString(projectDetails.getBestDayDate(), "MM/dd/yyyy");
+            String temp_bestday;
+            if (Util.checkIfToday(projectDetails.getBestDayDate(), "MM/dd/yyyy")) {
+                temp_bestday = "Today";
+            } else if (Util.checkIfYesterday(projectDetails.getBestDayDate(), "MM/dd/yyyy")) {
+                temp_bestday = "Yesterday";
+            } else {
+                temp_bestday = Util.convertStringToReadableDateString(projectDetails.getBestDayDate(), "MM/dd/yyyy");
+            }
+
+            final String bestday_date = temp_bestday;
             final String titleText = projectDetails.getName();
 
             List<Language> languages = projectDetails.getLanguages();
@@ -160,6 +174,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    loadingData.setVisibility(View.GONE);
                     content.setVisibility(View.VISIBLE);
                     totalTimeText.setText(total_time_text);
                     totalTime.setText(total_time);
@@ -184,6 +199,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    loadingData.setVisibility(View.GONE);
                     noData.setVisibility(View.VISIBLE);
 
                     if (swipeRefreshLayout.isRefreshing()) {

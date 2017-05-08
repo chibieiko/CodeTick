@@ -36,5 +36,7 @@
     <string name="debugLevel">4</string>
 
     <string name="no_data_for_project">Nothing to show from past 7 days...</string>
+    <string name="project_details_loading">Wakatime is crunching the data for you, this might take a while...</string>
+    <string name="project_details_loading2">Check back later or relax and have a cup of tea!</string>
 
 </resources>

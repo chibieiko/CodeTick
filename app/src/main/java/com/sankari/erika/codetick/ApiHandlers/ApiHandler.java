@@ -59,11 +59,7 @@ public class ApiHandler {
         Debug.print(TAG, "checkTokenExpiry", new Date(expires).toString(), 1);
 
         Date today = new Date();
-        if (today.getTime() < expires) {
-            return true;
-        } else {
-            return false;
-        }
+        return today.getTime() < expires;
     }
 
     public Request getRequest(String url) {
@@ -120,7 +116,6 @@ public class ApiHandler {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                //todo show snackbar in Login activity
                 // Util.logout(context);
             }
 
@@ -133,7 +128,6 @@ public class ApiHandler {
                 try {
                     JSONObject object = new JSONObject(result);
                     if (response.code() != 200) {
-                        // todo show snackbar to prompt user to login
                         Debug.print(TAG, "refreshToken::onResponse", "ERROR TRYING TO REFRESH TOKEN", 5);
 
                         Token.setInvalidRefreshToken(true);
@@ -151,8 +145,10 @@ public class ApiHandler {
                             context.startActivity(intent);
                         }
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Util.logout(context);
                 }
             }
         });

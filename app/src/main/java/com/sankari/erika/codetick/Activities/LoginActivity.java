@@ -60,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         long expires = prefs.getLong("expires", 0);
         String refreshToken = prefs.getString("refreshToken", null);
 
-        System.out.println("TOKEN: " + accessToken);
         Debug.print(TAG, "checkForExistingToken", "TOKEN: " + accessToken, 1);
         Debug.print(TAG, "checkForExistingToken", "EXPIRY: " + new Date(expires).toString(), 1);
         Debug.print(TAG, "checkForExistingToken", "REFRESH_TOKEN: " + refreshToken, 1);
@@ -102,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 Snackbar.make(findViewById(R.id.wakatime_sign_in_button),
-                        "Error, please try login again",
+                        "Error logging in, please try again",
                         Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

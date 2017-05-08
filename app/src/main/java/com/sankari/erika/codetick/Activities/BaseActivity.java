@@ -107,7 +107,7 @@ public class BaseActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
 
-        System.out.println("MAIN ON START");
+        System.out.println("BASE ON START");
         if (userHandler.getUserListener() == null) {
             userHandler.addUserListener(this);
         }

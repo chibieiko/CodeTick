@@ -11,7 +11,7 @@ import com.sankari.erika.codetick.R;
 
 public class Debug {
 
-    private static int DEBUG_LEVEL = 4;
+    private static int DEBUG_LEVEL = 5;
 
     public static void print(String className, String method, String message, int level) {
         if (level <= DEBUG_LEVEL) {
