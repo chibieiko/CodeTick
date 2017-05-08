@@ -27,7 +27,6 @@ public class LeaderboardHandler {
     private final String TAG = this.getClass().getName();
     private OnLeaderboardDataLoadedListener leaderboardListener;
     private ApiHandler apiHandler;
-    private List<LeaderboardItem> leaderboardList = new ArrayList<>();
 
     public LeaderboardHandler(ApiHandler apiHandler) {
         this.apiHandler = apiHandler;
@@ -55,10 +54,11 @@ public class LeaderboardHandler {
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
 
-                    Debug.print(TAG, "getLeaderboardData:onResponse", result, 4);
-                    Debug.print(TAG, "getLeaderboardData:onResponse", "code: " + response.code(), 4);
+                    Debug.print(TAG, "getLeaderboardData:onResponse", result, 6);
+                    Debug.print(TAG, "getLeaderboardData:onResponse", "code: " + response.code(), 6);
 
                     if (response.code() == 200) {
+                        List<LeaderboardItem> leaderboardList = new ArrayList<>();
                         try {
                             JSONObject resultObject = new JSONObject(result);
                             JSONArray data = new JSONArray(resultObject.getString("data"));
@@ -84,7 +84,7 @@ public class LeaderboardHandler {
                                 leaderboardList.add(leaderboardItem);
                             }
 
-                            Debug.print(TAG, "onResponse", "LEADERBOARD DETAILS READY", 4);
+                            Debug.print(TAG, "onResponse", "LEADERBOARD DETAILS READY", 6);
                             leaderboardListener.onLeaderboardDataSuccessfullyLoaded(leaderboardList);
                         } catch (JSONException e) {
                             e.printStackTrace();

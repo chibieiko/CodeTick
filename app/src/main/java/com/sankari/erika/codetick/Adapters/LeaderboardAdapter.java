@@ -41,7 +41,6 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         //  Debug.print(TAG, "onBindViewHolder", projectList.get(position).getName(), 4);
         LeaderboardItem leaderboardItem = leaderboardList.get(position);
         holder.name.setText(leaderboardItem.getName());
-        System.out.println("NAME: " + leaderboardItem.getName());
         String rankString = "" + leaderboardItem.getRank();
         holder.rank.setText(rankString);
         holder.total_text.setText("Total ");

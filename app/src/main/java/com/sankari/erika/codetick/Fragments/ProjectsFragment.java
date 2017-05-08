@@ -2,7 +2,6 @@ package com.sankari.erika.codetick.Fragments;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -45,7 +44,7 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
 
     private static ProjectHandler projectHandler;
     private View rootView;
-    private SwipeRefreshLayout swipeRefreshLayoutProjects;
+    private SwipeRefreshLayout swipeRefresh;
     private ProjectAdapter projectAdapter;
     private RecyclerView recyclerView;
     private SearchView searchView;
@@ -90,10 +89,13 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
 
         searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
-            public void onViewAttachedToWindow(View v) {}
+            public void onViewAttachedToWindow(View v) {
+                swipeRefresh.setEnabled(false);
+            }
 
             @Override
             public void onViewDetachedFromWindow(View v) {
+                swipeRefresh.setEnabled(true);
                 if (hasSearched) {
                     returnListToOriginalState();
                 }
@@ -160,15 +162,15 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.project_recycler_view);
 
-        swipeRefreshLayoutProjects = (SwipeRefreshLayout) rootView;
-        swipeRefreshLayoutProjects.setColorSchemeResources(R.color.colorPrimary);
-        swipeRefreshLayoutProjects.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefresh = (SwipeRefreshLayout) rootView;
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 projectHandler.getProjectListing();
             }
         });
-        swipeRefreshLayoutProjects.setRefreshing(true);
+        swipeRefresh.setRefreshing(true);
         projectHandler.getProjectListing();
 
         projectAdapter = new ProjectAdapter(projectList);
@@ -199,8 +201,8 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
             @Override
             public void run() {
                 projectAdapter.notifyDataSetChanged();
-                if (swipeRefreshLayoutProjects.isRefreshing()) {
-                    swipeRefreshLayoutProjects.setRefreshing(false);
+                if (swipeRefresh.isRefreshing()) {
+                    swipeRefresh.setRefreshing(false);
                 }
             }
         });
@@ -212,8 +214,8 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (swipeRefreshLayoutProjects.isRefreshing()) {
-                    swipeRefreshLayoutProjects.setRefreshing(false);
+                if (swipeRefresh.isRefreshing()) {
+                    swipeRefresh.setRefreshing(false);
                 }
 
                 Snackbar.make(getActivity().findViewById(R.id.drawer_layout),

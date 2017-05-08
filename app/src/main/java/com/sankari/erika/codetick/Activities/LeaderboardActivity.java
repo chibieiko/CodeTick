@@ -75,6 +75,8 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         originalList.clear();
         originalList.addAll(newLeaderboardList);
 
+        System.out.println("LIST SIZE::::::" + leaderboardList.size());
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -113,13 +115,15 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setQueryHint("Search users");
 
-
         searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
-            public void onViewAttachedToWindow(View v) {}
+            public void onViewAttachedToWindow(View v) {
+                swipeRefresh.setEnabled(false);
+            }
 
             @Override
             public void onViewDetachedFromWindow(View v) {
+                swipeRefresh.setEnabled(true);
                 if (hasSearched) {
                     returnListToOriginalState();
                 }
