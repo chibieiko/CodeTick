@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import com.sankari.erika.codetick.ApiHandlers.ProjectHandler;
 import com.sankari.erika.codetick.Classes.ProjectListItem;
 import com.sankari.erika.codetick.Listeners.OnProjectListLoadedListener;
 import com.sankari.erika.codetick.R;
+import com.sankari.erika.codetick.Utils.CustomDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -176,8 +178,8 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
         projectAdapter = new ProjectAdapter(projectList);
         recyclerView.setAdapter(projectAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration
-                (recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new CustomDividerItemDecoration(
+                ContextCompat.getDrawable(getContext(), R.drawable.item_decorator), getContext(), false));
 
         // Inflate the layout for this fragment.
         return rootView;
@@ -200,10 +202,11 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                projectAdapter.notifyDataSetChanged();
                 if (swipeRefresh.isRefreshing()) {
                     swipeRefresh.setRefreshing(false);
                 }
+
+                projectAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -224,5 +227,16 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (swipeRefresh!=null) {
+            swipeRefresh.setRefreshing(false);
+            swipeRefresh.destroyDrawingCache();
+            swipeRefresh.clearAnimation();
+        }
     }
 }

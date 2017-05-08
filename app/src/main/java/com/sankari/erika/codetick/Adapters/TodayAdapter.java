@@ -182,7 +182,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
             // No data.
             default:
-                holder.noTodayData.setText("No coding data from today...");
+                holder.noTodayData.setText(R.string.today_adapter_no_data);
         }
     }
 

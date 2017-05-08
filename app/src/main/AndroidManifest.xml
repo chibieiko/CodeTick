@@ -14,7 +14,8 @@
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/app_name"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,14 +35,16 @@
 
         <activity
             android:name=".Activities.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:configChanges="orientation|screenSize">
         </activity>
 
         <activity
             android:name=".Activities.ProjectActivity"
             android:label="@string/project_activity_label"
             android:theme="@style/ActivityWithActionBar"
-            android:parentActivityName=".Activities.MainActivity">
+            android:parentActivityName=".Activities.MainActivity"
+            android:configChanges="orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.MainActivity" />
@@ -50,7 +53,8 @@
         <activity
             android:name=".Activities.DayActivity"
             android:theme="@style/ActivityWithActionBar"
-            android:parentActivityName=".Activities.BaseActivity">
+            android:parentActivityName=".Activities.BaseActivity"
+            android:configChanges="orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.BaseActivity" />
@@ -58,9 +62,11 @@
 
         <activity
             android:name=".Activities.LeaderboardActivity"
-            android:label="@string/leaderboard_label"/>
+            android:label="@string/leaderboard_label"
+            android:configChanges="orientation|screenSize"/>
 
-        <activity android:name=".Activities.BaseActivity" />
+        <activity android:name=".Activities.BaseActivity"
+            android:configChanges="orientation|screenSize"/>
     </application>
 
 </manifest>

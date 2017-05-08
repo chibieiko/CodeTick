@@ -1,6 +1,7 @@
 package com.sankari.erika.codetick.Fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -41,8 +42,6 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private static ActivityHandler activityHandler;
-    private RecyclerView recyclerView;
-    private View rootView;
     private ActivityAdapter activityAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActivitySummary activitySummary;
@@ -69,11 +68,10 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
                              Bundle savedInstanceState) {
         activityHandler.setActivitySummaryListener(this);
 
-        rootView = inflater.inflate(R.layout.fragment_activity, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_activity, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.activity_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.activity_recycler_view);
 
-        // Defines where to show the refresh icon.
         swipeRefreshLayout = (SwipeRefreshLayout) rootView;
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -82,6 +80,7 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
                 activityHandler.getActivitySummary();
             }
         });
+
         swipeRefreshLayout.setRefreshing(true);
         activityHandler.getActivitySummary();
 
@@ -93,7 +92,7 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
         recyclerView.setAdapter(activityAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         recyclerView.addItemDecoration(new CustomDividerItemDecoration(
-                ContextCompat.getDrawable(getContext(), R.drawable.item_decorator)));
+                ContextCompat.getDrawable(getContext(), R.drawable.item_decorator), getContext(), true));
 
         return rootView;
     }
@@ -108,10 +107,11 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityAdapter.notifyDataSetChanged();
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+
+                activityAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -130,5 +130,16 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (swipeRefreshLayout!=null) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.destroyDrawingCache();
+            swipeRefreshLayout.clearAnimation();
+        }
     }
 }

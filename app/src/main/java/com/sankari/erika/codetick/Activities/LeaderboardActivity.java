@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 
@@ -75,15 +73,14 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         originalList.clear();
         originalList.addAll(newLeaderboardList);
 
-        System.out.println("LIST SIZE::::::" + leaderboardList.size());
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                leaderboardAdapter.notifyDataSetChanged();
                 if (swipeRefresh.isRefreshing()) {
                     swipeRefresh.setRefreshing(false);
                 }
+
+                leaderboardAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -113,7 +110,7 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
 
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setQueryHint("Search users");
+        searchView.setQueryHint(getString(R.string.leaderboard_activity_search_hint));
 
         searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override

@@ -82,7 +82,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         recyclerView.setAdapter(todayAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         recyclerView.addItemDecoration(new CustomDividerItemDecoration(
-                ContextCompat.getDrawable(getContext(), R.drawable.item_decorator)));
+                ContextCompat.getDrawable(getContext(), R.drawable.item_decorator), getContext(), true));
 
         return rootView;
     }
@@ -96,10 +96,11 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                todayAdapter.notifyDataSetChanged();
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+
+                todayAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -120,5 +121,16 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (swipeRefreshLayout!=null) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.destroyDrawingCache();
+            swipeRefreshLayout.clearAnimation();
+        }
     }
 }

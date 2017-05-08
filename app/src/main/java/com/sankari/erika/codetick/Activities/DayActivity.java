@@ -1,5 +1,6 @@
 package com.sankari.erika.codetick.Activities;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,13 +11,10 @@ import android.view.MenuItem;
 import com.sankari.erika.codetick.Adapters.DayAdapter;
 import com.sankari.erika.codetick.Classes.DaySummary;
 import com.sankari.erika.codetick.R;
+import com.sankari.erika.codetick.Utils.CustomDividerItemDecoration;
 import com.sankari.erika.codetick.Utils.Util;
 
 public class DayActivity extends AppCompatActivity {
-
-    private DaySummary daySummary;
-    private RecyclerView recyclerView;
-    private DayAdapter dayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +22,7 @@ public class DayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_day);
 
         Bundle extras = getIntent().getExtras();
-        daySummary = (DaySummary) extras.get("daySummary");
+        DaySummary daySummary = (DaySummary) extras.get("daySummary");
 
         String title;
         if (Util.checkIfToday(daySummary.getDate(), "yyyy-MM-dd")) {
@@ -37,12 +35,12 @@ public class DayActivity extends AppCompatActivity {
 
         setTitle(title);
 
-        recyclerView = (RecyclerView) findViewById(R.id.day_recycler_view);
-        dayAdapter = new DayAdapter(daySummary);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.day_recycler_view);
+        DayAdapter dayAdapter = new DayAdapter(daySummary);
         recyclerView.setAdapter(dayAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration
-                (recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new CustomDividerItemDecoration(
+                ContextCompat.getDrawable(this, R.drawable.item_decorator), this, true));
 
         // For back arrow.
         if (getSupportActionBar() != null) {

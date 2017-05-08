@@ -121,7 +121,6 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onPostResume() {
         super.onPostResume();
-
         if (userHandler.getUserListener() == null) {
             userHandler.addUserListener(this);
         }
@@ -130,7 +129,6 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-
         if (userHandler.getUserListener() != null) {
             userHandler.addUserListener(null);
         }
@@ -140,7 +138,6 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-
         if (userHandler.getUserListener() != null) {
             userHandler.addUserListener(null);
         }

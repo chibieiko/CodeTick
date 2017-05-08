@@ -9,7 +9,7 @@ import java.util.List;
 public class ActivitySummary {
     private List<DaySummary> daySummaryList;
     private long average;
-    private long total;
+    private long total = -1;
 
     public ActivitySummary() {}
 

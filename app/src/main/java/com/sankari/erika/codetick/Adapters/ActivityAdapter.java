@@ -60,24 +60,33 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
             chartView = inflater.inflate(R.layout.item_activity_chart, parent, false);
 
             return new ViewHolder(chartView);
-        } else {
+        } else if (viewType == 2) {
             View activityDayView = inflater.inflate(R.layout.item_activity_list, parent, false);
 
             // Returns a new holder instance
             return new ViewHolder(activityDayView);
+        } else {
+            // Inflates the today_project layout
+            View noDataView = inflater.inflate(R.layout.item_no_data, parent, false);
+
+            // Returns a new holder instance
+            return new ViewHolder(noDataView);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
         Debug.print(TAG, "getItemViewType", "position: " + position, 5);
-
-        if (position == 0) {
-            return 0;
-        } else if (position == 1) {
-            return 1;
+        if (activitySummary.getDaySummaryList().size() > 0) {
+            if (position == 0) {
+                return 0;
+            } else if (position == 1) {
+                return 1;
+            } else {
+                return 2;
+            }
         } else {
-            return 2;
+            return 3;
         }
     }
 
@@ -156,7 +165,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                 break;
 
             // Day list.
-            default:
+            case 2:
                 // Gets the data model based on position (-2 because summary total time and
                 // chart take positions 0 & 1).
                 DaySummary daySummary = activitySummary.getDaySummaryList().get(position - 2);
@@ -173,13 +182,23 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                 holder.time.setText(Util.convertSecondsToHoursAndMinutes(daySummary.getTotal()));
 
                 break;
+
+            // No data.
+            default:
+                holder.noTodayData.setText(R.string.today_adapter_no_data);
         }
     }
 
     @Override
     public int getItemCount() {
-        // Add two to count for chart and total time.
-        return activitySummary.getDaySummaryList().size() + 2;
+        if (activitySummary.getDaySummaryList().size() > 0) {
+            // Add two to count for chart and total time.
+            return activitySummary.getDaySummaryList().size() + 2;
+        } else if (activitySummary.getTotal() == -1) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -195,6 +214,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         TextView time;
         BarChart bar_chart;
         RelativeLayout list_item;
+        TextView noTodayData;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -210,6 +230,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
             date = (TextView) itemView.findViewById(R.id.activity_date);
             time = (TextView) itemView.findViewById(R.id.activity_time);
             bar_chart = (BarChart) itemView.findViewById(R.id.activity_bar_chart);
+            noTodayData = (TextView) itemView.findViewById(R.id.no_data);
             list_item = (RelativeLayout) itemView.findViewById(R.id.activity_list_item);
             if (list_item != null) {
                 list_item.setOnClickListener(this);
