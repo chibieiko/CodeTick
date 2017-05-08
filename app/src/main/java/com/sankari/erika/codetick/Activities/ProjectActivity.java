@@ -127,7 +127,9 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
             List<Language> languages = projectDetails.getLanguages();
             List<PieEntry> pieEntries = new ArrayList<>();
             for (Language language : languages) {
-                pieEntries.add(new PieEntry(language.getPercent(), language.getName()));
+                PieEntry temp = new PieEntry(language.getPercent(), language.getName());
+                temp.setLabel(temp.getLabel() + " " + language.getPercent() + "%");
+                pieEntries.add(temp);
             }
 
             PieDataSet dataSet = new PieDataSet(pieEntries, "");
@@ -153,7 +155,6 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
 
             PieData pieData = new PieData(dataSet);
             pieData.setDrawValues(false);
-            //pieData.setValueTextColor(Color.WHITE);
 
             languagePie.setData(pieData);
             languagePie.setDrawEntryLabels(false);

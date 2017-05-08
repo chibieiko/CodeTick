@@ -2,6 +2,7 @@ package com.sankari.erika.codetick.ApiHandlers;
 
 import com.sankari.erika.codetick.Classes.LeaderboardItem;
 import com.sankari.erika.codetick.Listeners.OnLeaderboardDataLoadedListener;
+import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Urls;
 
@@ -46,7 +47,7 @@ public class LeaderboardHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    leaderboardListener.onLeaderboardDataLoadError("Error connecting to Wakatime's server. Try again later");
+                    leaderboardListener.onLeaderboardDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_connecting));
                     e.printStackTrace();
                 }
 
@@ -91,13 +92,13 @@ public class LeaderboardHandler {
                         }
 
                     } else {
-                        leaderboardListener.onLeaderboardDataLoadError("Error fetching data from Wakatime's server. Try again later");
+                        leaderboardListener.onLeaderboardDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
                     }
                 }
             });
 
         } else {
-            leaderboardListener.onLeaderboardDataLoadError("Error fetching data from Wakatime's server. Try again later");
+            leaderboardListener.onLeaderboardDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

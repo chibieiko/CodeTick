@@ -2,6 +2,7 @@ package com.sankari.erika.codetick.ApiHandlers;
 
 import com.sankari.erika.codetick.Classes.User;
 import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
+import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
 
 import org.json.JSONException;
@@ -45,7 +46,7 @@ public class UserHandler {
                 public void onFailure(Call call, IOException e) {
                     e.printStackTrace();
                     if (userListener != null) {
-                        userListener.onUserDataLoadError("Error connecting to Wakatime's server. Try again later");
+                        userListener.onUserDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_connecting));
                     }
                 }
 
@@ -73,14 +74,14 @@ public class UserHandler {
                         }
                     } else {
                         if (userListener != null) {
-                            userListener.onUserDataLoadError("Error fetching data from Wakatime's server. Try again later");
+                            userListener.onUserDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
                         }
                     }
                 }
             });
         } else {
             if (userListener != null) {
-                userListener.onUserDataLoadError("Error fetching data from Wakatime's server. Try again later");
+                userListener.onUserDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
             }
 
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);

@@ -3,6 +3,7 @@ package com.sankari.erika.codetick.ApiHandlers;
 import com.sankari.erika.codetick.Classes.TodayProject;
 import com.sankari.erika.codetick.Classes.TodaySummary;
 import com.sankari.erika.codetick.Listeners.OnTodaySummaryLoadedListener;
+import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
@@ -51,7 +52,7 @@ public class TodayHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    todayListener.onTodaySummaryLoadError("Error connecting to Wakatime's server. Try again later");
+                    todayListener.onTodaySummaryLoadError(apiHandler.getContext().getResources().getString(R.string.error_connecting));
                     e.printStackTrace();
                 }
 
@@ -97,12 +98,12 @@ public class TodayHandler {
                             e.printStackTrace();
                         }
                     } else {
-                        todayListener.onTodaySummaryLoadError("Error fetching data from Wakatime's server. Try again later");
+                        todayListener.onTodaySummaryLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
                     }
                 }
             });
         } else {
-            todayListener.onTodaySummaryLoadError("Error fetching data from Wakatime's server. Try again later");
+            todayListener.onTodaySummaryLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

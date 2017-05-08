@@ -3,6 +3,7 @@ package com.sankari.erika.codetick.ApiHandlers;
 import com.sankari.erika.codetick.Classes.Language;
 import com.sankari.erika.codetick.Classes.ProjectDetails;
 import com.sankari.erika.codetick.Listeners.OnProjectDetailsLoadedListener;
+import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Urls;
 
@@ -49,7 +50,7 @@ public class ProjectDetailsHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    projectDetailsLoadedListener.onProjectDetailsLoadError("Error connecting to Wakatime's server. Try again later");
+                    projectDetailsLoadedListener.onProjectDetailsLoadError(apiHandler.getContext().getResources().getString(R.string.error_connecting));
                     e.printStackTrace();
                 }
 
@@ -89,7 +90,7 @@ public class ProjectDetailsHandler {
                             for (int i = 0; i < languagesArray.length(); i++) {
                                 JSONObject languageObj = languagesArray.getJSONObject(i);
                                 languages.add(new Language(languageObj.getString("name"),
-                                        languageObj.getLong("percent"),
+                                        languageObj.getInt("percent"),
                                         languageObj.getInt("hours"),
                                         languageObj.getInt("minutes")));
                             }
@@ -113,12 +114,12 @@ public class ProjectDetailsHandler {
                         }
 
                     } else {
-                        projectDetailsLoadedListener.onProjectDetailsLoadError("Error fetching data from Wakatime's server. Try again later");
+                        projectDetailsLoadedListener.onProjectDetailsLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
                     }
                 }
             });
         } else {
-            projectDetailsLoadedListener.onProjectDetailsLoadError("Error fetching data from Wakatime's server. Try again later");
+            projectDetailsLoadedListener.onProjectDetailsLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

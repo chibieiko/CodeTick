@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 public class Language implements Serializable {
     private String name;
-    private long percent;
+    private int percent;
     private int hours;
     private int minutes;
 
-    public Language(String name, long percent, int hours, int minutes) {
+    public Language(String name, int percent, int hours, int minutes) {
         this.name = name;
         this.percent = percent;
         this.hours = hours;
@@ -27,11 +27,11 @@ public class Language implements Serializable {
         this.name = name;
     }
 
-    public long getPercent() {
+    public int getPercent() {
         return percent;
     }
 
-    public void setPercent(long percent) {
+    public void setPercent(int percent) {
         this.percent = percent;
     }
 

@@ -2,6 +2,7 @@ package com.sankari.erika.codetick.ApiHandlers;
 
 import com.sankari.erika.codetick.Classes.ProjectListItem;
 import com.sankari.erika.codetick.Listeners.OnProjectListLoadedListener;
+import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Urls;
 
@@ -45,7 +46,7 @@ public class ProjectHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    projectListLoadedListener.onProjectListLoadError("Error connecting to Wakatime's server. Try again later");
+                    projectListLoadedListener.onProjectListLoadError(apiHandler.getContext().getResources().getString(R.string.error_connecting));
                     e.printStackTrace();
                 }
 
@@ -76,12 +77,12 @@ public class ProjectHandler {
                             e.printStackTrace();
                         }
                     } else {
-                        projectListLoadedListener.onProjectListLoadError("Error fetching data from Wakatime's server. Try again later");
+                        projectListLoadedListener.onProjectListLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
                     }
                 }
             });
         } else {
-            projectListLoadedListener.onProjectListLoadError("Error fetching data from Wakatime's server. Try again later");
+            projectListLoadedListener.onProjectListLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

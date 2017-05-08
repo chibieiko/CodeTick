@@ -30,7 +30,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="@dimen/header"
-                android:text="@string/last_two_weeks_logged" />
+                android:text="@string/activity_fragment_header" />
 
             <TextView
                 android:id="@+id/activity_total_box_text"

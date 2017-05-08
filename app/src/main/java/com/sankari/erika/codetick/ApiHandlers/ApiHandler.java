@@ -45,6 +45,10 @@ public class ApiHandler {
         client = new OkHttpClient();
     }
 
+    public Context getContext() {
+        return context;
+    }
+
     public OkHttpClient getClient() {
         return client;
     }

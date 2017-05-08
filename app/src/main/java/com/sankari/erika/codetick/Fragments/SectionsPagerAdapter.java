@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
+import com.sankari.erika.codetick.R;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -16,7 +17,6 @@ import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    private final String TAG = this.getClass().getName();
     private ApiHandler apiHandler;
 
     public SectionsPagerAdapter(FragmentManager fm, ApiHandler handler) {
@@ -28,7 +28,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        System.out.println("TAB POSITION: " + position);
         switch (position) {
             case 0:
                 return TodayFragment.newInstance(position, apiHandler);
@@ -51,11 +50,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "TODAY";
+                return apiHandler.getContext().getString(R.string.tab_today);
             case 1:
-                return "PROJECTS";
+                return apiHandler.getContext().getString(R.string.tab_projects);
             case 2:
-                return "ACTIVITY";
+                return apiHandler.getContext().getString(R.string.tab_activity);
         }
         return null;
     }

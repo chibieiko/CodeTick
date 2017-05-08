@@ -28,9 +28,9 @@ public class DayActivity extends AppCompatActivity {
 
         String title;
         if (Util.checkIfToday(daySummary.getDate(), "yyyy-MM-dd")) {
-            title = "Today";
+            title = getString(R.string.date_today);
         } else if (Util.checkIfYesterday(daySummary.getDate(), "yyyy-MM-dd")) {
-            title = "Yesterday";
+            title = getString(R.string.date_yesterday);
         } else {
             title = Util.convertStringToReadableDateString(daySummary.getDate(), "yyyy-MM-dd");
         }

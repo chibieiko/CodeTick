@@ -85,7 +85,7 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setQueryHint("Search projects");
+        searchView.setQueryHint(getString(R.string.project_fragment_search_hint));
 
         searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
@@ -224,6 +224,5 @@ public class ProjectsFragment extends android.support.v4.app.Fragment implements
                         .setAction("Action", null).show();
             }
         });
-
     }
 }

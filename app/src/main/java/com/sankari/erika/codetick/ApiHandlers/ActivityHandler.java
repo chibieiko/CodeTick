@@ -71,7 +71,7 @@ public class ActivityHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    activitySummaryListener.onActivitySummaryLoadError("Error connecting to Wakatime's server. Try again later");
+                    activitySummaryListener.onActivitySummaryLoadError(apiHandler.getContext().getResources().getString(R.string.error_connecting));
                     e.printStackTrace();
                 }
 
@@ -143,12 +143,12 @@ public class ActivityHandler {
                         }
 
                     } else {
-                        activitySummaryListener.onActivitySummaryLoadError("Error getting data from Wakatime's server. Try again later");
+                        activitySummaryListener.onActivitySummaryLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
                     }
                 }
             });
         } else {
-            activitySummaryListener.onActivitySummaryLoadError("Error getting data from Wakatime's server. Try again later");
+            activitySummaryListener.onActivitySummaryLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

@@ -1,5 +1,7 @@
 package com.sankari.erika.codetick.Adapters;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -19,6 +22,7 @@ import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -113,7 +117,9 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 List<TodayProject> todayProjects = todaySummary.getTodayProjectList();
                 List<PieEntry> pieEntries = new ArrayList<>();
                 for (TodayProject todayProject : todayProjects) {
-                    pieEntries.add(new PieEntry(todayProject.getPercent(), todayProject.getName()));
+                    PieEntry temp = new PieEntry(todayProject.getPercent(), todayProject.getName());
+                    temp.setLabel(temp.getLabel() + " " + todayProject.getPercent() + "%");
+                    pieEntries.add(temp);
                 }
 
                 PieDataSet dataSet = new PieDataSet(pieEntries, "");
@@ -138,7 +144,6 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
                 PieData pieData = new PieData(dataSet);
                 pieData.setDrawValues(false);
-                //pieData.setValueTextColor(Color.WHITE);
 
                 todayPie.setData(pieData);
                 todayPie.setDrawEntryLabels(false);
