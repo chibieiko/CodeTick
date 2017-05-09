@@ -212,7 +212,7 @@ public class BaseActivity extends AppCompatActivity implements
 
         final TextView userName = (TextView) findViewById(R.id.username);
         final TextView userEmail = (TextView) findViewById(R.id.user_email);
-        new DownloadAndPlaceImage((ImageView) findViewById(R.id.user_image)).execute(user.getPhoto());
+        new DownloadAndPlaceImage((ImageView) findViewById(R.id.user_image)).execute(user.getIcon());
 
         this.runOnUiThread(new Runnable() {
             @Override

@@ -116,9 +116,6 @@ public class ProjectDetailsHandler {
                             // Total time.
                             projectDetails.setTotalTime(data.getLong("total_seconds"));
 
-                            // Last modified date.
-                            projectDetails.setLastModified(data.getString("modified_at"));
-
                             // Project name
                             projectDetails.setName(data.getString("project"));
 
