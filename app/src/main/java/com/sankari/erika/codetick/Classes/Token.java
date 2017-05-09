@@ -43,6 +43,11 @@ public class Token {
     }
 
     /**
+     * Required empty constructor.
+     */
+    public Token() {}
+
+    /**
      * Gets user's access token.
      *
      * @return user's access token
