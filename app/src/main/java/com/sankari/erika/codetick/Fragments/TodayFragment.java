@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.sankari.erika.codetick.Adapters.TodayAdapter;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
@@ -20,9 +19,12 @@ import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.CustomDividerItemDecoration;
 
 /**
- * Created by erika on 4/16/2017.
+ * Displays user's coding activity for today.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public class TodayFragment extends android.support.v4.app.Fragment implements OnTodaySummaryLoadedListener {
 
     /**
@@ -31,18 +33,39 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
 
+    /**
+     * Used to fetch today data from Wakatime's server.
+     */
     private static TodayHandler todayHandler;
-    private RecyclerView recyclerView;
-    private View rootView;
+
+    /**
+     * Handles UI updates for the recycler view.
+     */
     private TodayAdapter todayAdapter;
+
+    /**
+     * Holds today summary data.
+     */
     private TodaySummary todaySummary = null;
+
+    /**
+     * Swipe refresh layout.
+     */
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public TodayFragment() {}
+    /**
+     * Required empty constructor.
+     */
+    public TodayFragment() {
+    }
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
+     *
+     * @param sectionNumber section number
+     * @param handler       api handler
+     * @return today fragment
      */
     public static TodayFragment newInstance(int sectionNumber, ApiHandler handler) {
         if (todayHandler == null) {
@@ -56,14 +79,22 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         return fragment;
     }
 
+    /**
+     * Creates the recycler view and gets today's data.
+     *
+     * @param inflater           used to inflate the view
+     * @param container          view group
+     * @param savedInstanceState saved instance state
+     * @return inflated view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         todayHandler.setTodayListener(this);
 
-        rootView = inflater.inflate(R.layout.fragment_today, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_today, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.today_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.today_recycler_view);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView;
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -87,6 +118,11 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         return rootView;
     }
 
+    /**
+     * Updates UI with today data from Wakatime's server.
+     *
+     * @param obj today object
+     */
     @Override
     public void onTodaySummarySuccessfullyLoaded(TodaySummary obj) {
         // Set values from server.
@@ -105,6 +141,13 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         });
     }
 
+    /**
+     * Shows snackbar with error.
+     * <p>
+     * Only called if there is an error fetching data from Wakatime's server.
+     *
+     * @param error describes the error
+     */
     @Override
     public void onTodaySummaryLoadError(String error) {
         final String message = error;
@@ -123,11 +166,14 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         });
     }
 
+    /**
+     * Clears swipe refresh layout on pause to prevent fragment overlapping.
+     */
     @Override
     public void onPause() {
         super.onPause();
 
-        if (swipeRefreshLayout!=null) {
+        if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.destroyDrawingCache();
             swipeRefreshLayout.clearAnimation();
