@@ -29,34 +29,77 @@ import okhttp3.Response;
 import okio.BufferedSink;
 
 /**
- * Created by erika on 4/10/2017.
+ * Provides methods for other handlers and login activity.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public class ApiHandler {
 
+    /**
+     * Holds class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Used to make request to Wakatime's server.
+     */
     private OkHttpClient client;
+
+    /**
+     * For accessing shared preferences.
+     */
     private Context context;
+
+    /**
+     * Holds user's token information.
+     */
     private SharedPreferences prefs;
 
+    /**
+     * Sets context and initializes shared preferences and OkHttpClient.
+     *
+     * @param context context
+     */
     public ApiHandler(Context context) {
         this.context = context;
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         client = new OkHttpClient();
     }
 
+    /**
+     * Gets context.
+     *
+     * @return context
+     */
     public Context getContext() {
         return context;
     }
 
+    /**
+     * Gets OkHttpClient.
+     *
+     * @return okHttpClient client
+     */
     public OkHttpClient getClient() {
         return client;
     }
 
+    /**
+     * Gets shared preferences.
+     *
+     * @return shared preferences prefs
+     */
     public SharedPreferences getPrefs() {
         return prefs;
     }
 
+    /**
+     * Checks if user's token has expired or not.
+     *
+     * @return false if token has expired and true otherwise
+     */
     public boolean checkTokenExpiry() {
         long expires = prefs.getLong("expires", 0);
 
@@ -66,6 +109,12 @@ public class ApiHandler {
         return today.getTime() < expires;
     }
 
+    /**
+     * Creates and returns a okHttpClient request.
+     *
+     * @param url request url
+     * @return okHttpClient url
+     */
     public Request getRequest(String url) {
         String token = prefs.getString("token", null);
 
@@ -75,6 +124,12 @@ public class ApiHandler {
                 .build();
     }
 
+    /**
+     * Attempts to acquire a new token for the user with refresh token.
+     *
+     * @param refreshToken user's refresh token
+     * @param startMain indicates whether to start main activity on success or not
+     */
     public void refreshToken(String refreshToken, final boolean startMain) {
         String appSecret = "";
         String appId = "";

@@ -42,6 +42,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
      * Receives the day summary.
      *
      * @param daySummary has day summary data
+     * @param context context
      */
     public DayAdapter(DaySummary daySummary, Context context) {
         this.daySummary = daySummary;

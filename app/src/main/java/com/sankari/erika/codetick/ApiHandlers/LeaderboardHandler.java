@@ -21,22 +21,56 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by erika on 5/3/2017.
+ * Fetches leaderboard data from Wakatime's server.
+ * <p>
+ * Passes data onwards through OnLeaderboardDataLoadedListener.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public class LeaderboardHandler {
+
+    /**
+     * Holds class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Used to pass leaderboard data onwards.
+     */
     private OnLeaderboardDataLoadedListener leaderboardListener;
+
+    /**
+     * Api handler instance.
+     */
     private ApiHandler apiHandler;
 
+    /**
+     * Receives the api handler.
+     *
+     * @param apiHandler api handler
+     */
     public LeaderboardHandler(ApiHandler apiHandler) {
         this.apiHandler = apiHandler;
     }
 
+    /**
+     * Sets the leaderboard listener.
+     *
+     * @param leaderboardListener leaderboard listener
+     */
     public void setLeaderboardListener(OnLeaderboardDataLoadedListener leaderboardListener) {
         this.leaderboardListener = leaderboardListener;
     }
 
+    /**
+     * Tries to fetch leaderboard data.
+     * <p>
+     * On success creates a leaderboard list containing leaderboard items and calls
+     * leaderboard listener's onLeaderboardDataSuccessfullyLoaded method. On error calls
+     * onLeaderboardDataLoadError.
+     */
     public void getLeaderboardData() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL + "/leaders").newBuilder();
         String url = urlBuilder.build().toString();

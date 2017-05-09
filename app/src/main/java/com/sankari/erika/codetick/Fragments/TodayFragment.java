@@ -77,7 +77,7 @@ public class TodayFragment extends android.support.v4.app.Fragment implements On
         todayHandler.getTodayDetails();
 
         todaySummary = new TodaySummary();
-        todayAdapter = new TodayAdapter(todaySummary);
+        todayAdapter = new TodayAdapter(todaySummary, getContext());
 
         recyclerView.setAdapter(todayAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));

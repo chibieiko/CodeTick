@@ -20,22 +20,55 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by erika on 4/23/2017.
+ * Fetches user's project list from Wakatime's server.
+ * <p>
+ * Passes list onwards through OnProjectListLoadedListener.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public class ProjectHandler {
+
+    /**
+     * Holds class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Used to pass activity data onwards.
+     */
     private OnProjectListLoadedListener projectListLoadedListener;
+
+    /**
+     * Api handler instance.
+     */
     private ApiHandler apiHandler;
 
+    /**
+     * Receives the api handler.
+     *
+     * @param apiHandler api handler
+     */
     public ProjectHandler(ApiHandler apiHandler) {
         this.apiHandler = apiHandler;
     }
 
+    /**
+     * Sets the project list loaded listener.
+     *
+     * @param projectListLoadedListener project list loaded listener
+     */
     public void setProjectListLoadedListener(OnProjectListLoadedListener projectListLoadedListener) {
         this.projectListLoadedListener = projectListLoadedListener;
     }
 
+    /**
+     * Tries to fetch user's project list.
+     * <p>
+     * On success creates project list containing project list items and calls project list
+     * listener's onProjectListSuccessfullyLoaded method. On error calls onProjectListLoadError.
+     */
     public void getProjectListing() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL + "/users/current/projects").newBuilder();
         String url = urlBuilder.build().toString();
@@ -66,7 +99,7 @@ public class ProjectHandler {
 
                             for (int i = 0; i < projectsArray.length(); i++) {
                                 JSONObject tempObject = projectsArray.getJSONObject(i);
-                                projectList.add(new ProjectListItem (
+                                projectList.add(new ProjectListItem(
                                         tempObject.getString("name"),
                                         tempObject.getString("id")));
                             }

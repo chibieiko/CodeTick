@@ -55,6 +55,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
      * Receives the today summary.
      *
      * @param todaySummary has today summary data.
+     * @param context context
      */
     public TodayAdapter(TodaySummary todaySummary, Context context) {
         this.todaySummary = todaySummary;

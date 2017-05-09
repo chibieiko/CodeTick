@@ -22,24 +22,62 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by erika on 4/25/2017.
+ * Fetches project details form the past 7 days from Wakatime's server.
+ * <p>
+ * Passes activity data onwards through OnProjectDetailsLoadedListener.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public class ProjectDetailsHandler {
+
+    /**
+     * Holds class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Used to pass project details onwards.
+     */
     private OnProjectDetailsLoadedListener projectDetailsLoadedListener;
+
+    /**
+     * Api handler instance.
+     */
     private ApiHandler apiHandler;
+
+    /**
+     * Used to signal Wakatime's api which project's data the app wants.
+     */
     private String projectName;
 
+    /**
+     * Receives the api handler and project name.
+     *
+     * @param apiHandler  api handler
+     * @param projectName project's name that the app wants data of
+     */
     public ProjectDetailsHandler(ApiHandler apiHandler, String projectName) {
         this.apiHandler = apiHandler;
         this.projectName = projectName;
     }
 
+    /**
+     * Sets the project details listener.
+     *
+     * @param projectDetailsLoadedListener project details
+     */
     public void setProjectDetailsLoadedListener(OnProjectDetailsLoadedListener projectDetailsLoadedListener) {
         this.projectDetailsLoadedListener = projectDetailsLoadedListener;
     }
 
+    /**
+     * Tries to fetch project details from the past 7 days.
+     * <p>
+     * On success creates project details object and calls project details listener's
+     * onProjectDetailsSuccessfullyLoaded method. On error calls onProjectDetailsLoadError.
+     */
     public void getProjectDetails() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL + "/users/current/stats/last_7_days?project=" + projectName).newBuilder();
         String url = urlBuilder.build().toString();
@@ -103,6 +141,8 @@ public class ProjectDetailsHandler {
                             e.printStackTrace();
                         }
 
+                        // Happens when Wakatime's server informs that it is preparing the data,
+                        // check back later...
                     } else if (response.code() == 202) {
                         try {
                             Debug.print(TAG, "getProjectDetails:onResponse", "code: " + response.code(), 6);

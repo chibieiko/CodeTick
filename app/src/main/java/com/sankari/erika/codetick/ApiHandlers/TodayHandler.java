@@ -23,25 +23,57 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by erika on 4/19/2017.
+ * Fetches today's coding data from Wakatime's server.
+ * <p>
+ * Passes data onwards through OnTodaySummaryLoadedListener.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public class TodayHandler {
 
+    /**
+     * Holds class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Used to pass today's data onwards.
+     */
     private OnTodaySummaryLoadedListener todayListener;
+
+    /**
+     * Api handler instance.
+     */
     private ApiHandler apiHandler;
 
+    /**
+     * Receives the api handler.
+     *
+     * @param handler api handler
+     */
     public TodayHandler(ApiHandler handler) {
         this.apiHandler = handler;
     }
 
+    /**
+     * Sets the today listener.
+     *
+     * @param todayListener today listener
+     */
     public void setTodayListener(OnTodaySummaryLoadedListener todayListener) {
         this.todayListener = todayListener;
     }
 
+    /**
+     * Tries to fetch user's today's coding data.
+     * <p>
+     * On success creates today summary object and calls today summary listener's
+     * onTodaySummarySuccessfullyLoaded method. On error calls onTodaySummaryLoadError.
+     */
     public void getTodayDetails() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL +"/users/current/summaries").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL + "/users/current/summaries").newBuilder();
         urlBuilder.addQueryParameter("start", Util.convertDateToProperFormat(new Date()));
         urlBuilder.addQueryParameter("end", Util.convertDateToProperFormat(new Date()));
         String url = urlBuilder.build().toString();
@@ -92,7 +124,7 @@ public class TodayHandler {
                             todaySummary.setTodayProjectList(todayProjects);
                             todaySummary.setTotalTime(totalTimeToday);
 
-                            Debug.print(TAG, "onResponse", "NYT OLIS VALMIS SUMMARY", 5);
+                            Debug.print(TAG, "onResponse", "TODAY SUMMARY READY", 6);
                             todayListener.onTodaySummarySuccessfullyLoaded(todaySummary);
                         } catch (JSONException e) {
                             e.printStackTrace();

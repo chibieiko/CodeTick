@@ -16,27 +16,64 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by erika on 4/19/2017.
+ * Fetches user's data from Wakatime's server.
+ * <p>
+ * Passes user data onwards through OnUserDataLoadedListener.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public class UserHandler {
 
+    /**
+     * Holds class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Used to pass user data onwards.
+     */
     private OnUserDataLoadedListener userListener;
+
+    /**
+     * Api handler instance.
+     */
     private ApiHandler apiHandler;
 
+    /**
+     * Receives the api handler.
+     *
+     * @param apiHandler api handler
+     */
     public UserHandler(ApiHandler apiHandler) {
         this.apiHandler = apiHandler;
     }
 
+    /**
+     * Sets user listener.
+     *
+     * @param listener user listener
+     */
     public void addUserListener(OnUserDataLoadedListener listener) {
         userListener = listener;
     }
 
+    /**
+     * Gets user listener.
+     *
+     * @return user listener
+     */
     public OnUserDataLoadedListener getUserListener() {
         return userListener;
     }
 
+    /**
+     * Tries to fetch user's details.
+     * <p>
+     * On success creates user object and calls user listener's
+     * onUserDataSuccessfullyLoaded method. On error calls onUserDataLoadError.
+     */
     public void getUserDetails(String url) {
         if (apiHandler.checkTokenExpiry()) {
             Request request = apiHandler.getRequest(url);
@@ -72,6 +109,7 @@ public class UserHandler {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                     } else {
                         if (userListener != null) {
                             userListener.onUserDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
@@ -79,6 +117,7 @@ public class UserHandler {
                     }
                 }
             });
+
         } else {
             if (userListener != null) {
                 userListener.onUserDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));

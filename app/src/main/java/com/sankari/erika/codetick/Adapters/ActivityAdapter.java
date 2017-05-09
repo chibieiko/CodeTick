@@ -62,6 +62,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
      * Receives the activity summary.
      *
      * @param activitySummary has activity summary data
+     * @param context context
      */
     public ActivityAdapter(ActivitySummary activitySummary, Context context) {
         this.activitySummary = activitySummary;
