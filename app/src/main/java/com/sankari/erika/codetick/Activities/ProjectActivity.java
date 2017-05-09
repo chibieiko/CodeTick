@@ -26,23 +26,90 @@ import com.sankari.erika.codetick.Utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectActivity extends AppCompatActivity implements OnProjectDetailsLoadedListener{
+/**
+ * Showcases a projects coding details from past seven days.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
+ */
+public class ProjectActivity extends AppCompatActivity implements OnProjectDetailsLoadedListener {
 
+    /**
+     * Total time coded.
+     */
     private TextView totalTime;
+
+    /**
+     * Label for total time coded.
+     */
     private TextView totalTimeText;
+
+    /**
+     * Average time coded.
+     */
     private TextView projectAverageTime;
+
+    /**
+     * Label for average time coded.
+     */
     private TextView projectAverageTimeText;
+
+    /**
+     * Date with longest coding time.
+     */
     private TextView bestday;
+
+    /**
+     * Label for best day.
+     */
     private TextView bestdayText;
+
+    /**
+     * Time coded on best day.
+     */
     private TextView bestdayTime;
+
+    /**
+     * Label for best day time.
+     */
     private TextView bestdayTimeText;
+
+    /**
+     * Project's name.
+     */
     private TextView title;
+
+    /**
+     * Pie chart showcases languages that have been used in the project.
+     */
     private PieChart languagePie;
+
+    /**
+     * Is displayed when there is no data for the project from the last 7 days.
+     */
     private LinearLayout noData;
+
+    /**
+     * Text indicating that loading can take quite some time.
+     */
     private LinearLayout loadingData;
+
+    /**
+     * Displayed when there is data for the project from the last 7 days.
+     */
     private LinearLayout content;
+
+    /**
+     * A swipe refresh layout.
+     */
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    /**
+     * Gets project details from Intent and sets them to UI.
+     *
+     * @param savedInstanceState saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +158,12 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         }
     }
 
+    /**
+     * Returns to previous activity if back arrow is clicked.
+     *
+     * @param item back arrow menu item
+     * @return true if back arrow is clicked, otherwise returns super call
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -102,21 +175,28 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Sets project details to UI.
+     * <p>
+     * If there is no data, then displays a no data card.
+     *
+     * @param projectDetails contains project's information
+     */
     @Override
     public void onProjectDetailsSuccessfullyLoaded(ProjectDetails projectDetails) {
         if (projectDetails.getLanguages().size() > 0) {
             final String total_time = "" + Util.convertSecondsToHoursAndMinutes(projectDetails.getTotalTime());
-            final String total_time_text = "Total ";
+            final String total_time_text = getString(R.string.project_activity_total_time);
             final String daily_average = "" + Util.convertSecondsToHoursAndMinutes(projectDetails.getDailyAverage());
-            final String daily_average_text = "Daily average ";
-            final String bestday_time_text = "Best day total ";
+            final String daily_average_text = getString(R.string.project_activity_average);
+            final String bestday_time_text = getString(R.string.project_activity_best_day_total);
             final String bestday_time = Util.convertSecondsToHoursAndMinutes(projectDetails.getBestDayTime());
-            final String bestday_date_text = "Best day ";
+            final String bestday_date_text = getString(R.string.project_activity_best_day);
             String temp_bestday;
             if (Util.checkIfToday(projectDetails.getBestDayDate(), "MM/dd/yyyy")) {
-                temp_bestday = "Today";
+                temp_bestday = getString(R.string.date_today);
             } else if (Util.checkIfYesterday(projectDetails.getBestDayDate(), "MM/dd/yyyy")) {
-                temp_bestday = "Yesterday";
+                temp_bestday = getString(R.string.date_yesterday);
             } else {
                 temp_bestday = Util.convertStringToReadableDateString(projectDetails.getBestDayDate(), "MM/dd/yyyy");
             }
@@ -159,7 +239,7 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
             languagePie.setData(pieData);
             languagePie.setDrawEntryLabels(false);
             languagePie.setUsePercentValues(true);
-            languagePie.setCenterText("Languages");
+            languagePie.setCenterText(getString(R.string.project_activity_language_pie_text));
             languagePie.setCenterTextSize(16);
             languagePie.setCenterTextColor(R.color.primary_text);
             languagePie.setDescription(null);
@@ -211,6 +291,13 @@ public class ProjectActivity extends AppCompatActivity implements OnProjectDetai
         }
     }
 
+    /**
+     * Shows snackbar with error.
+     * <p>
+     * Only called if there is an error fetching project details from Wakatime's server.
+     *
+     * @param error describes the error
+     */
     @Override
     public void onProjectDetailsLoadError(String error) {
         final String message = error;

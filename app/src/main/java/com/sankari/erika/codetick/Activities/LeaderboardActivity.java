@@ -23,17 +23,50 @@ import com.sankari.erika.codetick.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDataLoadedListener{
+/**
+ * Showcases leaderboard list.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
+ */
+public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDataLoadedListener {
 
-    private RecyclerView recyclerView;
+    /**
+     * A swipe refresh layout.
+     */
     private SwipeRefreshLayout swipeRefresh;
+
+    /**
+     * List containing all leaderboard items, gets modified during search.
+     */
     private List<LeaderboardItem> leaderboardList = new ArrayList<>();
+
+    /**
+     * List that contains all leaderboard items, does not get modified during search.
+     */
     private List<LeaderboardItem> originalList = new ArrayList<>();
+
+    /**
+     * A recyclerview adapter that handles ui updates.
+     */
     private LeaderboardAdapter leaderboardAdapter;
+
+    /**
+     * A navigation view containing navigation drawer.
+     */
     private NavigationView navigationView;
-    private SearchView searchView;
+
+    /**
+     * Indicates whether user has searched or not.
+     */
     private boolean hasSearched = false;
 
+    /**
+     * Creates a recycler view and gets leaderboard data.
+     *
+     * @param savedInstanceState saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +76,7 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         final LeaderboardHandler leaderboardHandler = new LeaderboardHandler(apiHandler);
         leaderboardHandler.setLeaderboardListener(this);
 
-        recyclerView = (RecyclerView) findViewById(R.id.leaderboard_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.leaderboard_recycler_view);
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.activity_leaderboard);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
@@ -66,6 +99,11 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         navigationView = (NavigationView) findViewById(R.id.nav_view);
     }
 
+    /**
+     * Updates UI with leaderboard data from Wakatime's server.
+     *
+     * @param newLeaderboardList contains a list of leaderboard items fresh from the Wakatime server
+     */
     @Override
     public void onLeaderboardDataSuccessfullyLoaded(List<LeaderboardItem> newLeaderboardList) {
         leaderboardList.clear();
@@ -85,6 +123,13 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         });
     }
 
+    /**
+     * Shows snackbar with error.
+     * <p>
+     * Only called if there is an error fetching leaderboard data from Wakatime's server.
+     *
+     * @param error describes the error
+     */
     @Override
     public void onLeaderboardDataLoadError(String error) {
         final String reason = error;
@@ -101,14 +146,20 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         });
     }
 
+    /**
+     * Adds search view to action bar.
+     *
+     * @param menu options menu
+     * @return a call to super
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflates the menu. Adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_today, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setQueryHint(getString(R.string.leaderboard_activity_search_hint));
 
@@ -161,6 +212,9 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Returns leaderboard listing to original state after searching.
+     */
     private void returnListToOriginalState() {
         hasSearched = false;
         leaderboardList.clear();
@@ -174,6 +228,11 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         });
     }
 
+    /**
+     * Sets leaderboard item in navigation view as checked.
+     * <p>
+     * Also indicates to base activity that leaderboard activity is now visible.
+     */
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -181,6 +240,9 @@ public class LeaderboardActivity extends BaseActivity implements OnLeaderboardDa
         navigationView.getMenu().getItem(1).setChecked(true);
     }
 
+    /**
+     * Indicates to base activity that leaderboard activity is not visible anymore.
+     */
     @Override
     protected void onPause() {
         super.onPause();

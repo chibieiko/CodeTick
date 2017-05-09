@@ -41,5 +41,12 @@
     <string name="date_yesterday">Yesterday</string>
     <string name="leaderboard_activity_search_hint">Search users...</string>
     <string name="today_adapter_no_data">No coding data from today...</string>
+    <string name="login_error_refreshing_token">Error refreshing token, please login again</string>
+    <string name="login_error_logging_in">Error logging in, please try again</string>
+    <string name="project_activity_total_time">Total</string>
+    <string name="project_activity_average">Daily average</string>
+    <string name="project_activity_best_day_total">Best day total</string>
+    <string name="project_activity_best_day">Best day</string>
+    <string name="project_activity_language_pie_text">Languages</string>
 
 </resources>

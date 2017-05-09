@@ -11,6 +11,13 @@ import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
 
+/**
+ * Contains today, project and activity fragments.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
+ */
 public class MainActivity extends BaseActivity {
 
     /**
@@ -27,9 +34,22 @@ public class MainActivity extends BaseActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    /**
+     * Stores the class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Navigation view containing the navigation drawer.
+     */
     private NavigationView navigationView;
 
+    /**
+     * Creates section pager adapter, view pager and tab layout.
+     *
+     * @param savedInstanceState saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,12 +75,20 @@ public class MainActivity extends BaseActivity {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
     }
 
+    /**
+     * Indicates to base activity that main activity is visible now.
+     */
     @Override
     protected void onPause() {
         super.onPause();
         BaseActivity.mainActivityVisible = false;
     }
 
+    /**
+     * Indicates to base activity that main activity is not visible anymore.
+     * <p>
+     * In addition sets today item in navigation drawer checked.
+     */
     @Override
     protected void onPostResume() {
         super.onPostResume();

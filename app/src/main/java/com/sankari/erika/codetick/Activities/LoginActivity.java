@@ -2,11 +2,11 @@ package com.sankari.erika.codetick.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.net.Uri;
-import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,14 +18,28 @@ import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Util;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.Date;
 import java.util.Properties;
 
+/**
+ * Enables users to login to the app with their Wakatime account.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
+ */
 public class LoginActivity extends AppCompatActivity {
 
+    /**
+     * Stores the class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
 
+    /**
+     * Checks if activity has received sign in data from Wakatime and if token exists.
+     *
+     * @param savedInstanceState saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,12 +60,21 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Checks if activity has received sign in data from Wakatime.
+     */
     @Override
     protected void onStart() {
         super.onStart();
         checkForWakatimeData();
     }
 
+    /**
+     * Checks if an access token exists for the user in app preferences.
+     * <p>
+     * Starts main activity if user has an access token. If access token has expired, tries to
+     * refresh token. If refresh token is invalid, prompts user to login again.
+     */
     private void checkForExistingToken() {
         Debug.print(TAG, "checkForExistingToken", "CHECKING FOR TOKEN", 5);
 
@@ -74,17 +97,24 @@ public class LoginActivity extends AppCompatActivity {
             } else if (!Token.isInvalidRefreshToken()) {
                 ApiHandler handler = new ApiHandler(this);
                 handler.refreshToken(refreshToken, true);
+            } else {
+                Snackbar.make(findViewById(R.id.wakatime_sign_in_button),
+                        R.string.login_error_refreshing_token,
+                        Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         }
     }
 
+    /**
+     * Saves token to app preferences.
+     */
     private void checkForWakatimeData() {
         final Uri data = this.getIntent().getData();
 
         if (data != null && data.getScheme().equals("codeticklogin") && data.getFragment() != null) {
             Token token = Util.parseTokenUrl(data.getFragment());
 
-            System.out.println("TÄSSÄ PITÄIS OLLA");
             System.out.println(token.getAccessToken());
             Debug.print(TAG, "checkForWakatimeData", "TOKEN: " + token.getAccessToken(), 1);
             Debug.print(TAG, "checkForWakatimeData", "EXPIRY: " + new Date(token.getExpires()).toString(), 1);
@@ -101,13 +131,16 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 Snackbar.make(findViewById(R.id.wakatime_sign_in_button),
-                        "Error logging in, please try again",
+                        R.string.login_error_logging_in,
                         Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         }
     }
 
+    /**
+     * Logs user in to Wakatime utilising OAuth 2.0.
+     */
     private void attemptLogin() {
         Properties config = new Properties();
         String appId = "";
@@ -135,6 +168,9 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(browser);
     }
 
+    /**
+     * Closes application on back button press.
+     */
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);

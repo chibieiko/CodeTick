@@ -25,15 +25,48 @@ import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
 import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
 
+/**
+ * Provides a base for all the other activities that use the navigation drawer.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
+ */
 public class BaseActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, OnUserDataLoadedListener {
 
+    /**
+     * Navigation drawer layout.
+     */
     private DrawerLayout drawer;
+
+    /**
+     * A handler that fetches user information.
+     */
     private UserHandler userHandler;
+
+    /**
+     * Contains user's details.
+     */
     private User user;
+
+    /**
+     * Indicates whether main activity is visible or not.
+     */
     public static boolean mainActivityVisible = false;
+
+    /**
+     * Indicates whether leaderboard activity is visible or not.
+     */
     public static boolean leaderboardVisible = false;
 
+    /**
+     * Inflates the layout.
+     * <p>
+     * Adds a toolbar and navigation drawer to the activity.
+     *
+     * @param layoutResID layout resource id
+     */
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         // Set up navigation drawer.
@@ -55,6 +88,11 @@ public class BaseActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    /**
+     * Creates a new user handler.
+     *
+     * @param savedInstanceState saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +100,9 @@ public class BaseActivity extends AppCompatActivity implements
         userHandler = new UserHandler(new ApiHandler(this));
     }
 
-    // Close navigation drawer with back button if it is open.
+    /**
+     * Closes navigation drawer with back button if drawer is open.
+     */
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -72,6 +112,12 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Handles navigation drawer's item clicks.
+     *
+     * @param item menu item
+     * @return always true
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -103,6 +149,9 @@ public class BaseActivity extends AppCompatActivity implements
         return true;
     }
 
+    /**
+     * Gets user's details.
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -118,6 +167,9 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Adds user listener for user handler.
+     */
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -126,6 +178,9 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Removes user listener from user handler.
+     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -135,6 +190,9 @@ public class BaseActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * Removes user listener from user handler.
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -143,6 +201,11 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Sets user data to navigation drawer.
+     *
+     * @param obj contains user information
+     */
     @Override
     public void onUserDataSuccessfullyLoaded(User obj) {
         user = obj;
@@ -162,6 +225,13 @@ public class BaseActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Shows snackbar with error.
+     * <p>
+     * Only called if there is an error fetching user details from Wakatime's server.
+     *
+     * @param error describes the error
+     */
     @Override
     public void onUserDataLoadError(String error) {
         final String reason = error;
