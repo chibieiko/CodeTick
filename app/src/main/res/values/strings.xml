@@ -48,5 +48,14 @@
     <string name="project_activity_best_day_total">Best day total</string>
     <string name="project_activity_best_day">Best day</string>
     <string name="project_activity_language_pie_text">Languages</string>
+    <string name="activity_adapter_total_label">Total</string>
+    <string name="activity_adapter_average_label">Daily avg</string>
+    <string name="day_adapter_total_label">Total</string>
+    <string name="day_adapter_no_coding_data">No coding data for this day...</string>
+    <string name="leaderboard_adapter_total_label">Total</string>
+    <string name="leaderboard_adapter_average_label">Daily avg</string>
+    <string name="leaderboard_adapter_languages_label">Languages:</string>
+    <string name="today_adapter_total_label">Total</string>
+    <string name="today_adapter_chart_label">Projects</string>
 
 </resources>

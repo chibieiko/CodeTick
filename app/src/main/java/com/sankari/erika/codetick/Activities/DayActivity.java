@@ -47,7 +47,7 @@ public class DayActivity extends AppCompatActivity {
         setTitle(title);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.day_recycler_view);
-        DayAdapter dayAdapter = new DayAdapter(daySummary);
+        DayAdapter dayAdapter = new DayAdapter(daySummary, this);
         recyclerView.setAdapter(dayAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new CustomDividerItemDecoration(

@@ -1,5 +1,6 @@
 package com.sankari.erika.codetick.Adapters;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -29,22 +30,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by erika on 4/30/2017.
+ * Handles activity fragment's recycler view items.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
-// Create the basic adapter extending from RecyclerView.Adapter
-// Note that we specify the custom ViewHolder which gives us access to our views
 public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHolder> {
 
+    /**
+     * Holds class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Holds activity summary data.
+     */
     private ActivitySummary activitySummary;
+
+    /**
+     * Bar chart view showcasing coding activity of last two weeks.
+     */
     private View chartView;
 
-    public ActivityAdapter(ActivitySummary activitySummary) {
+    /**
+     * Context for extracting string resources.
+     */
+    private Context context;
+
+    /**
+     * Receives the activity summary.
+     *
+     * @param activitySummary has activity summary data
+     */
+    public ActivityAdapter(ActivitySummary activitySummary, Context context) {
         this.activitySummary = activitySummary;
+        this.context = context;
     }
 
-    // Usually involves inflating a layout from XML and returning the holder.
+    /**
+     * Inflates item layout from XML based on view type and returns the holder.
+     *
+     * @param parent view group parent
+     * @param viewType view type displayed as integer
+     * @return view holder with inflated view
+     */
     @Override
     public ActivityAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -54,7 +84,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         if (viewType == 0) {
             View activityTotalView = inflater.inflate(R.layout.item_activity_total, parent, false);
 
-            // Returns a new holder instance
             return new ViewHolder(activityTotalView);
         } else if (viewType == 1) {
             chartView = inflater.inflate(R.layout.item_activity_chart, parent, false);
@@ -63,17 +92,22 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         } else if (viewType == 2) {
             View activityDayView = inflater.inflate(R.layout.item_activity_list, parent, false);
 
-            // Returns a new holder instance
             return new ViewHolder(activityDayView);
         } else {
-            // Inflates the today_project layout
             View noDataView = inflater.inflate(R.layout.item_no_data, parent, false);
 
-            // Returns a new holder instance
             return new ViewHolder(noDataView);
         }
     }
 
+    /**
+     * Returns a different view type depending on the position and data.
+     * <p>
+     * Enables custom recycler view with different item XMLs.
+     *
+     * @param position recycler view list position
+     * @return view type
+     */
     @Override
     public int getItemViewType(int position) {
         Debug.print(TAG, "getItemViewType", "position: " + position, 5);
@@ -90,7 +124,12 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         }
     }
 
-    // Involves populating data into the item through holder.
+    /**
+     * Populates data into the item through view holder.
+     *
+     * @param holder view holder
+     * @param position recycler view list position
+     */
     @Override
     public void onBindViewHolder(ActivityAdapter.ViewHolder holder, int position) {
         Debug.print(TAG, "onBindViewHolder", "position: " + position, 5);
@@ -99,10 +138,10 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         switch (holder.getItemViewType()) {
             // Activity total time and avg.
             case 0:
-                holder.total_box_text.setText("Total ");
+                holder.total_box_text.setText(R.string.activity_adapter_total_label);
                 holder.total_box.setText(Util.convertSecondsToHoursAndMinutes(activitySummary.getTotal()));
 
-                holder.avg_box_text.setText("Daily avg ");
+                holder.avg_box_text.setText(R.string.activity_adapter_average_label);
                 holder.avg_box.setText(Util.convertSecondsToHoursAndMinutes(activitySummary.getAverage()));
 
                 break;
@@ -171,9 +210,9 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                 DaySummary daySummary = activitySummary.getDaySummaryList().get(position - 2);
                 String dateText;
                 if (Util.checkIfToday(daySummary.getDate(), "yyyy-MM-dd")) {
-                    dateText = "Today";
+                    dateText = context.getString(R.string.date_today);
                 } else if (Util.checkIfYesterday(daySummary.getDate(), "yyyy-MM-dd")) {
-                    dateText = "Yesterday";
+                    dateText = context.getString(R.string.date_yesterday);
                 } else {
                     dateText = Util.convertStringToReadableDateString(daySummary.getDate(), "yyyy-MM-dd");
                 }
@@ -185,10 +224,15 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
             // No data.
             default:
-                holder.noTodayData.setText(R.string.today_adapter_no_data);
+                holder.noActivityData.setText(R.string.today_adapter_no_data);
         }
     }
 
+    /**
+     * Returns how many items the recycler view contains.
+     *
+     * @return item count for recycler view
+     */
     @Override
     public int getItemCount() {
         if (activitySummary.getDaySummaryList().size() > 0) {
@@ -201,26 +245,66 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         }
     }
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    /**
+     * Provides a direct reference to each of the views within a data item.
+     * <p>
+     * Used to cache the views within the item layout for fast access.
+     */
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // Your holder should contain a member variable
-        // for any view that will be set as you render a row
-        TextView total_box_text;
-        TextView total_box;
-        TextView avg_box_text;
-        TextView avg_box;
-        TextView date;
-        TextView time;
-        BarChart bar_chart;
-        RelativeLayout list_item;
-        TextView noTodayData;
+        // for any view that will be set as you render a row.
 
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
-        public ViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
+        /**
+         * Label for total time.
+         */
+        TextView total_box_text;
+
+        /**
+         * Total time coded.
+         */
+        TextView total_box;
+
+        /**
+         * Label for average time.
+         */
+        TextView avg_box_text;
+
+        /**
+         * Daily average.
+         */
+        TextView avg_box;
+
+        /**
+         * Date.
+         */
+        TextView date;
+
+        /**
+         * Time coded on a specific day.
+         */
+        TextView time;
+
+        /**
+         * Displays two weeks coding time.
+         */
+        BarChart bar_chart;
+
+        /**
+         * Day list item layout.
+         */
+        RelativeLayout list_item;
+
+        /**
+         * Displayed if there is no data from the past two weeks.
+         */
+        TextView noActivityData;
+
+        /**
+         * Accepts entire item row and does the view lookups to find each subview.
+         *
+         * @param itemView entire item row
+         */
+        ViewHolder(View itemView) {
             super(itemView);
 
             total_box_text = (TextView) itemView.findViewById(R.id.activity_total_box_text);
@@ -230,13 +314,20 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
             date = (TextView) itemView.findViewById(R.id.activity_date);
             time = (TextView) itemView.findViewById(R.id.activity_time);
             bar_chart = (BarChart) itemView.findViewById(R.id.activity_bar_chart);
-            noTodayData = (TextView) itemView.findViewById(R.id.no_data);
+            noActivityData = (TextView) itemView.findViewById(R.id.no_data);
             list_item = (RelativeLayout) itemView.findViewById(R.id.activity_list_item);
             if (list_item != null) {
                 list_item.setOnClickListener(this);
             }
         }
 
+        /**
+         * Day list click listener.
+         * <p>
+         * Opens day activity with day summary object.
+         *
+         * @param v view
+         */
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), DayActivity.class);

@@ -1,7 +1,6 @@
 package com.sankari.erika.codetick.Adapters;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -22,26 +20,54 @@ import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by erika on 4/18/2017.
+ * Handles today fragment's recycler view items.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
-// Create the basic adapter extending from RecyclerView.Adapter
-// Note that we specify the custom ViewHolder which gives us access to our views
 public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> {
 
+    /**
+     * Holds class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Holds today summary data.
+     */
     private TodaySummary todaySummary;
+
+    /**
+     * Context for extracting string resources.
+     */
+    private Context context;
+
+    /**
+     * Pie chart containing days coding time per project.
+     */
     private View todayPieView;
 
-    public TodayAdapter(TodaySummary todaySummary) {
+    /**
+     * Receives the today summary.
+     *
+     * @param todaySummary has today summary data.
+     */
+    public TodayAdapter(TodaySummary todaySummary, Context context) {
         this.todaySummary = todaySummary;
+        this.context = context;
     }
 
-    // Usually involves inflating a layout from XML and returning the holder.
+    /**
+     * Inflates item layout from XML based on view type and returns the holder.
+     *
+     * @param parent view group parent
+     * @param viewType view type displayed as integer
+     * @return view holder with inflated view
+     */
     @Override
     public TodayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -49,30 +75,35 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         Debug.print(TAG, "onCreateViewHolder", "ViewType: " + viewType, 5);
 
         if (viewType == 0) {
-            // Inflates the today_total layout
+            // Inflates the today_total layout.
             View todayTotalView = inflater.inflate(R.layout.item_today_total, parent, false);
 
-            // Returns a new holder instance
             return new ViewHolder(todayTotalView);
         } else if (viewType == 1) {
             todayPieView = inflater.inflate(R.layout.item_today_chart, parent, false);
 
             return new ViewHolder(todayPieView);
         } else if (viewType == 2) {
-            // Inflates the today_project layout
+            // Inflates the today_project layout.
             View todayProjectView = inflater.inflate(R.layout.item_today_project, parent, false);
 
-            // Returns a new holder instance
             return new ViewHolder(todayProjectView);
         } else {
-            // Inflates the today_project layout
+            // Inflates the no_data layout.
             View noDataView = inflater.inflate(R.layout.item_no_data, parent, false);
 
-            // Returns a new holder instance
             return new ViewHolder(noDataView);
         }
     }
 
+    /**
+     * Returns a different view type depending on the position and data.
+     * <p>
+     * Enables custom recycler view with different item XMLs.
+     *
+     * @param position recycler view list position
+     * @return view type
+     */
     @Override
     public int getItemViewType(int position) {
         Debug.print(TAG, "getItemViewType", "position: " + position, 5);
@@ -90,7 +121,12 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         }
     }
 
-    // Involves populating data into the item through holder.
+    /**
+     * Populates data into the item through view holder.
+     *
+     * @param holder view holder
+     * @param position recycler view list position
+     */
     @Override
     public void onBindViewHolder(TodayAdapter.ViewHolder holder, int position) {
         Debug.print(TAG, "onBindViewHolder", "position: " + position, 5);
@@ -102,7 +138,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 TextView todayTimeBox = holder.todayTime;
                 TextView todayTimeBoxText = holder.todayTimeText;
 
-                String totalText = "Total ";
+                String totalText = context.getString(R.string.today_adapter_total_label);
                 String total = "" + Util.convertSecondsToHoursAndMinutes(todaySummary.getTotalTime());
 
                 todayTimeBox.setText(total);
@@ -148,10 +184,9 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 todayPie.setData(pieData);
                 todayPie.setDrawEntryLabels(false);
                 todayPie.setUsePercentValues(true);
-                todayPie.setCenterText("Projects");
+                todayPie.setCenterText(context.getString(R.string.today_adapter_chart_label));
                 todayPie.setCenterTextSize(16);
                 todayPie.setCenterTextColor(R.color.primary_text);
-                todayPie.setNoDataText("Maybe it's time to code something?");
                 todayPie.setDescription(null);
                 todayPie.setTouchEnabled(false);
 
@@ -186,6 +221,11 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         }
     }
 
+    /**
+     * Returns how many items the recycler view contains.
+     *
+     * @return item count for recycler view
+     */
     @Override
     public int getItemCount() {
         if (todaySummary.getTodayProjectList().size() > 0) {
@@ -198,23 +238,51 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         }
     }
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * Provides a direct reference to each of the views within a data item.
+     * <p>
+     * Used to cache the views within the item layout for fast access.
+     */
+    class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
-        // for any view that will be set as you render a row
+        // for any view that will be set as you render a row.
+
+        /**
+         * Project's name.
+         */
         TextView projectName;
+
+        /**
+         * Time used on project.
+         */
         TextView projectTime;
+
+        /**
+         * Total time coded today.
+         */
         TextView todayTime;
+
+        /**
+         * Label for total time today.
+         */
         TextView todayTimeText;
+
+        /**
+         * Pie chart displaying projects that have been coded today.
+         */
         PieChart todayPie;
+
+        /**
+         * Displayed when user hasn't coded today.
+         */
         TextView noTodayData;
 
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
-        public ViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
+        /**
+         * Accepts entire item row and does the view lookups to find each subview.
+         *
+         * @param itemView entire item row
+         */
+        ViewHolder(View itemView) {
             super(itemView);
 
             projectName = (TextView) itemView.findViewById(R.id.projectName);
