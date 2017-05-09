@@ -5,10 +5,25 @@ import com.sankari.erika.codetick.Classes.LeaderboardItem;
 import java.util.List;
 
 /**
- * Created by erika on 5/3/2017.
+ * Listens for when leaderboard data has loaded.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public interface OnLeaderboardDataLoadedListener {
+
+    /**
+     * Provides leaderboard list.
+     *
+     * @param leaderboardList list containing leaderboard items
+     */
     void onLeaderboardDataSuccessfullyLoaded(List<LeaderboardItem> leaderboardList);
+
+    /**
+     * Provides error message.
+     *
+     * @param error error message
+     */
     void onLeaderboardDataLoadError(String error);
 }
