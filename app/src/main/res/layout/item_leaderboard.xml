@@ -30,7 +30,9 @@
             android:paddingBottom="@dimen/content_padding"
             android:layout_toEndOf="@+id/leaderboard_rank"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/header" />
+            android:textSize="@dimen/header"
+            android:ellipsize="end"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/leaderboard_total_text"
