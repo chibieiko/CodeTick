@@ -2,6 +2,7 @@ package com.sankari.erika.codetick.ApiHandlers;
 
 import com.sankari.erika.codetick.Classes.LeaderboardItem;
 import com.sankari.erika.codetick.Listeners.OnLeaderboardDataLoadedListener;
+import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Urls;
 
@@ -20,23 +21,56 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by erika on 5/3/2017.
+ * Fetches leaderboard data from Wakatime's server.
+ * <p>
+ * Passes data onwards through OnLeaderboardDataLoadedListener.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public class LeaderboardHandler {
-    private final String TAG = this.getClass().getName();
-    private OnLeaderboardDataLoadedListener leaderboardListener;
-    private ApiHandler apiHandler;
-    private List<LeaderboardItem> leaderboardList = new ArrayList<>();
 
+    /**
+     * Holds class name for debugging.
+     */
+    private final String TAG = this.getClass().getName();
+
+    /**
+     * Used to pass leaderboard data onwards.
+     */
+    private OnLeaderboardDataLoadedListener leaderboardListener;
+
+    /**
+     * Api handler instance.
+     */
+    private ApiHandler apiHandler;
+
+    /**
+     * Receives the api handler.
+     *
+     * @param apiHandler api handler
+     */
     public LeaderboardHandler(ApiHandler apiHandler) {
         this.apiHandler = apiHandler;
     }
 
+    /**
+     * Sets the leaderboard listener.
+     *
+     * @param leaderboardListener leaderboard listener
+     */
     public void setLeaderboardListener(OnLeaderboardDataLoadedListener leaderboardListener) {
         this.leaderboardListener = leaderboardListener;
     }
 
+    /**
+     * Tries to fetch leaderboard data.
+     * <p>
+     * On success creates a leaderboard list containing leaderboard items and calls
+     * leaderboard listener's onLeaderboardDataSuccessfullyLoaded method. On error calls
+     * onLeaderboardDataLoadError.
+     */
     public void getLeaderboardData() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL + "/leaders").newBuilder();
         String url = urlBuilder.build().toString();
@@ -47,6 +81,7 @@ public class LeaderboardHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    leaderboardListener.onLeaderboardDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_connecting));
                     e.printStackTrace();
                 }
 
@@ -54,10 +89,11 @@ public class LeaderboardHandler {
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
 
-                    Debug.print(TAG, "getLeaderboardData:onResponse", result, 4);
-                    Debug.print(TAG, "getLeaderboardData:onResponse", "code: " + response.code(), 4);
+                    Debug.print(TAG, "getLeaderboardData:onResponse", result, 6);
+                    Debug.print(TAG, "getLeaderboardData:onResponse", "code: " + response.code(), 6);
 
                     if (response.code() == 200) {
+                        List<LeaderboardItem> leaderboardList = new ArrayList<>();
                         try {
                             JSONObject resultObject = new JSONObject(result);
                             JSONArray data = new JSONArray(resultObject.getString("data"));
@@ -83,19 +119,20 @@ public class LeaderboardHandler {
                                 leaderboardList.add(leaderboardItem);
                             }
 
-                            Debug.print(TAG, "onResponse", "LEADERBOARD DETAILS READY", 4);
+                            Debug.print(TAG, "onResponse", "LEADERBOARD DETAILS READY", 6);
                             leaderboardListener.onLeaderboardDataSuccessfullyLoaded(leaderboardList);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
                     } else {
-                        leaderboardListener.onLeaderboardDataLoadError("Error fetching data from Wakatime's server...");
+                        leaderboardListener.onLeaderboardDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
                     }
                 }
             });
 
         } else {
+            leaderboardListener.onLeaderboardDataLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

@@ -1,6 +1,7 @@
 package com.sankari.erika.codetick.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -9,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -19,25 +19,57 @@ import android.widget.TextView;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.ApiHandlers.UserHandler;
 import com.sankari.erika.codetick.Classes.User;
-import com.sankari.erika.codetick.Fragments.SectionsPagerAdapter;
 import com.sankari.erika.codetick.Listeners.OnUserDataLoadedListener;
 import com.sankari.erika.codetick.R;
-import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.DownloadAndPlaceImage;
 import com.sankari.erika.codetick.Utils.Urls;
 import com.sankari.erika.codetick.Utils.Util;
 
+/**
+ * Provides a base for all the other activities that use the navigation drawer.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
+ */
 public class BaseActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, OnUserDataLoadedListener {
 
+    /**
+     * Navigation drawer layout.
+     */
     private DrawerLayout drawer;
+
+    /**
+     * A handler that fetches user information.
+     */
     private UserHandler userHandler;
+
+    /**
+     * Contains user's details.
+     */
     private User user;
 
+    /**
+     * Indicates whether main activity is visible or not.
+     */
+    public static boolean mainActivityVisible = false;
+
+    /**
+     * Indicates whether leaderboard activity is visible or not.
+     */
+    public static boolean leaderboardVisible = false;
+
+    /**
+     * Inflates the layout.
+     * <p>
+     * Adds a toolbar and navigation drawer to the activity.
+     *
+     * @param layoutResID layout resource id
+     */
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         // Set up navigation drawer.
-        //drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_base, null);
 
         FrameLayout activityContainer = (FrameLayout) drawer.findViewById(R.id.activity_content);
@@ -56,6 +88,11 @@ public class BaseActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    /**
+     * Creates a new user handler.
+     *
+     * @param savedInstanceState saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +100,9 @@ public class BaseActivity extends AppCompatActivity implements
         userHandler = new UserHandler(new ApiHandler(this));
     }
 
-    // Close navigation drawer with back button if it is open.
+    /**
+     * Closes navigation drawer with back button if drawer is open.
+     */
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -73,20 +112,33 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Handles navigation drawer's item clicks.
+     *
+     * @param item menu item
+     * @return always true
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        System.out.println("pressed menuitem " + item);
         switch (item.getItemId()) {
             case R.id.nav_today:
-                // todo change to today fragment if in leaderboards fragment
+                if (mainActivityVisible) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                }
 
-                drawer.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.nav_leaderboards:
+                if (leaderboardVisible) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    Intent intent = new Intent(this, LeaderboardActivity.class);
+                    startActivity(intent);
+                }
 
-                Intent intent = new Intent(this, LeaderboardActivity.class);
-                startActivity(intent);
                 break;
 
             case R.id.nav_logout:
@@ -97,11 +149,14 @@ public class BaseActivity extends AppCompatActivity implements
         return true;
     }
 
+    /**
+     * Gets user's details.
+     */
     @Override
     protected void onStart() {
         super.onStart();
 
-        System.out.println("MAIN ON START");
+        System.out.println("BASE ON START");
         if (userHandler.getUserListener() == null) {
             userHandler.addUserListener(this);
         }
@@ -112,41 +167,52 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Adds user listener for user handler.
+     */
     @Override
     protected void onPostResume() {
         super.onPostResume();
-
         if (userHandler.getUserListener() == null) {
             userHandler.addUserListener(this);
         }
     }
 
+    /**
+     * Removes user listener from user handler.
+     */
     @Override
     protected void onStop() {
         super.onStop();
-
         if (userHandler.getUserListener() != null) {
             userHandler.addUserListener(null);
         }
 
     }
 
+    /**
+     * Removes user listener from user handler.
+     */
     @Override
     protected void onPause() {
         super.onPause();
-
         if (userHandler.getUserListener() != null) {
             userHandler.addUserListener(null);
         }
     }
 
+    /**
+     * Sets user data to navigation drawer.
+     *
+     * @param obj contains user information
+     */
     @Override
     public void onUserDataSuccessfullyLoaded(User obj) {
         user = obj;
 
         final TextView userName = (TextView) findViewById(R.id.username);
         final TextView userEmail = (TextView) findViewById(R.id.user_email);
-        new DownloadAndPlaceImage((ImageView) findViewById(R.id.user_image)).execute(user.getPhoto());
+        new DownloadAndPlaceImage((ImageView) findViewById(R.id.user_image)).execute(user.getIcon());
 
         this.runOnUiThread(new Runnable() {
             @Override
@@ -159,6 +225,13 @@ public class BaseActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Shows snackbar with error.
+     * <p>
+     * Only called if there is an error fetching user details from Wakatime's server.
+     *
+     * @param error describes the error
+     */
     @Override
     public void onUserDataLoadError(String error) {
         final String reason = error;

@@ -17,22 +17,20 @@ import com.sankari.erika.codetick.ApiHandlers.ActivityHandler;
 import com.sankari.erika.codetick.ApiHandlers.ApiHandler;
 import com.sankari.erika.codetick.Classes.ActivitySummary;
 import com.sankari.erika.codetick.Classes.DaySummary;
-import com.sankari.erika.codetick.Classes.ProjectListItem;
 import com.sankari.erika.codetick.Listeners.OnActivitySummaryLoadedListener;
 import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.CustomDividerItemDecoration;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Displays user's coding activity for the past two weeks.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
 public class ActivityFragment extends Fragment implements OnActivitySummaryLoadedListener {
-
-    private final String TAG = this.getClass().getName();
 
     /**
      * The fragment argument representing the section number for this
@@ -40,13 +38,29 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
 
+    /**
+     * Used to fetch activity data from Wakatime's server.
+     */
     private static ActivityHandler activityHandler;
-    private RecyclerView recyclerView;
-    private View rootView;
+
+    /**
+     * Handles UI updates for the recycler view.
+     */
     private ActivityAdapter activityAdapter;
+
+    /**
+     * Swipe refresh layout.
+     */
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    /**
+     * Holds activity summary data.
+     */
     private ActivitySummary activitySummary;
 
+    /**
+     * Required empty constructor.
+     */
     public ActivityFragment() {
         // Required empty public constructor
     }
@@ -54,6 +68,10 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
     /**
      * Returns a new instance of this fragment for the given section
      * number.
+     *
+     * @param sectionNumber section number
+     * @param apiHandler api handler
+     * @return activity fragment instance
      */
     public static ActivityFragment newInstance(int sectionNumber, ApiHandler apiHandler) {
         activityHandler = new ActivityHandler(apiHandler);
@@ -64,39 +82,53 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
         return fragment;
     }
 
+    /**
+     * Creates the recycler view and gets activity summary data.
+     *
+     * @param inflater           used to inflate the view
+     * @param container          view group
+     * @param savedInstanceState saved instance state
+     * @return inflated view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         activityHandler.setActivitySummaryListener(this);
 
-        rootView = inflater.inflate(R.layout.fragment_activity, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_activity, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.activity_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.activity_recycler_view);
 
-        // Defines where to show the refresh icon.
         swipeRefreshLayout = (SwipeRefreshLayout) rootView;
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 activityHandler.getActivitySummary();
             }
         });
+
         swipeRefreshLayout.setRefreshing(true);
         activityHandler.getActivitySummary();
 
         activitySummary = new ActivitySummary();
         ArrayList<DaySummary> days = new ArrayList<>();
         activitySummary.setDaySummaryList(days);
-        activityAdapter = new ActivityAdapter(activitySummary);
+        activityAdapter = new ActivityAdapter(activitySummary, getContext());
 
         recyclerView.setAdapter(activityAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         recyclerView.addItemDecoration(new CustomDividerItemDecoration(
-                ContextCompat.getDrawable(getContext(), R.drawable.item_decorator)));
+                ContextCompat.getDrawable(getContext(), R.drawable.item_decorator), getContext(), true));
 
         return rootView;
     }
 
+    /**
+     * Updates UI with activity summary data from Wakatime's server.
+     *
+     * @param obj activity summary object
+     */
     @Override
     public void onActivitySummaryLoadedSuccessfully(ActivitySummary obj) {
         // Set values from server.
@@ -107,21 +139,49 @@ public class ActivityFragment extends Fragment implements OnActivitySummaryLoade
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activityAdapter.notifyDataSetChanged();
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+
+                activityAdapter.notifyDataSetChanged();
             }
         });
     }
 
+    /**
+     * Shows snackbar with error.
+     * <p>
+     * Only called if there is an error fetching data from Wakatime's server.
+     *
+     * @param error describes the error
+     */
     @Override
     public void onActivitySummaryLoadError(String error) {
-        if (swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
+        final String message = error;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
-        Snackbar.make(getActivity().findViewById(R.id.drawer_layout), "Error getting data from Wakatime's server... Try again later", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+                Snackbar.make(getActivity().findViewById(R.id.drawer_layout), message, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+    }
+
+    /**
+     * Clears swipe refresh layout on pause to prevent fragment overlapping.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.destroyDrawingCache();
+            swipeRefreshLayout.clearAnimation();
+        }
     }
 }

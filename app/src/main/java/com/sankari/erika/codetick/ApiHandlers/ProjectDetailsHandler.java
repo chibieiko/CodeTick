@@ -3,6 +3,7 @@ package com.sankari.erika.codetick.ApiHandlers;
 import com.sankari.erika.codetick.Classes.Language;
 import com.sankari.erika.codetick.Classes.ProjectDetails;
 import com.sankari.erika.codetick.Listeners.OnProjectDetailsLoadedListener;
+import com.sankari.erika.codetick.R;
 import com.sankari.erika.codetick.Utils.Debug;
 import com.sankari.erika.codetick.Utils.Urls;
 
@@ -21,24 +22,62 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by erika on 4/25/2017.
+ * Fetches project details form the past 7 days from Wakatime's server.
+ * <p>
+ * Passes activity data onwards through OnProjectDetailsLoadedListener.
+ *
+ * @author Erika Sankari
+ * @version 2017.0509
+ * @since 1.7
  */
-
 public class ProjectDetailsHandler {
+
+    /**
+     * Holds class name for debugging.
+     */
     private final String TAG = this.getClass().getName();
+
+    /**
+     * Used to pass project details onwards.
+     */
     private OnProjectDetailsLoadedListener projectDetailsLoadedListener;
+
+    /**
+     * Api handler instance.
+     */
     private ApiHandler apiHandler;
+
+    /**
+     * Used to signal Wakatime's api which project's data the app wants.
+     */
     private String projectName;
 
+    /**
+     * Receives the api handler and project name.
+     *
+     * @param apiHandler  api handler
+     * @param projectName project's name that the app wants data of
+     */
     public ProjectDetailsHandler(ApiHandler apiHandler, String projectName) {
         this.apiHandler = apiHandler;
         this.projectName = projectName;
     }
 
+    /**
+     * Sets the project details listener.
+     *
+     * @param projectDetailsLoadedListener project details
+     */
     public void setProjectDetailsLoadedListener(OnProjectDetailsLoadedListener projectDetailsLoadedListener) {
         this.projectDetailsLoadedListener = projectDetailsLoadedListener;
     }
 
+    /**
+     * Tries to fetch project details from the past 7 days.
+     * <p>
+     * On success creates project details object and calls project details listener's
+     * onProjectDetailsSuccessfullyLoaded method. On error calls onProjectDetailsLoadError.
+     */
     public void getProjectDetails() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL + "/users/current/stats/last_7_days?project=" + projectName).newBuilder();
         String url = urlBuilder.build().toString();
@@ -49,6 +88,7 @@ public class ProjectDetailsHandler {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    projectDetailsLoadedListener.onProjectDetailsLoadError(apiHandler.getContext().getResources().getString(R.string.error_connecting));
                     e.printStackTrace();
                 }
 
@@ -76,9 +116,6 @@ public class ProjectDetailsHandler {
                             // Total time.
                             projectDetails.setTotalTime(data.getLong("total_seconds"));
 
-                            // Last modified date.
-                            projectDetails.setLastModified(data.getString("modified_at"));
-
                             // Project name
                             projectDetails.setName(data.getString("project"));
 
@@ -88,22 +125,24 @@ public class ProjectDetailsHandler {
                             for (int i = 0; i < languagesArray.length(); i++) {
                                 JSONObject languageObj = languagesArray.getJSONObject(i);
                                 languages.add(new Language(languageObj.getString("name"),
-                                        languageObj.getLong("percent"),
+                                        languageObj.getInt("percent"),
                                         languageObj.getInt("hours"),
                                         languageObj.getInt("minutes")));
                             }
 
                             projectDetails.setLanguages(languages);
 
-                            Debug.print(TAG, "onResponse", "PROJECT DETAILS READY", 4);
+                            Debug.print(TAG, "onResponse", "PROJECT DETAILS READY", 6);
                             projectDetailsLoadedListener.onProjectDetailsSuccessfullyLoaded(projectDetails);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
+                        // Happens when Wakatime's server informs that it is preparing the data,
+                        // check back later...
                     } else if (response.code() == 202) {
                         try {
-                            Debug.print(TAG, "getProjectDetails:onResponse", "code: " + response.code(), 4);
+                            Debug.print(TAG, "getProjectDetails:onResponse", "code: " + response.code(), 6);
                             // calls Thread to sleep for one second and then try again to get project details.
                             TimeUnit.SECONDS.sleep(1);
                             getProjectDetails();
@@ -112,11 +151,12 @@ public class ProjectDetailsHandler {
                         }
 
                     } else {
-                        projectDetailsLoadedListener.onProjectDetailsLoadError("Error fetching data from Wakatime's server...");
+                        projectDetailsLoadedListener.onProjectDetailsLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
                     }
                 }
             });
         } else {
+            projectDetailsLoadedListener.onProjectDetailsLoadError(apiHandler.getContext().getResources().getString(R.string.error_getting_data));
             apiHandler.refreshToken(apiHandler.getPrefs().getString("token", null), false);
         }
     }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sankari.erika.codetick.Fragments.TodayFragment"
+    tools:context="com.sankari.erika.codetick.Fragments.ActivityFragment"
     android:id="@+id/fragment_activity">
 
     <android.support.v7.widget.RecyclerView
