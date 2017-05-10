@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                 handler.refreshToken(refreshToken, true);
             } else {
                 Snackbar.make(findViewById(R.id.wakatime_sign_in_button),
-                        R.string.login_error_refreshing_token,
+                        R.string.login_activity_error_refreshing_token,
                         Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 Snackbar.make(findViewById(R.id.wakatime_sign_in_button),
-                        R.string.login_error_logging_in,
+                        R.string.login_activity_error_logging_in,
                         Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

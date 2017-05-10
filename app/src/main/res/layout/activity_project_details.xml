@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/project_details_loading"
+                android:text="@string/project_activity_details_loading"
                 android:textColor="@color/secondary_text"
                 android:textSize="@dimen/primary_text" />
 
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/project_details_loading2"
+                android:text="@string/project_activity_details_loading2"
                 android:textColor="@color/secondary_text"
                 android:textSize="@dimen/primary_text" />
 
@@ -63,7 +63,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/no_data_for_project"
+                    android:text="@string/project_activity_no_data_for_project"
                     android:textColor="@color/white"
                     android:textSize="@dimen/primary_text" />
 

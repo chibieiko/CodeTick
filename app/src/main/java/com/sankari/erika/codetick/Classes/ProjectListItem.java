@@ -38,6 +38,11 @@ public class ProjectListItem implements Serializable {
     }
 
     /**
+     * Creates empty project list item.
+     */
+    public ProjectListItem() {}
+
+    /**
      * Gets project's name.
      *
      * @return project's name

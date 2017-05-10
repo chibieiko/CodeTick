@@ -9,7 +9,7 @@
     <color name="secondary_text">#757575</color>
     <color name="white">#fff</color>
 
-    <!-- Recycler view decoration color -->
+    <!-- Recycler view item line decoration color -->
     <color name="itemLine">#E0E0E0</color>
 
     <!-- Pie chart colors -->

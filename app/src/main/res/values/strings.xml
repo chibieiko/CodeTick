@@ -1,20 +1,44 @@
 <resources>
     <string name="app_name">CodeTick</string>
 
-    <!-- Strings related to login -->
     <string name="login_activity_sign_in">Sign in</string>
     <string name="login_activity_welcome_text">Welcome to CodeTick, a Wakatime client. Sign in with your Wakatime account to enjoy the app!</string>
+    <string name="login_activity_error_refreshing_token">Error refreshing token, please login again</string>
+    <string name="login_activity_error_logging_in">Error logging in, please try again</string>
 
-    <!-- Strings related to Project activity -->
     <string name="project_activity_label">Last 7 days logged</string>
+    <string name="project_activity_no_data_for_project">Nothing to show from past 7 days&#8230;</string>
+    <string name="project_activity_details_loading">Wakatime is crunching the data for you, this might take a while&#8230;</string>
+    <string name="project_activity_details_loading2">Check back later or relax and have a cup of tea!</string>
+    <string name="project_activity_total_time">Total</string>
+    <string name="project_activity_average">Daily average</string>
+    <string name="project_activity_best_day_total">Best day total</string>
+    <string name="project_activity_best_day">Best day</string>
+    <string name="project_activity_language_pie_text">Languages</string>
 
-    <string name="leaderboard_label">Leaderboards</string>
+    <string name="project_fragment_search_hint">Search projects&#8230;</string>
 
-    <!-- Strings related to Activity fragment -->
+    <string name="activity_adapter_total_label">Total</string>
+    <string name="activity_adapter_average_label">Daily avg</string>
+
+    <string name="day_adapter_total_label">Total</string>
+    <string name="day_adapter_no_coding_data">No coding data for this day&#8230;</string>
+
+    <string name="today_adapter_no_data">No coding data from today&#8230;</string>
+    <string name="today_adapter_total_label">Total</string>
+    <string name="today_adapter_chart_label">Projects</string>
+
+    <string name="leaderboard_adapter_total_label">Total</string>
+    <string name="leaderboard_adapter_average_label">Daily avg</string>
+    <string name="leaderboard_adapter_languages_label">Languages:</string>
+
+    <string name="leaderboard_activity_label">Leaderboards</string>
+    <string name="leaderboard_activity_search_hint">Search users&#8230;</string>
+
     <string name="activity_fragment_header">Last two weeks logged</string>
 
     <!-- Strings related to toolbar -->
-    <string name="search_projects">Search...</string>
+    <string name="search_projects">Search&#8230;</string>
 
     <!-- Strings related to Navigation drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -23,39 +47,19 @@
     <string name="nav_drawer_leaderboards">Leaderboards</string>
     <string name="nav_drawer_logout">Logout</string>
 
-    <!-- Strings for errors -->
+    <!-- Tab names -->
+    <string name="tab_today">TODAY</string>
+    <string name="tab_projects">PROJECTS</string>
+    <string name="tab_activity">ACTIVITY</string>
+
+    <!-- Date strings for today and yesterday -->
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+
+    <!-- Strings for errors used in handlers -->
     <string name="error_getting_data">Error fetching data from Wakatime\'s server. Try again later</string>
     <string name="error_connecting">Error connecting to Wakatime\'s server. Try again later</string>
 
     <!-- Debugger level -->
     <string name="debugLevel">4</string>
-
-    <string name="no_data_for_project">Nothing to show from past 7 days...</string>
-    <string name="project_details_loading">Wakatime is crunching the data for you, this might take a while...</string>
-    <string name="project_details_loading2">Check back later or relax and have a cup of tea!</string>
-    <string name="project_fragment_search_hint">Search projects...</string>
-    <string name="tab_today">TODAY</string>
-    <string name="tab_projects">PROJECTS</string>
-    <string name="tab_activity">ACTIVITY</string>
-    <string name="date_today">Today</string>
-    <string name="date_yesterday">Yesterday</string>
-    <string name="leaderboard_activity_search_hint">Search users...</string>
-    <string name="today_adapter_no_data">No coding data from today...</string>
-    <string name="login_error_refreshing_token">Error refreshing token, please login again</string>
-    <string name="login_error_logging_in">Error logging in, please try again</string>
-    <string name="project_activity_total_time">Total</string>
-    <string name="project_activity_average">Daily average</string>
-    <string name="project_activity_best_day_total">Best day total</string>
-    <string name="project_activity_best_day">Best day</string>
-    <string name="project_activity_language_pie_text">Languages</string>
-    <string name="activity_adapter_total_label">Total</string>
-    <string name="activity_adapter_average_label">Daily avg</string>
-    <string name="day_adapter_total_label">Total</string>
-    <string name="day_adapter_no_coding_data">No coding data for this day...</string>
-    <string name="leaderboard_adapter_total_label">Total</string>
-    <string name="leaderboard_adapter_average_label">Daily avg</string>
-    <string name="leaderboard_adapter_languages_label">Languages:</string>
-    <string name="today_adapter_total_label">Total</string>
-    <string name="today_adapter_chart_label">Projects</string>
-
 </resources>
