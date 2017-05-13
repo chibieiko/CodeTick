@@ -72,7 +72,7 @@ public class LeaderboardHandler {
      * onLeaderboardDataLoadError.
      */
     public void getLeaderboardData() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL + "/leaders").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Urls.BASE_URL + "/leaders?page=0").newBuilder();
         String url = urlBuilder.build().toString();
 
         if (apiHandler.checkTokenExpiry()) {
